@@ -101,6 +101,10 @@ Necesitamos un stack tecnológico que proporcione flexibilidad, escabilidad y se
 
 🔹**Base de Datos**: PostgreSQL ➡️	 SQL  
 
+________
+
+Para ejecución de proyecto en real: 
+
 🔹**Autenticación**: JWT + OAuth 2.0  ➡️ JavaScript/TypeScript
 
 🔹**Pagos**: Stripe ➡️	 JavaScript/TypeScript 
