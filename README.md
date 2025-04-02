@@ -3,15 +3,7 @@
 Desarrollo de una Aplicación de Gestión de Reservas para “Circo Escuela Fantasía”
 
 ## Introducción
-Circo Escuela Fantasía es un centro de ocio dedicado a la organización de actividades lúdico-educativas dirigidas tanto a centros escolares como a familias. A lo largo del año, ofrece una variedad de experiencias temáticas estructuradas en cuatro categorías principales:
-
-🎭 Un Día en el Circo
-
-🐮 Granja Escuela de Caperucita
-
-🎃 Halloween Kids Party
-
-🎅 La Fábrica de Papá Noel
+Circo Escuela Fantasía es un centro de ocio dedicado a la organización de actividades lúdico-educativas dirigidas tanto a centros escolares como a familias. A lo largo del año, ofrece una variedad de experiencias temáticas estructuradas en cuatro categorías principales: 🎭 Un Día en el Circo, 🐮 Granja Escuela de Caperucita, 🎃 Halloween Kids Party y 🎅 La Fábrica de Papá Noel.
     
 Con más de diez años de trayectoria, el centro ha experimentado un crecimiento constante en la demanda de sus actividades. No obstante, a pesar de su éxito, la empresa aún no cuenta con una aplicación propia que facilite la gestión de reservas de manera eficiente y accesible. Hace un año, se implementó un sistema de reservas en línea a través de una plataforma genérica. Sin embargo, esta opción ha resultado ser poco intuitiva para los usuarios y con un coste elevado.
 
