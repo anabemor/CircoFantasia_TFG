@@ -106,7 +106,25 @@ ___________________
 
 ## Stack Tecnológico
 (Propuesta)
-Necesitamos un stack tecnológico que proporciones flexibilidad, escabilidad y seguridad.
+
+Necesitamos un stack tecnológico que proporcione flexibilidad, escabilidad y seguridad a la aplicación.
+
+🔹**Frontend**: React.js + Tailwind CSS o Angular / 	TypeScript
+
+🔹**Backend**:  Node.js + Express.js / JavaScript/TypeScript
+
+🔹**Base de Datos**: PostgreSQL / SQL  
+
+🔹**Autenticación**: JWT + OAuth 2.0 / JavaScript/TypeScript
+
+🔹**Pagos**: Stripe / JavaScript/TypeScript 
+
+🔹**Notificaciones**: Firebase Cloud Messaging (FCM) / JavaScript/TypeScript
+
+🔹**Infraestructura**: AWS + Docker / Bash/Shell
+
+🔹**Seguridad**: HTTPS + bcrypt + OWASP / JavaScript/TypeScript
+
 
 ______________
 
