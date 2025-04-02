@@ -90,34 +90,33 @@ _____________________
 ▪️ **Integración con Redes Sociales**: Para compartir eventos fácilmente.
 __________________________
 
+## Stack Tecnológico y Lenguajes
+(Propuesta)
+
+Necesitamos un stack tecnológico que proporcione flexibilidad, escabilidad y seguridad a la aplicación.
+
+🔹**Frontend**: React.js + Tailwind CSS o Angular ➡️	TypeScript
+
+🔹**Backend**:  Node.js + Express.js ➡️	 JavaScript/TypeScript
+
+🔹**Base de Datos**: PostgreSQL ➡️	 SQL  
+
+🔹**Autenticación**: JWT + OAuth 2.0  ➡️ JavaScript/TypeScript
+
+🔹**Pagos**: Stripe ➡️	 JavaScript/TypeScript 
+
+🔹**Notificaciones**: Firebase Cloud Messaging (FCM) ➡️	JavaScript/TypeScript
+
+🔹**Infraestructura**: AWS + Docker ➡️	 Bash/Shell
+
+🔹**Seguridad**: HTTPS + bcrypt + OWASP ➡️	 JavaScript/TypeScript
+___________
+
 ## Planning Board
 ____________
 
 ## Diagrama ER
 ___________________
 
-## Stack Tecnológico
-(Propuesta)
-
-Necesitamos un stack tecnológico que proporcione flexibilidad, escabilidad y seguridad a la aplicación.
-
-🔹**Frontend**: React.js + Tailwind CSS o Angular / 	TypeScript
-
-🔹**Backend**:  Node.js + Express.js / JavaScript/TypeScript
-
-🔹**Base de Datos**: PostgreSQL / SQL  
-
-🔹**Autenticación**: JWT + OAuth 2.0 / JavaScript/TypeScript
-
-🔹**Pagos**: Stripe / JavaScript/TypeScript 
-
-🔹**Notificaciones**: Firebase Cloud Messaging (FCM) / JavaScript/TypeScript
-
-🔹**Infraestructura**: AWS + Docker / Bash/Shell
-
-🔹**Seguridad**: HTTPS + bcrypt + OWASP / JavaScript/TypeScript
-
-
-______________
 
 
