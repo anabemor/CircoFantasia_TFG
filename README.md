@@ -18,7 +18,7 @@ Con más de diez años de trayectoria, el centro ha experimentado un crecimiento
 Por este motivo, surge la necesidad de desarrollar una aplicación a medida que optimice la gestión de reservas, ofreciendo una interfaz intuitiva para los clientes y un entorno de administración sencillo y eficiente. Esta nueva herramienta deberá mantener una coherencia visual con la identidad corporativa del centro y garantizar un sistema robusto que contemple todas las necesidades del usuario, cumpla con los estándares de seguridad y sea capaz de gestionar altas cargas de demanda sin afectar su rendimiento.
 __________
 
-## 👪Público Objetivo
+## 👪 Público Objetivo
 Dirigida a centros escolares y familias. 
 ____________
 
@@ -99,6 +99,9 @@ _____________________
 __________________________
 
 ## Planning Board
+____________
+
+## Diagrama ER
 ___________________
 
 ## Tecnologías 
