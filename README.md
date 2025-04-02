@@ -16,6 +16,15 @@ Circo Escuela Fantasía es un centro de ocio dedicado a la organización de acti
 Con más de diez años de trayectoria, el centro ha experimentado un crecimiento constante en la demanda de sus actividades. No obstante, a pesar de su éxito, la empresa aún no cuenta con una aplicación propia que facilite la gestión de reservas de manera eficiente y accesible. Hace un año, se implementó un sistema de reservas en línea a través de una plataforma genérica. Sin embargo, esta opción ha resultado ser poco intuitiva para los usuarios y con un coste elevado.
 
 Por este motivo, surge la necesidad de desarrollar una aplicación a medida que optimice la gestión de reservas, ofreciendo una interfaz intuitiva para los clientes y un entorno de administración sencillo y eficiente. Esta nueva herramienta deberá mantener una coherencia visual con la identidad corporativa del centro y garantizar un sistema robusto que contemple todas las necesidades del usuario, cumpla con los estándares de seguridad y sea capaz de gestionar altas cargas de demanda sin afectar su rendimiento.
+__________
+
+## 👪Público Objetivo
+Dirigida a centros escolares y familias. 
+____________
+
+## 🖥️ Apps Similares
+Turitop
+________________
 
 ## 🎯 Características de CircoFantasia
 Las funcionalidades del proyecto Circo Escuela Fantasía deberían centrarse en la gestión eficiente de reservas, la interacción con los usuarios y la administración de eventos. Así las funcionalidades de la aplicación serán:
@@ -92,6 +101,7 @@ __________________________
 ## Planning Board
 ___________________
 
-
 ## Tecnologías 
+______________
+
 
