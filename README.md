@@ -104,7 +104,10 @@ ____________
 ## Diagrama ER
 ___________________
 
-## Tecnologías 
+## Stack Tecnológico
+(Propuesta)
+Necesitamos un stack tecnológico que proporciones flexibilidad, escabilidad y seguridad.
+
 ______________
 
 
