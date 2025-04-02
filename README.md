@@ -120,7 +120,7 @@ ___________
 ____________
 
 ## Diagrama ER
-___________________
+![ER CircoFantasia](https://github.com/user-attachments/assets/3b250ed4-ca37-438a-8958-e8598ccb9161)
 
 
 
