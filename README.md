@@ -20,7 +20,7 @@ Por este motivo, surge la necesidad de desarrollar una aplicación a medida que 
 ## 🎯 Características de CircoFantasia
 Las funcionalidades del proyecto Circo Escuela Fantasía deberían centrarse en la gestión eficiente de reservas, la interacción con los usuarios y la administración de eventos. Así las funcionalidades de la aplicación serán:
 
-### :one: Gestión de Reservas
+### ✅ :one: Gestión de Reservas
 ▪️ **Reserva Online de Actividades**: Permitir a los usuarios seleccionar y reservar eventos según disponibilidad.
 
 ▪️ **Calendario de Eventos**: Vista organizada de fechas y horarios disponibles.
@@ -32,7 +32,7 @@ Las funcionalidades del proyecto Circo Escuela Fantasía deberían centrarse en 
 ▪️ **Historial de Reservas**: Los usuarios pueden consultar sus reservas pasadas y futuras.
 
 
-### :two: Gestión de Usuarios
+### 👦 :two: Gestión de Usuarios
 ▪️ **Registro e Inicio de Sesión**: Para clientes y administradores.
 
 ▪️ **Perfiles de Usuario**: Almacenar datos básicos y preferencias.
@@ -40,7 +40,7 @@ Las funcionalidades del proyecto Circo Escuela Fantasía deberían centrarse en 
 ▪️ **Diferenciación de Roles**: Administradores, colegios, familias, etc.
 
 
-### :three: Administración de Eventos
+### 🥳:three: Administración de Eventos
 
 ▪️ **Creación y Edición de Actividades**: Los administradores pueden añadir, modificar o eliminar eventos.
 
@@ -49,14 +49,14 @@ Las funcionalidades del proyecto Circo Escuela Fantasía deberían centrarse en 
 ▪️ **Control de Asistencia**: Lista de participantes y posibilidad de gestionar cancelaciones.
 
 
-### :four: Métodos de Pago
+### 💳:four: Métodos de Pago
 
 ▪️ **Pasarela de Pago Segura**: Pago online con tarjeta, PayPal o transferencia.
 
 ▪️ **Facturación Automática**: Generación de recibos o facturas.
 
 
-### :five: Comunicación y Soporte
+### :📢:five: Comunicación y Soporte
 
 ▪️ **Chat o Formulario de Contacto**: Para resolver dudas sobre eventos o reservas.
 
@@ -65,14 +65,14 @@ Las funcionalidades del proyecto Circo Escuela Fantasía deberían centrarse en 
 ▪️ **Notificaciones Push**: Avisos sobre cambios, promociones o recordatorios de eventos.
 
 
-### :six: Diseño y Experiencia de Usuario
+### 🎨:six: Diseño y Experiencia de Usuario
 
 ▪️ **Interfaz Intuitiva, Adaptada Y Responsiva**: Fácil de usar tanto en móviles, tablets u ordenadores.
 
 ▪️ **Diseño en Línea con la Identidad del Circo**: Colores, imágenes y tipografías coherentes con la marca.
 
 
-### :seven: Seguridad y Rendimiento
+### 🔒:seven: Seguridad y Rendimiento
 
 ▪️ **Autenticación Segura**: Protección de datos personales.
 
@@ -81,8 +81,16 @@ Las funcionalidades del proyecto Circo Escuela Fantasía deberían centrarse en 
 ▪️ **Cumplimiento con Regulaciones (GDPR, LOPD, etc.)**: Protección de datos personales de los usuarios.
 
 
-### :eight: Extras Opcionales
+### 📌 :eight: Extras Opcionales
 
 ▪️ **Sistema de Fidelización**: Descuentos o puntos por repetir reservas.
+
 ▪️ **Modo Offline**: Para que administradores puedan gestionar reservas sin conexión.
+
 ▪️ **Integración con Redes Sociales**: Para compartir eventos fácilmente.
+
+
+## Planning Board
+
+## Tecnologías 
+
