@@ -90,7 +90,9 @@ _____________________
 ▪️ **Integración con Redes Sociales**: Para compartir eventos fácilmente.
 __________________________
 
-## Stack Tecnológico y Lenguajes
+## 🛠️ Stack Tecnológico y Lenguajes
+
+Teniendo en cuenta que, por tiempo y poca experiencia, no voy a poder desarrollar la aplicación completa, me centraré solo en los tres pilares fundamentales: frontend, backend y base de datos. “Métodos de pago” lo sustituiré por una simulación mediante un monedero digital. Dejaré para más adelante el método de pago real, la “Comunicación y Soporte”, la “Seguridad y Rendimiento” y los extras. 
 (Propuesta)
 
 Necesitamos un stack tecnológico que proporcione flexibilidad, escabilidad y seguridad a la aplicación.
