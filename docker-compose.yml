@@ -36,20 +36,21 @@ services:
 
   db:
     image: postgres:13
-    container_name: stronova_postgres
+    container_name: tickfantasia_postgres
     restart: always
     environment:
-      POSTGRES_USER: stronova_user
-      POSTGRES_PASSWORD: stronova_password
-      POSTGRES_DB: stronova_db
+      POSTGRES_USER: tickfantasia_user
+      POSTGRES_PASSWORD: tickfantasia_password
+      POSTGRES_DB: tickfantasia_db
     ports:
-      - "5432:5432"
+      - "5434:5432"  # Cambiado para no usar el 5432 por defecto
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U symfony -d symfony_db"]
+      test: ["CMD-SHELL", "pg_isready -U tickfantasia_user -d tickfantasia_db"]
       interval: 10s
       retries: 5
+
 
   frontend:
     build:
