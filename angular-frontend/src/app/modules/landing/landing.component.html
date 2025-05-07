@@ -1,9 +1,39 @@
 <div class="h-full w-full flex bg-green-200 p-20">
-    <h1 class="text-sm font-thin text-red-600 ml-40">Welcome to the Landing Page</h1>
-    
-    <button 
-      routerLink="/tasks" 
-      class="bg-yellow-400 text-black font-light p-1 rounded-sm border border-black mt-40">
-      Click me
-    </button>
+  <div class="max-w-sm w-full mx-auto bg-white p-10 rounded-lg shadow-lg">
+      <h1 class="text-xl font-semibold text-center text-red-600 mb-6">Bienvenido Administrador a Tickfantasia</h1>
+      
+      <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+          <div class="mb-4">
+              <label for="username" class="block text-sm font-semibold text-gray-700">Usuario</label>
+              <input
+                  type="text"
+                  id="username"
+                  name="username"
+                  [(ngModel)]="username"
+                  class="w-full p-2 border border-gray-300 rounded-sm"
+                  required
+              />
+          </div>
+
+          <div class="mb-6">
+              <label for="password" class="block text-sm font-semibold text-gray-700">Contraseña</label>
+              <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  [(ngModel)]="password"
+                  class="w-full p-2 border border-gray-300 rounded-sm"
+                  required
+              />
+          </div>
+
+          <button
+              type="submit"
+              [disabled]="!loginForm.form.valid"
+              class="w-full bg-yellow-400 text-black font-light p-2 rounded-sm border border-black mt-4"
+          >
+              Iniciar sesión
+          </button>
+      </form>
+  </div>
 </div>
