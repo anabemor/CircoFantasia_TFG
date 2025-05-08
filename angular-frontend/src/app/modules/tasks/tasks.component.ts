@@ -10,7 +10,7 @@ import { RouterModule } from '@angular/router';
   selector: 'app-tasks',
   imports: [CommonModule, RouterModule],
   templateUrl: './tasks.component.html',
-  styleUrls: ['./tasks.component.scss']
+  //styleUrls: ['./tasks.component.scss']
 })
 export class TasksComponent implements OnInit {
   tasks: Task[] = [];

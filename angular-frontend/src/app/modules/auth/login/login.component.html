@@ -1,0 +1,22 @@
+<h2>Login Administrador</h2>
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <div>
+    <label for="username">Usuario:</label>
+    <input type="text" id="username" formControlName="username" placeholder="Usuario" />
+    <div *ngIf="loginForm.controls['username'].invalid && loginForm.controls['username'].touched">
+      <small *ngIf="loginForm.controls['username'].hasError('required')">El campo de usuario es obligatorio.</small>
+    </div>
+  </div>
+
+  <div>
+    <label for="password">Contraseña:</label>
+    <input type="password" id="password" formControlName="password" placeholder="Contraseña" />
+    <div *ngIf="loginForm.controls['password'].invalid && loginForm.controls['password'].touched">
+      <small *ngIf="loginForm.controls['password'].hasError('required')">La contraseña es obligatoria.</small>
+    </div>
+  </div>
+
+  <button type="submit" [disabled]="loginForm.invalid">Iniciar sesión</button>
+</form>
+
+  

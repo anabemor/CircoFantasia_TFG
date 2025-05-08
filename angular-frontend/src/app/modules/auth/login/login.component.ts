@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
-  standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
@@ -12,19 +12,29 @@ import { CommonModule } from '@angular/common';
 export class LoginComponent {
   loginForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private router: Router) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      username: ['', Validators.required],
       password: ['', Validators.required]
     });
   }
 
   onSubmit(): void {
     if (this.loginForm.valid) {
-      console.log('Login data:', this.loginForm.value);
+      const { username, password } = this.loginForm.value;
+
+      // Simulando un login exitoso
+      if (username === 'admin' && password === 'admin123') {
+        console.log('Login exitoso');
+        this.router.navigate(['/admin']);  // Redirige a la página de administración
+      } else {
+        console.log('Credenciales incorrectas');
+        alert('Usuario o contraseña incorrectos');
+      }
     } else {
       console.log('Formulario inválido');
     }
   }
 }
+
 
