@@ -1,40 +1,43 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
-
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, ReactiveFormsModule],
+  standalone: true,
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
+  imports: [ReactiveFormsModule],
 })
 export class LoginComponent {
   loginForm: FormGroup;
+  showSignup = false;
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(private fb: FormBuilder) {
     this.loginForm = this.fb.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required]
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 
   onSubmit(): void {
-    if (this.loginForm.valid) {
-      const { username, password } = this.loginForm.value;
-
-      // Simulando un login exitoso
-      if (username === 'admin' && password === 'admin123') {
-        console.log('Login exitoso');
-        this.router.navigate(['/admin']);  // Redirige a la página de administración
-      } else {
-        console.log('Credenciales incorrectas');
-        alert('Usuario o contraseña incorrectos');
-      }
-    } else {
-      console.log('Formulario inválido');
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
     }
+
+    const credentials = this.loginForm.value;
+    console.log('Login data:', credentials);
+
+    // Aquí llamarías a tu servicio de login
+    // this.authService.login(credentials).subscribe(...)
+  }
+
+  onPasswordReset(): void {
+    // Aquí podrías redirigir o abrir un modal de recuperación
+    alert('Password reset not implemented yet.');
+  }
+
+  switchToSignup(): void {
+    this.showSignup = true;
   }
 }
-
-

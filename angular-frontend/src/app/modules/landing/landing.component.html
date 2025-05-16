@@ -1,2 +1,102 @@
-<h1>Bienvenido a Circo Fantasía</h1>
-<a routerLink="/login" class="btn">Iniciar sesión como administrador</a>
+<!-- Contenedor principal -->
+<div class="relative w-full h-screen bg-white font-poppins">
+    <!-- Logotipo -->
+    <img
+      src="public/img/logotickfantasia.png"
+      alt="Logotipo TickFantasía"
+      class="absolute w-[206px] h-[206px] left-[613px] top-[54px]"
+    />
+  
+    <!-- Rectángulo azul de fondo -->
+    <div
+      class="absolute w-[956px] h-[623px] left-[238px] top-[314px] bg-[#003D76] opacity-90 shadow-lg rounded-[40px]"
+    ></div>
+  
+    <!-- Título de bienvenida -->
+    <h1
+      class="absolute w-[588px] h-[114px] left-[419px] top-[378px] text-center text-[#030101] font-extrabold text-[32px] leading-[48px] flex items-center justify-center"
+    >
+      Bienvenido a TickFantasía
+      Compra tus entradas
+      Consulta tus entradas
+    </h1>
+
+    <!-- Crear un botón para dirigir al administrador a login (solo el podrá logarse) /  -->
+    <!-- Rectángulo blanco para el formulario /  -->
+    <div
+      class="absolute w-[574px] h-[392px] left-[433px] top-[496px] bg-white rounded-[32px] shadow-md"
+    >
+      <!-- Título del formulario -->
+      <h2
+        class="absolute left-[26px] top-[25px] text-black font-extrabold text-[20px] leading-[24px]"
+      >
+        Inicia sesión como Administrador
+      </h2>
+  
+      <!-- Campo de correo electrónico -->
+      <div class="absolute left-[115px] top-[82px]">
+        <input
+          type="email"
+          placeholder="admin@ejemplo.com"
+          class="w-[326px] h-[51px] border-2 border-[#1A5084] rounded-[10px] px-4 text-black font-semibold text-[20px] placeholder-black/10"
+        />
+        <!-- Ícono de usuario -->
+        <svg
+          class="absolute right-[-40px] top-[13px] w-[24px] h-[24px]"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <!-- SVG del ícono de usuario -->
+        </svg>
+      </div>
+  
+      <!-- Campo de contraseña -->
+      <div class="absolute left-[115px] top-[164px]">
+        <input
+          type="password"
+          placeholder="••••••••••"
+          class="w-[326px] h-[51px] border-2 border-[#1A5084] rounded-[10px] px-4 text-black font-semibold text-[20px] placeholder-black/10"
+        />
+        <!-- Ícono de candado -->
+        <svg
+          class="absolute right-[-40px] top-[13px] w-[24px] h-[24px]"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <!-- SVG del ícono de candado -->
+        </svg>
+      </div>
+  
+      <!-- Indicadores de contraseña -->
+      <div class="absolute left-[129px] top-[233px] flex space-x-2">
+      </div>
+  
+      <!-- Enlace de ayuda: iría a contacta--> 
+      <a
+        href="#"
+        class="absolute left-[130px] top-[280px] text-[#1A5084] font-semibold text-[13px] leading-[20px] text-center"
+      >
+        ¿Necesitas ayuda para iniciar sesión?
+      </a>
+  
+      <!-- Botón de inicio de sesión -->
+      <button
+        class="absolute left-[124px] top-[320px] w-[326px] h-[41px] bg-[#1A5084] rounded-full text-white font-extrabold text-[16px] leading-[19px]"
+      >
+        Inicia Sesión
+      </button>
+    </div>
+  
+    <!-- Términos y políticas -->
+    <p
+      class="absolute left-[611px] top-[902px] w-[219px] h-[28px] text-center text-[#A2A2A2] font-semibold text-[13px] leading-[16px]"
+    >
+      Terms of use. Privacy policy
+    </p>
+  
+    <!-- Pie de página -->
+    <footer class="absolute bottom-0 w-full h-[117px] bg-[#D9D9D9] flex items-center justify-center">
+     
+    </footer>
+  </div>
+  

@@ -1,0 +1,79 @@
+<!-- Fondo con imagen y capa oscura -->
+<div class="min-h-screen flex items-center justify-center bg-cover bg-center relative" style="background-image: url('img/fondo.webp');">
+    <!-- Capa oscura -->
+    <div class="absolute bg-black bg-opacity-40 z-0"></div>
+  
+    <!-- Contenedor del formulario -->
+    <div class="relative z-10 w-full max-w-md p-8 bg-black/70 backdrop-blur-md rounded-2xl shadow-xl border border-white/10">
+  
+      <div class="text-center mb-8">
+        <img class="mx-auto h-12 w-auto" src="/img/Logo_Blanco.png" alt="Nombre de la empresa">
+        <h2 class="mt-6 text-3xl font-bold tracking-tight text-white">Crea tu cuenta</h2>
+      </div>
+  
+      <form class="space-y-6" [formGroup]="registerForm" (ngSubmit)="onRegister()">
+        <!-- Nombre -->
+        <div>
+          <label for="name" class="block text-sm font-medium text-white">Nombre completo</label>
+          <div class="mt-2">
+            <input type="text" id="name" formControlName="fullName" required
+                   class="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                   placeholder="Tu nombre">
+          </div>
+        </div>
+  
+        <!-- Correo -->
+        <div>
+          <label for="email" class="block text-sm font-medium text-white">Correo electrónico</label>
+          <div class="mt-2">
+            <input type="email" id="email" formControlName="email" required
+                   class="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                   placeholder="tucorreo@ejemplo.com">
+          </div>
+        </div>
+  
+        <!-- Contraseña -->
+        <div>
+          <label for="password" class="block text-sm font-medium text-white">Contraseña</label>
+          <div class="mt-2">
+            <input type="password" id="password" formControlName="password" required
+                   class="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                   placeholder="********">
+          </div>
+        </div>
+  
+        <!-- Confirmar contraseña -->
+        <div>
+          <label for="confirm-password" class="block text-sm font-medium text-white">Repite la contraseña</label>
+          <div class="mt-2">
+            <input type="password" id="confirm-password" formControlName="confirmPassword" required
+                   class="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                   placeholder="********">
+          </div>
+          <!-- Error si las contraseñas no coinciden -->
+          <div *ngIf="registerForm.errors?.['passwordsMismatch']&& registerForm.touched" class="text-sm text-red-400 mt-1">
+            Las contraseñas no coinciden.
+          </div>
+        </div>
+  
+        <!-- Botón -->
+        <div>
+          <button type="submit"
+                  class="w-full rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2 transition-all duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white/40">
+            Registrarse
+          </button>
+        </div>
+  
+        <!-- Mensaje de error general -->
+        <div *ngIf="errorMessage" class="text-sm text-red-400 text-center mt-4">
+          {{ errorMessage }}
+        </div>
+      </form>
+  
+      <p class="mt-8 text-center text-sm text-white/80">
+        ¿Ya tienes una cuenta?
+        <a href="/login" class="font-semibold text-indigo-300 hover:text-white">Inicia sesión</a>
+      </p>
+    </div>
+  </div>
+  

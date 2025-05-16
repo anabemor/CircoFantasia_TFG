@@ -3,7 +3,7 @@ services:
     build:
       context: ./symfony-backend
       dockerfile: ./docker/php/Dockerfile
-    container_name: stronova_backend
+    container_name: tickfantasia_backend
     restart: unless-stopped
     working_dir: /var/www/app
     volumes:
@@ -43,7 +43,7 @@ services:
       POSTGRES_PASSWORD: tickfantasia_password
       POSTGRES_DB: tickfantasia_db
     ports:
-      - "5434:5432"  # Cambiado para no usar el 5432 por defecto
+      - "5432:5432"  
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -56,7 +56,7 @@ services:
     build:
       context: ./angular-frontend
       dockerfile: Dockerfile
-    container_name: stronova_frontend
+    container_name: tickfantasia_frontend
     restart: always
     working_dir: /app
     volumes:
