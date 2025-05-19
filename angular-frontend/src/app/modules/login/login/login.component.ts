@@ -1,18 +1,27 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { AuthService } from '../../../shared/services/auth.service'// ✅ Ajusta según ruta real
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
+
 @Component({
   selector: 'app-login',
   standalone: true,
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule],
 })
 export class LoginComponent {
   loginForm: FormGroup;
-  showSignup = false;
+  errorMessage: string | null = null;
+  successMessage: string | null = null;
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -25,19 +34,29 @@ export class LoginComponent {
       return;
     }
 
-    const credentials = this.loginForm.value;
-    console.log('Login data:', credentials);
+    const { email, password } = this.loginForm.value;
 
-    // Aquí llamarías a tu servicio de login
-    // this.authService.login(credentials).subscribe(...)
+    this.authService.login({ email, password }).subscribe({
+      next: () => {
+        this.errorMessage = null;
+        this.successMessage = 'Inicio de sesión exitoso. Redirigiendo...';
+        setTimeout(() => {
+          this.router.navigate(['/admin']); // Ajusta la ruta si es necesario
+        }, 1500);
+      },
+      error: (err: HttpErrorResponse) => {
+        console.error('Login fallido', err);
+        this.successMessage = null;
+        this.errorMessage = 'Correo o contraseña incorrectos.';
+      }
+    });
   }
 
   onPasswordReset(): void {
-    // Aquí podrías redirigir o abrir un modal de recuperación
-    alert('Password reset not implemented yet.');
+    alert('Funcionalidad de recuperación aún no implementada.');
   }
 
   switchToSignup(): void {
-    this.showSignup = true;
+    // Lógica para mostrar el formulario de registro si quieres en esta vista
   }
 }
