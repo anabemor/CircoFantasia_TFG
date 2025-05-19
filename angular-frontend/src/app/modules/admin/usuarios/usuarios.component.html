@@ -37,31 +37,72 @@
       {{ usuarioSeleccionado?.id ? 'Editar Usuario' : 'Crear Usuario' }}
     </h2>
 
-    <form (ngSubmit)="guardarUsuario()" *ngIf="usuarioSeleccionado">
+    <form #usuarioForm="ngForm" (ngSubmit)="guardarUsuario()" *ngIf="usuarioSeleccionado">
+    <!-- Nombre -->
       <label class="block mb-2">
         Nombre:
-        <input [(ngModel)]="usuarioSeleccionado.name" name="name" class="border p-2 w-full" required />
+         <input
+          [(ngModel)]="usuarioSeleccionado.name"
+          name="name"
+          class="border p-2 w-full"
+          required
+          minlength="3"
+          #name="ngModel"
+        />
+        <div *ngIf="name.invalid && name.touched" class="text-red-600 text-sm mt-1">
+          <div *ngIf="name.errors?.['required']">El nombre es obligatorio.</div>
+          <div *ngIf="name.errors?.['minlength']">Debe tener al menos 3 caracteres.</div>
+        </div>
       </label>
 
+  <!-- Email -->
       <label class="block mb-2">
         Email:
-        <input [(ngModel)]="usuarioSeleccionado.email" name="email" class="border p-2 w-full" required type="email" />
+        <input
+          [(ngModel)]="usuarioSeleccionado.email"
+          name="email"
+          class="border p-2 w-full"
+          required
+          email
+          #email="ngModel"
+          type="email"
+        />
+        <div *ngIf="email.invalid && email.touched" class="text-red-600 text-sm mt-1">
+          <div *ngIf="email.errors?.['required']">El email es obligatorio.</div>
+          <div *ngIf="email.errors?.['email']">Debe ser un email válido.</div>
+        </div>
       </label>
 
+      <!-- Rol -->
       <label class="block mb-2">
         Rol:
-        <select [(ngModel)]="usuarioSeleccionado.roles" name="roles" class="border p-2 w-full" required>
+        <select
+          [(ngModel)]="usuarioSeleccionado.roles"
+          name="roles"
+          class="border p-2 w-full"
+          required
+          #roles="ngModel"
+        >
           <option [ngValue]="['ROLE_ADMIN']">Administrador</option>
           <option [ngValue]="['ROLE_USER']">Gestor</option>
         </select>
+        <div *ngIf="roles.invalid && roles.touched" class="text-red-600 text-sm mt-1">
+          Debes seleccionar un rol.
+        </div>
       </label>
 
+      <!-- Botones -->
       <div class="flex justify-end gap-2 mt-4">
         <button type="button" (click)="cerrarModal()" class="bg-gray-300 px-4 py-2 rounded">Cancelar</button>
-        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">
+        <button
+          type="submit"
+          class="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
+          [disabled]="usuarioForm.invalid"
+        >
           {{ usuarioSeleccionado.id ? 'Actualizar' : 'Crear' }}
         </button>
       </div>
     </form>
+
   </div>
 </div>
