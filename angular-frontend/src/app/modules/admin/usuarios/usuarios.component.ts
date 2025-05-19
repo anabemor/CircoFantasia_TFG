@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Usuario, UsuariosService } from '../../../shared/services/usuarios.service';
 
 @Component({
   selector: 'app-usuarios',
@@ -9,23 +10,27 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./usuarios.component.css']
 })
 export class UsuariosComponent {
-  usuarios = [
-    { id: 1, name: 'Ana Admin', email: 'ana@ejemplo.com', role: 'admin' },
-    { id: 2, name: 'Carlos Cliente', email: 'carlos@ejemplo.com', role: 'cliente' },
-  ];
+   usuarios: Usuario[] = [];
 
-  crearUsuario() {
-    // Aquí podrías abrir un modal o redirigir a un formulario
-    console.log('Crear usuario');
+  constructor(private usuariosService: UsuariosService) {}
+
+  ngOnInit(): void {
+    this.cargarUsuarios();
   }
 
-  editarUsuario(usuario: any) {
-    // Lógica para editar
-    console.log('Editar', usuario);
+  cargarUsuarios(): void {
+    this.usuariosService.getUsuarios().subscribe({
+      next: (data) => this.usuarios = data,
+      error: (err) => console.error('Error cargando usuarios:', err),
+    });
   }
 
-  eliminarUsuario(id: number) {
-    // Lógica para eliminar
-    console.log('Eliminar usuario con ID:', id);
+  eliminarUsuario(id: number): void {
+    this.usuariosService.eliminarUsuario(id).subscribe({
+      next: () => this.cargarUsuarios(),
+      error: (err) => console.error('Error al eliminar usuario:', err),
+    });
   }
 }
+
+
