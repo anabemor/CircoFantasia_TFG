@@ -1,54 +1,73 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthService {
-  private apiUrl = 'http://localhost:8000/api/login'; // Endpoint de login
-  private registerUrl = 'http://localhost:8000/api/register'; // Endpoint de registro
-  private tokenKey = 'authToken'; // Clave del token en localStorage
+  private baseUrl = 'http://localhost:8000/api';
+  private tokenKey = 'authToken';
 
-  constructor(private http: HttpClient) {}
-
-  /**
-   * Inicia sesión con email y password. Devuelve un observable con el token.
-   */
-  login(credentials: { email: string; password: string }): Observable<{ token: string }> {
-    return this.http.post<{ token: string }>(this.apiUrl, credentials);
-  }
+  constructor(private http: HttpClient, private router: Router) {}
 
   /**
-   * Registra un nuevo usuario. Devuelve un observable con la respuesta.
+   * Registra un nuevo usuario
    */
   register(user: { name: string; email: string; password: string }): Observable<any> {
-    return this.http.post<any>(this.registerUrl, user);
+    return this.http.post(`${this.baseUrl}/register`, user);
   }
 
   /**
-   * Guarda el token en localStorage.
+   * Inicia sesión y devuelve un token JWT
+   */
+  login(credentials: { email: string; password: string }): Observable<{ token: string }> {
+    return this.http.post<{ token: string }>(`${this.baseUrl}/login`, credentials);
+  }
+
+  /**
+   * Guarda el token en localStorage
    */
   saveToken(token: string): void {
     localStorage.setItem(this.tokenKey, token);
   }
 
   /**
-   * Obtiene el token almacenado.
+   * Obtiene el token almacenado
    */
   getToken(): string | null {
     return localStorage.getItem(this.tokenKey);
   }
 
   /**
-   * Elimina el token del almacenamiento.
+   * Devuelve la información del usuario autenticado
    */
-  clearToken(): void {
-    localStorage.removeItem(this.tokenKey);
+  getUser(): Observable<any> {
+    const token = this.getToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get(`${this.baseUrl}/user-info`, { headers });
   }
 
   /**
-   * Verifica si el usuario está autenticado.
+   * Verifica si hay un token almacenado (autenticado)
    */
   isAuthenticated(): boolean {
     return !!this.getToken();
+  }
+
+  /**
+   * Cierra sesión y redirige a /login
+   */
+  logout(): void {
+    this.clearToken();
+    this.router.navigate(['/login']);
+  }
+
+  /**
+   * Elimina el token del almacenamiento
+   */
+  clearToken(): void {
+    localStorage.removeItem(this.tokenKey);
   }
 }
