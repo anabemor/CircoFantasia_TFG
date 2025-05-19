@@ -1,18 +1,17 @@
-<div class="min-h-screen grid grid-cols-1 md:grid-cols-2 bg-gray-900 text-white">
-  <!-- Hero / Bienvenida -->
-  <div class="flex flex-col justify-center items-start p-12 bg-gradient-to-br from-indigo-800 to-indigo-600">
-    <img src="/img/Logo_Blanco.png" class="h-12 mb-6" alt="Logo TickFantasia">
-    <h1 class="text-4xl font-bold mb-4">¡Bienvenido a TickFantasia!</h1>
-    <p class="text-lg text-white/80 mb-6">
-      Gestiona tus reservas, actividades y mucho más desde un solo lugar.
+<div class="min-h-screen w-full bg-gradient-to-br from-indigo-700 to-purple-700 text-white flex flex-col items-center justify-center px-4 py-10 space-y-10">
+
+  <!-- Sección de bienvenida -->
+  <div class="text-center max-w-lg">
+    <img src="/img/logotickfantasia.png" alt="Logo TickFantasía" class="mx-auto h-24 sm:h-28 mb-4" />
+    <h1 class="text-3xl sm:text-4xl font-bold mb-2">¡Bienvenido a TickFantasía!</h1>
+    <p class="text-base sm:text-lg text-white/80">
+      Gestiona tus reservas, actividades y accede a todo desde un solo lugar.
     </p>
-    <a href="#login" class="text-indigo-100 underline hover:text-white transition">Iniciar sesión</a>
   </div>
 
-  <!-- Login incrustado -->
-  <div id="login" class="flex justify-center items-center bg-white/10 backdrop-blur-lg p-8">
-    <div class="w-full max-w-md">
-      <app-login></app-login>
-    </div>
+  <!-- Contenedor del formulario de login -->
+  <div class="w-full max-w-md">
+    <app-login></app-login>
   </div>
+
 </div>

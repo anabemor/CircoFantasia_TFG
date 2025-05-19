@@ -1,67 +1,47 @@
-<!-- Contenedor principal -->
-<div class="relative w-full h-screen bg-white font-poppins">
-  <!-- Logotipo -->
-  <img
-    src="public/img/logotickfantasia.png"
-    alt="Logotipo TickFantasía"
-    class="absolute w-[206px] h-[206px] left-[613px] top-[54px]"
-  />
-
-  <!-- Rectángulo azul de fondo -->
-  <div
-    class="absolute w-[956px] h-[623px] left-[238px] top-[314px] bg-[#003D76] opacity-90 shadow-lg rounded-[40px]"
-  ></div>
-
-  <!-- Título de bienvenida -->
-  <h1
-    class="absolute w-[588px] h-[114px] left-[419px] top-[378px] text-center text-[#030101] font-extrabold text-[32px] leading-[48px] flex items-center justify-center"
+<!-- Navbar superior -->
+<nav class="w-full bg-gradient-to-r from-indigo-700 to-purple-600 text-white px-6 py-4 flex justify-between items-center shadow-lg">
+  <div class="flex items-center gap-4">
+    <img src="/img/logotickfantasia.png" alt="Logotipo TickFantasía" class="h-12 w-auto" />
+    <h1 class="text-xl font-bold">Panel de Administración</h1>
+  </div>
+  <button
+    (click)="logout()"
+    class="bg-white text-indigo-600 font-semibold px-4 py-2 rounded-lg hover:bg-gray-100 transition"
   >
-    ¡Bienvenido Admin a TickFantasía!
-  </h1>
+    Cerrar sesión
+  </button>
+</nav>
 
-  <!-- Rectángulo blanco para el formulario -->
-  <div
-    class="absolute w-[574px] h-[392px] left-[433px] top-[496px] bg-white rounded-[32px] shadow-md"
-  >
-    <!-- Título del formulario -->
-    <h2
-      class="absolute left-[26px] top-[25px] text-black font-extrabold text-[20px] leading-[24px]"
-    >
-    </h2>
+<!-- Contenido principal -->
+<main class="flex flex-col items-center justify-center px-4 py-12 bg-white min-h-screen text-center">
+  <h2 class="text-3xl font-bold text-gray-800 mb-6">¡Bienvenido, Administrador!</h2>
 
-    <!-- Enlace de ayuda -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-5xl">
     <a
-      href="#"
-      class="absolute left-[130px] top-[280px] text-[#1A5084] font-semibold text-[13px] leading-[20px] text-center"
+      routerLink="/admin/usuarios"
+      class="bg-indigo-500 hover:bg-indigo-600 text-white py-8 px-6 rounded-2xl shadow-lg transition-all text-xl font-semibold"
     >
-      ¿Necesitas ayuda para iniciar sesión?
+      Gestionar Usuarios
     </a>
 
-    <!-- Botón de inicio de sesión -->
-    <button
-      class="absolute left-[124px] top-[320px] w-[326px] h-[41px] bg-[#1A5084] rounded-full text-white font-extrabold text-[16px] leading-[19px]"
+    <a
+      routerLink="/admin/actividades"
+      class="bg-purple-500 hover:bg-purple-600 text-white py-8 px-6 rounded-2xl shadow-lg transition-all text-xl font-semibold"
     >
-      Inicia Sesión
-    </button>
+      Gestionar Actividades
+    </a>
+
+    <a
+      routerLink="/admin/reservas"
+      class="bg-green-500 hover:bg-green-600 text-white py-8 px-6 rounded-2xl shadow-lg transition-all text-xl font-semibold"
+    >
+      Gestionar Reservas
+    </a>
   </div>
 
-  <div>
-  <!-- Términos y políticas -->
-  <p
-    class="absolute left-[611px] top-[902px] w-[219px] h-[28px] text-center text-[#A2A2A2] font-semibold text-[13px] leading-[16px]"
-  >
-    Terms of use. Privacy policy
-  </p>
-
-  <!-- Pie de página -->
-  <footer class="absolute bottom-0 w-full h-[117px] bg-[#D9D9D9] flex items-center justify-center">
-   
+  <!-- Footer -->
+  <footer class="mt-12 text-sm text-gray-500">
+    <p>© 2025 TickFantasía. Todos los derechos reservados.</p>
+    <p class="mt-1">Términos de uso · Política de privacidad</p>
   </footer>
-</div>
-
-<h2>Panel de Administración</h2>
-<ul>
-  <li><a routerLink="/admin/usuarios">Gestionar usuarios</a></li>
-  <li><a routerLink="/admin/actividades">Gestionar actividades</a></li>
-</ul>
-
+</main>
