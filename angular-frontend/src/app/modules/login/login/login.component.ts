@@ -37,13 +37,16 @@ export class LoginComponent {
     const { email, password } = this.loginForm.value;
 
     this.authService.login({ email, password }).subscribe({
-      next: () => {
-        this.errorMessage = null;
-        this.successMessage = 'Inicio de sesión exitoso. Redirigiendo...';
-        setTimeout(() => {
-          this.router.navigate(['/admin']); // Ajusta la ruta si es necesario
-        }, 1500);
-      },
+     next: (response) => {
+      this.authService.saveToken(response.token); // ✅ guardar token
+
+      this.errorMessage = null;
+      this.successMessage = 'Inicio de sesión exitoso. Redirigiendo...';
+
+      setTimeout(() => {
+        this.router.navigate(['/admin']); // o la ruta correspondiente
+      }, 1500);
+    },
       error: (err: HttpErrorResponse) => {
         console.error('Login fallido', err);
         this.successMessage = null;

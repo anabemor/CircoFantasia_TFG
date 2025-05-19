@@ -33,6 +33,7 @@ export class UsuariosComponent {
     this.usuarioSeleccionado = {
       name: '',
       email: '',
+      password: '',
       roles: ['ROLE_USER'], // valor por defecto
     };
     this.mostrarModal = true; 

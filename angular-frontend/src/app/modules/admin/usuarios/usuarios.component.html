@@ -73,6 +73,24 @@
         </div>
       </label>
 
+      <!-- Contraseña (solo si se está creando un nuevo usuario) -->
+      <label class="block mb-2" *ngIf="!usuarioSeleccionado?.id">
+        Contraseña:
+        <input
+          [(ngModel)]="usuarioSeleccionado.password"
+          name="password"
+          class="border p-2 w-full"
+          required
+          type="password"
+          minlength="6"
+          #password="ngModel"
+        />
+        <div *ngIf="password.invalid && password.touched" class="text-red-600 text-sm mt-1">
+          <div *ngIf="password.errors?.['required']">La contraseña es obligatoria.</div>
+          <div *ngIf="password.errors?.['minlength']">Debe tener al menos 6 caracteres.</div>
+        </div>
+      </label>
+
       <!-- Rol -->
       <label class="block mb-2">
         Rol:
