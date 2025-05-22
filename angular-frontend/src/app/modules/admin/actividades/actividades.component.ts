@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ActividadService, Actividad } from '../../../shared/services/actividad.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-actividades',
@@ -26,7 +27,7 @@ export class ActividadesComponent implements OnInit {
     activa: true
   };
 
-  constructor(private actividadService: ActividadService) {}
+  constructor(private actividadService: ActividadService, private snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
     this.cargarActividades();
@@ -61,12 +62,22 @@ export class ActividadesComponent implements OnInit {
     if (this.modoEdicion && this.actividadEnEdicion?.id) {
       this.actividadService.actualizarActividad(this.actividadEnEdicion.id, this.formActividad)
         .subscribe(() => {
+          this.snackBar.open('Actividad actualizada con éxito', 'Cerrar', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+          });
           this.mostrarFormulario = false;
           this.cargarActividades();
         });
     } else {
       this.actividadService.crearActividad(this.formActividad)
         .subscribe(() => {
+          this.snackBar.open('Actividad creada con éxito', 'Cerrar', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+          });
           this.mostrarFormulario = false;
           this.cargarActividades();
         });
@@ -76,6 +87,11 @@ export class ActividadesComponent implements OnInit {
   eliminarActividad(id: number) {
     if (confirm('¿Seguro que deseas eliminar esta actividad?')) {
       this.actividadService.eliminarActividad(id).subscribe(() => {
+        this.snackBar.open('Actividad eliminada', 'Cerrar', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+        });
         this.cargarActividades();
       });
     }
