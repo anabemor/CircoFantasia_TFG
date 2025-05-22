@@ -18,6 +18,7 @@ export class ActividadesComponent implements OnInit {
   mostrarFormulario = false;
   modoEdicion = false;
 
+  fechasInvalidas: boolean = false;
   // Modelo del formulario
   formActividad: Actividad = {
     nombre: '',
@@ -59,6 +60,10 @@ export class ActividadesComponent implements OnInit {
   }
 
   guardarActividad() {
+    this.fechasInvalidas = new Date(this.formActividad.fechaFin) < new Date(this.formActividad.fechaInicio);
+
+    if (this.fechasInvalidas) return;
+    
     if (this.modoEdicion && this.actividadEnEdicion?.id) {
       this.actividadService.actualizarActividad(this.actividadEnEdicion.id, this.formActividad)
         .subscribe(() => {

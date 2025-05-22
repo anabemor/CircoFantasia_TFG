@@ -9,27 +9,64 @@
   <div *ngIf="mostrarFormulario" class="mb-6 bg-gray-100 p-4 rounded shadow">
     <h3 class="text-lg font-semibold mb-2">{{ modoEdicion ? 'Editar' : 'Nueva' }} Actividad</h3>
 
-    <form (ngSubmit)="guardarActividad()" #actividadForm="ngForm">
+    <form (ngSubmit)="guardarActividad()" #actividadForm="ngForm" novalidate>
+      <!-- Nombre -->
       <div class="mb-2">
         <label class="block mb-1">Nombre</label>
-        <input type="text" class="w-full border px-3 py-2 rounded" [(ngModel)]="formActividad.nombre" name="nombre" required />
+        <input
+          type="text"
+          class="w-full border px-3 py-2 rounded"
+          [(ngModel)]="formActividad.nombre"
+          name="nombre"
+          required
+          #nombre="ngModel"
+        />
+        <div *ngIf="nombre.invalid && nombre.touched" class="text-red-600 text-sm">Este campo es obligatorio.</div>
       </div>
 
+      <!-- Descripción -->
       <div class="mb-2">
         <label class="block mb-1">Descripción</label>
-        <textarea class="w-full border px-3 py-2 rounded" [(ngModel)]="formActividad.descripcion" name="descripcion" required></textarea>
+        <textarea
+          class="w-full border px-3 py-2 rounded"
+          [(ngModel)]="formActividad.descripcion"
+          name="descripcion"
+          required
+          #descripcion="ngModel"
+        ></textarea>
+        <div *ngIf="descripcion.invalid && descripcion.touched" class="text-red-600 text-sm">Este campo es obligatorio.</div>
       </div>
 
+      <!-- Fecha de inicio -->
       <div class="mb-2">
         <label class="block mb-1">Fecha de inicio</label>
-        <input type="date" class="w-full border px-3 py-2 rounded" [(ngModel)]="formActividad.fechaInicio" name="fechaInicio" required />
+        <input
+          type="date"
+          class="w-full border px-3 py-2 rounded"
+          [(ngModel)]="formActividad.fechaInicio"
+          name="fechaInicio"
+          required
+          #fechaInicio="ngModel"
+        />
+        <div *ngIf="fechaInicio.invalid && fechaInicio.touched" class="text-red-600 text-sm">Este campo es obligatorio.</div>
       </div>
 
+      <!-- Fecha de fin -->
       <div class="mb-2">
         <label class="block mb-1">Fecha de fin</label>
-        <input type="date" class="w-full border px-3 py-2 rounded" [(ngModel)]="formActividad.fechaFin" name="fechaFin" required />
+        <input
+          type="date"
+          class="w-full border px-3 py-2 rounded"
+          [(ngModel)]="formActividad.fechaFin"
+          name="fechaFin"
+          required
+          #fechaFin="ngModel"
+        />
+        <div *ngIf="fechaFin.invalid && fechaFin.touched" class="text-red-600 text-sm">Este campo es obligatorio.</div>
+        <div *ngIf="fechasInvalidas" class="text-red-600 text-sm">La fecha de fin debe ser posterior a la de inicio.</div>
       </div>
 
+      <!-- Activa -->
       <div class="mb-4">
         <label class="inline-flex items-center">
           <input type="checkbox" class="mr-2" [(ngModel)]="formActividad.activa" name="activa" />
@@ -37,8 +74,13 @@
         </label>
       </div>
 
+      <!-- Botones -->
       <div class="flex gap-2">
-        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+        <button
+          type="submit"
+          class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+          [disabled]="actividadForm.invalid || fechasInvalidas"
+        >
           Guardar
         </button>
         <button type="button" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400" (click)="cancelar()">
