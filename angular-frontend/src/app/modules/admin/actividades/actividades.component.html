@@ -1,19 +1,62 @@
 <div class="p-6 max-w-6xl mx-auto">
   <h2 class="text-2xl font-bold mb-4 text-gray-800">Gestión de Actividades</h2>
 
-  <button
-    class="mb-4 bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600"
-    (click)="crearActividad()"
-  >
+  <button class="mb-4 bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600" (click)="crearNueva()">
     Crear nueva actividad
   </button>
 
+  <!-- Formulario -->
+  <div *ngIf="mostrarFormulario" class="mb-6 bg-gray-100 p-4 rounded shadow">
+    <h3 class="text-lg font-semibold mb-2">{{ modoEdicion ? 'Editar' : 'Nueva' }} Actividad</h3>
+
+    <form (ngSubmit)="guardarActividad()" #actividadForm="ngForm">
+      <div class="mb-2">
+        <label class="block mb-1">Nombre</label>
+        <input type="text" class="w-full border px-3 py-2 rounded" [(ngModel)]="formActividad.nombre" name="nombre" required />
+      </div>
+
+      <div class="mb-2">
+        <label class="block mb-1">Descripción</label>
+        <textarea class="w-full border px-3 py-2 rounded" [(ngModel)]="formActividad.descripcion" name="descripcion" required></textarea>
+      </div>
+
+      <div class="mb-2">
+        <label class="block mb-1">Fecha de inicio</label>
+        <input type="date" class="w-full border px-3 py-2 rounded" [(ngModel)]="formActividad.fechaInicio" name="fechaInicio" required />
+      </div>
+
+      <div class="mb-2">
+        <label class="block mb-1">Fecha de fin</label>
+        <input type="date" class="w-full border px-3 py-2 rounded" [(ngModel)]="formActividad.fechaFin" name="fechaFin" required />
+      </div>
+
+      <div class="mb-4">
+        <label class="inline-flex items-center">
+          <input type="checkbox" class="mr-2" [(ngModel)]="formActividad.activa" name="activa" />
+          Activa
+        </label>
+      </div>
+
+      <div class="flex gap-2">
+        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+          Guardar
+        </button>
+        <button type="button" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400" (click)="cancelar()">
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Tabla -->
   <table class="min-w-full bg-white border border-gray-200 rounded-lg overflow-hidden shadow">
     <thead class="bg-indigo-600 text-white">
       <tr>
         <th class="px-4 py-2 text-left">Nombre</th>
         <th class="px-4 py-2 text-left">Descripción</th>
         <th class="px-4 py-2 text-left">Fecha</th>
+        <th class="px-4 py-2 text-left">Activa</th>
+        <th class="px-4 py-2 text-left">Vigente</th>
         <th class="px-4 py-2 text-left">Acciones</th>
       </tr>
     </thead>
@@ -21,10 +64,12 @@
       <tr *ngFor="let actividad of actividades" class="border-t border-gray-200">
         <td class="px-4 py-2">{{ actividad.nombre }}</td>
         <td class="px-4 py-2">{{ actividad.descripcion }}</td>
-        <td class="px-4 py-2">{{ actividad.fecha }}</td>
+        <td class="px-4 py-2">{{ actividad.fechaInicio }} → {{ actividad.fechaFin }}</td>
+        <td class="px-4 py-2">{{ actividad.activa ? 'Sí' : 'No' }}</td>
+        <td class="px-4 py-2">{{ actividad.vigente ? 'Sí' : 'No' }}</td>
         <td class="px-4 py-2 space-x-2">
           <button class="text-blue-600 hover:underline" (click)="editarActividad(actividad)">Editar</button>
-          <button class="text-red-600 hover:underline" (click)="eliminarActividad(actividad.id)">Eliminar</button>
+          <button class="text-red-600 hover:underline" (click)="eliminarActividad(actividad.id!)">Eliminar</button>
         </td>
       </tr>
     </tbody>

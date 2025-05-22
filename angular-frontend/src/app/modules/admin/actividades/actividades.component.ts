@@ -1,28 +1,94 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { ActividadService, Actividad } from '../../../shared/services/actividad.service';
 
 @Component({
   selector: 'app-actividades',
   standalone: true,
-  imports: [CommonModule],
   templateUrl: './actividades.component.html',
-  styleUrls: ['./actividades.component.css']
+  styleUrls: ['./actividades.component.css'],
+  imports: [CommonModule, FormsModule, RouterModule]
 })
-export class ActividadesComponent {
-  actividades = [
-    { id: 1, nombre: 'Taller de acrobacias', descripcion: 'Acrobacias básicas para niños.', fecha: '2025-06-15' },
-    { id: 2, nombre: 'Clases de malabares', descripcion: 'Aprende a usar tres pelotas.', fecha: '2025-06-20' },
-  ];
+export class ActividadesComponent implements OnInit {
+  actividades: Actividad[] = [];
+  actividadEnEdicion: Actividad | null = null;
+  mostrarFormulario = false;
+  modoEdicion = false;
 
-  crearActividad() {
-    console.log('Crear nueva actividad');
+  // Modelo del formulario
+  formActividad: Actividad = {
+    nombre: '',
+    descripcion: '',
+    fechaInicio: '',
+    fechaFin: '',
+    activa: true
+  };
+
+  constructor(private actividadService: ActividadService) {}
+
+  ngOnInit(): void {
+    this.cargarActividades();
   }
 
-  editarActividad(actividad: any) {
-    console.log('Editar actividad:', actividad);
+  cargarActividades() {
+    this.actividadService.getActividades().subscribe(data => {
+      this.actividades = data;
+    });
+  }
+
+  crearNueva() {
+    this.mostrarFormulario = true;
+    this.modoEdicion = false;
+    this.formActividad = {
+      nombre: '',
+      descripcion: '',
+      fechaInicio: '',
+      fechaFin: '',
+      activa: true
+    };
+  }
+
+  editarActividad(actividad: Actividad) {
+    this.mostrarFormulario = true;
+    this.modoEdicion = true;
+    this.formActividad = { ...actividad };
+    this.actividadEnEdicion = actividad;
+  }
+
+  guardarActividad() {
+    if (this.modoEdicion && this.actividadEnEdicion?.id) {
+      this.actividadService.actualizarActividad(this.actividadEnEdicion.id, this.formActividad)
+        .subscribe(() => {
+          this.mostrarFormulario = false;
+          this.cargarActividades();
+        });
+    } else {
+      this.actividadService.crearActividad(this.formActividad)
+        .subscribe(() => {
+          this.mostrarFormulario = false;
+          this.cargarActividades();
+        });
+    }
   }
 
   eliminarActividad(id: number) {
-    console.log('Eliminar actividad con ID:', id);
+    if (confirm('¿Seguro que deseas eliminar esta actividad?')) {
+      this.actividadService.eliminarActividad(id).subscribe(() => {
+        this.cargarActividades();
+      });
+    }
+  }
+
+  cancelar() {
+    this.mostrarFormulario = false;
+    this.formActividad = {
+      nombre: '',
+      descripcion: '',
+      fechaInicio: '',
+      fechaFin: '',
+      activa: true
+    };
   }
 }
