@@ -1,0 +1,23 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { ResumenPagoComponent } from './resumen-pago.component';
+
+describe('ResumenPagoComponent', () => {
+  let component: ResumenPagoComponent;
+  let fixture: ComponentFixture<ResumenPagoComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [ResumenPagoComponent]
+    })
+    .compileComponents();
+
+    fixture = TestBed.createComponent(ResumenPagoComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

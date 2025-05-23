@@ -1,0 +1,18 @@
+<div class="min-h-screen bg-gray-50 flex flex-col">
+  <!-- Header -->
+  <header class="bg-indigo-600 text-white py-4 shadow">
+    <div class="container mx-auto px-4 text-center">
+      <h1 class="text-2xl font-semibold">Compra de Entradas</h1>
+    </div>
+  </header>
+
+  <!-- Contenido dinámico -->
+  <main class="flex-grow container mx-auto px-4 py-8">
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- Footer simple -->
+  <footer class="bg-gray-100 text-center py-3 text-sm text-gray-600">
+    © {{ currentYear }} Circo Escuela Fantasía
+  </footer>
+</div>
