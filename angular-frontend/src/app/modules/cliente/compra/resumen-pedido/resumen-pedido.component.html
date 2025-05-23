@@ -1,0 +1,21 @@
+<div class="bg-white p-4 rounded shadow">
+  <h2 class="text-lg font-bold mb-4">Resumen del Pedido</h2>
+
+  <ul *ngIf="compraService.getTickets().length > 0; else vacio" class="space-y-2">
+    <li *ngFor="let t of compraService.getTickets()" class="flex justify-between">
+      <span>{{ t.nombre }} x{{ t.cantidad }}</span>
+      <span>{{ (t.precio * t.cantidad) | currency:'EUR' }}</span>
+    </li>
+  </ul>
+
+  <ng-template #vacio>
+    <p class="text-sm text-gray-500">No has seleccionado entradas aún.</p>
+  </ng-template>
+
+  <hr class="my-3">
+
+  <div class="flex justify-between font-semibold">
+    <span>Total</span>
+    <span>{{ total | currency:'EUR' }}</span>
+  </div>
+</div>

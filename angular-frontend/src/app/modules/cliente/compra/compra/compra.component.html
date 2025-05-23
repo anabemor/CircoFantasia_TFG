@@ -6,11 +6,19 @@
     </div>
   </header>
 
-  <!-- Contenido dinámico -->
-  <main class="flex-grow container mx-auto px-4 py-8">
-    <router-outlet></router-outlet>
-  </main>
 
+
+  <!-- Layout de contenido + resumen -->>
+   <main class="flex-grow container mx-auto px-4 py-8 flex flex-col md:flex-row gap-6">
+    <div class="flex-1">
+      <router-outlet></router-outlet>
+    </div>
+
+     <div class="w-full md:w-80">
+      <app-resumen-pedido></app-resumen-pedido> <!-- 👈 componente resumen -->
+    </div>
+  </main>
+  
   <!-- Footer simple -->
   <footer class="bg-gray-100 text-center py-3 text-sm text-gray-600">
     © {{ currentYear }} Circo Escuela Fantasía
