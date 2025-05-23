@@ -20,4 +20,14 @@ export class CompraService {
   getTickets(): TicketSeleccionado[] {
     return this.ticketsSubject.getValue();
   }
+
+  private fechaSeleccionada: Date | null = null;
+
+setFecha(fecha: Date): void {
+  this.fechaSeleccionada = fecha;
+}
+
+getFecha(): Date | null {
+  return this.fechaSeleccionada;
+}
 }
