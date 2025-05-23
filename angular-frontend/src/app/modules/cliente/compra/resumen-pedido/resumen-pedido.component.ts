@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CompraService } from '../../../../shared/services/compra.service';
+import { CompraService, TicketSeleccionado } from '../../../../shared/services/compra.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-resumen-pedido',
@@ -9,10 +10,13 @@ import { CompraService } from '../../../../shared/services/compra.service';
   templateUrl: './resumen-pedido.component.html'
 })
 export class ResumenPedidoComponent {
-  constructor(public compraService: CompraService) {}
+  tickets$: Observable<TicketSeleccionado[]>;
 
-  get total(): number {
-    return this.compraService.getTickets()
-      .reduce((suma, ticket) => suma + ticket.precio * ticket.cantidad, 0);
+   constructor(private compraService: CompraService) {
+    this.tickets$ = this.compraService.tickets$;
+  }
+
+  calcularTotal(tickets: TicketSeleccionado[]): number {
+    return tickets.reduce((suma, t) => suma + t.precio * t.cantidad, 0);
   }
 }

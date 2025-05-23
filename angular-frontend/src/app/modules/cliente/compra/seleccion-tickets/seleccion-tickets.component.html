@@ -16,7 +16,7 @@
         <span class="text-lg font-semibold">{{ cantidades[tipo.id] }}</span>
         <button
           class="px-3 py-1 bg-green-500 text-white rounded"
-          (click)="cantidades[tipo.id] = cantidades[tipo.id] + 1">
+          (click)="sumarCantidad(tipo.id)">
           +
         </button>
       </div>

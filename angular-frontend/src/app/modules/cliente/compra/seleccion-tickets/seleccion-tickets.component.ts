@@ -31,11 +31,17 @@ export class SeleccionTicketsComponent implements OnInit {
     });
   }
 
-  restarCantidad(id: number): void {
+   restarCantidad(id: number): void {
     this.cantidades[id] = Math.max(0, this.cantidades[id] - 1);
+    this.actualizarCompra(); // 👈
   }
-  
-  continuar(): void {
+
+  sumarCantidad(id: number): void {
+    this.cantidades[id] += 1;
+    this.actualizarCompra(); // 👈
+  }
+
+  actualizarCompra(): void {
     const seleccionados: TicketSeleccionado[] = this.tiposTicket
       .filter(t => this.cantidades[t.id] > 0)
       .map(t => ({
@@ -45,12 +51,17 @@ export class SeleccionTicketsComponent implements OnInit {
         precio: t.precio
       }));
 
-    if (seleccionados.length === 0) {
+    this.compraService.setTickets(seleccionados);
+  }
+
+  continuar(): void {
+    // Ya no hace falta volver a llamar a setTickets aquí,
+    // si ya se actualiza en tiempo real en los botones.
+    if (this.compraService.getTickets().length === 0) {
       alert('Debes seleccionar al menos una entrada.');
       return;
     }
 
-    this.compraService.setTickets(seleccionados);
     this.router.navigate(['/compra/fecha']);
   }
 }
