@@ -49,7 +49,7 @@ export class DatosVisitanteComponent {
     }
 
     this.reservaService.enviarReserva(reserva).subscribe({
-      next: () => this.router.navigate(['/compra/confirmacion']),
+      next: () => this.router.navigate(['/compra/pago']),
     error: (err) => {
     console.error('Error al guardar la reserva:', err);
     alert('Hubo un problema al guardar la reserva');

@@ -1,1 +1,21 @@
-<p>resumen-pago works!</p>
+<div class="max-w-2xl mx-auto p-6 bg-white rounded shadow mt-8">
+  <h2 class="text-2xl font-bold mb-4 text-center">Resumen de tu compra</h2>
+
+  <ul class="mb-4">
+    <li *ngFor="let t of compraService.getTickets()" class="flex justify-between border-b py-2">
+      <span>{{ t.nombre }} x{{ t.cantidad }}</span>
+      <span>{{ t.precio * t.cantidad | currency:'EUR' }}</span>
+    </li>
+  </ul>
+
+  <div class="text-right font-semibold text-lg mb-6">
+    Total: {{ total() | currency:'EUR' }}
+  </div>
+
+  <button
+    class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition"
+    (click)="pagar()"
+  >
+    Realizar pago
+  </button>
+</div>
