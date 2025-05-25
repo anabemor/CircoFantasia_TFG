@@ -42,7 +42,9 @@ class ReservaController extends AbstractController
         $reserva->setAceptoCondiciones($data['aceptoCondiciones'] ?? false);
 
         foreach ($data['tickets'] as $ticket) {
-            $tipo = $em->getRepository(TicketType::class)->find($ticket['id']);
+            if (!isset($ticket['ticketType']['id'], $ticket['cantidad'])) continue;
+            
+            $tipo = $em->getRepository(TicketType::class)->find($ticket['ticketType']['id']);
             if (!$tipo) continue;
 
             $reservaTicket = new ReservaTicket();

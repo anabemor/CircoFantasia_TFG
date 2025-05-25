@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { Reserva } from '../interfaces/reserva.interface';
+import { ReservaEnvio } from '../interfaces/reserva-envio.interface';
 
 export interface TicketSeleccionado {
   id: number;
@@ -30,4 +32,49 @@ setFecha(fecha: Date): void {
 getFecha(): Date | null {
   return this.fechaSeleccionada;
 }
+
+//para que genere el objeto Reserva (con los todos los datos del cliente)
+private datosCliente: {
+  nombre: string;
+  apellidos: string;
+  fechaNacimiento: string;
+  email: string;
+  telefono: string;
+  aceptoCondiciones: boolean;
+} | null = null;
+
+setDatosCliente(datos: {
+  nombre: string;
+  apellidos: string;
+  fechaNacimiento: string;
+  email: string;
+  telefono: string;
+  aceptoCondiciones: boolean;
+}): void {
+  this.datosCliente = datos;
 }
+
+getDatosCliente() {
+  return this.datosCliente;
+}
+
+crearReserva(): ReservaEnvio | null {
+  if (!this.fechaSeleccionada || !this.datosCliente) return null;
+
+  return {
+    nombre: this.datosCliente.nombre,
+    apellidos: this.datosCliente.apellidos,
+    fechaNacimiento: this.datosCliente.fechaNacimiento,
+    email: this.datosCliente.email,
+    telefono: this.datosCliente.telefono,
+    fechaVisita: this.fechaSeleccionada.toISOString().split('T')[0],
+    fechaReserva: new Date().toISOString().split('T')[0],
+    aceptoCondiciones: this.datosCliente.aceptoCondiciones,
+    tickets: this.getTickets().map(ticket => ({
+      ticketType: { id: ticket.id }, // ✅ solo enviamos el id
+      cantidad: ticket.cantidad
+    }))
+  };
+}
+}
+

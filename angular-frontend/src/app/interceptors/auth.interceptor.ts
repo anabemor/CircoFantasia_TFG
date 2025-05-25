@@ -10,6 +10,13 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    const publicUrls = ['/api/ticket_types','/api/reservas']; // 👈 añade aquí más si quieres
+
+    // Si la URL es pública, no añadimos el token
+    if (publicUrls.some(url => req.url.includes(url))) {
+      return next.handle(req); 
+    }
+
     const token = localStorage.getItem('authToken');
 
     if (token) {

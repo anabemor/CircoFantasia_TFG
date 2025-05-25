@@ -23,7 +23,8 @@ export class SeleccionTicketsComponent implements OnInit {
 
   ngOnInit(): void {
     this.ticketTypeService.getTiposTicket().subscribe((tipos) => {
-      this.tiposTicket = tipos.filter(t => t.activo); // por si más adelante filtras por estado
+      this.tiposTicket = tipos;
+     // this.tiposTicket = tipos.filter(t => t.activo); // anulo temporal: por si más adelante filtras por estado
       // Inicializar las cantidades en 0
       for (let tipo of this.tiposTicket) {
         this.cantidades[tipo.id] = 0;
