@@ -24,19 +24,30 @@ export class ResumenPagoComponent {
     );
   }
 
-  pagar(): void {
-    const reserva = this.compraService.crearReserva();
-    if (!reserva) {
-      alert('No se puede generar la reserva. Faltan datos.');
-      return;
-    }
+  isLoading = false;
 
+pagar(): void {
+  const reserva = this.compraService.crearReserva();
+  if (!reserva) {
+    alert('No se puede generar la reserva. Faltan datos.');
+    return;
+  }
+
+  this.isLoading = true;
+
+  // Simulación de carga (2 segundos)
+  setTimeout(() => {
     this.reservaService.enviarReserva(reserva).subscribe({
-      next: () => this.router.navigate(['/compra/confirmacion']),
+      next: () => {
+        this.isLoading = false;
+        this.router.navigate(['/compra/confirmacion']);
+      },
       error: err => {
+        this.isLoading = false;
         console.error('Error al guardar la reserva:', err);
         alert('Hubo un error al realizar el pago o guardar la reserva.');
       }
     });
-  }
+  }, 2000);
+}
 }

@@ -13,9 +13,14 @@
   </div>
 
   <button
-    class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition"
+    class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition disabled:opacity-50"
+    [disabled]="isLoading"
     (click)="pagar()"
-  >
-    Realizar pago
+ >
+    {{ isLoading ? 'Procesando pago…' : 'Realizar pago' }}
   </button>
+  
+   <div *ngIf="isLoading" class="mt-4 flex justify-center">
+    <span class="animate-spin h-8 w-8 border-4 border-green-600 border-t-transparent rounded-full"></span>
+  </div>
 </div>
