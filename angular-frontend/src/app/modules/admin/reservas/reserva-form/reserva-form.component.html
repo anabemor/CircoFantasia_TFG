@@ -1,0 +1,55 @@
+<form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4">
+
+  <mat-form-field appearance="fill" class="w-full">
+    <mat-label>Nombre</mat-label>
+    <input matInput formControlName="nombre" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="w-full">
+    <mat-label>Apellidos</mat-label>
+    <input matInput formControlName="apellidos" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="w-full">
+    <mat-label>Fecha de nacimiento</mat-label>
+    <input matInput [matDatepicker]="nacimiento" formControlName="fechaNacimiento" />
+    <mat-datepicker-toggle matSuffix [for]="nacimiento"></mat-datepicker-toggle>
+    <mat-datepicker #nacimiento></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="w-full">
+    <mat-label>Email</mat-label>
+    <input matInput formControlName="email" type="email" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="w-full">
+    <mat-label>Teléfono</mat-label>
+    <input matInput formControlName="telefono" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="w-full">
+    <mat-label>Fecha de visita</mat-label>
+    <input matInput [matDatepicker]="visita" formControlName="fechaVisita" />
+    <mat-datepicker-toggle matSuffix [for]="visita"></mat-datepicker-toggle>
+    <mat-datepicker #visita></mat-datepicker>
+  </mat-form-field>
+
+  <mat-checkbox formControlName="aceptoCondiciones">
+    Acepto las condiciones
+  </mat-checkbox>
+
+  <div class="mt-4">
+    <h3 class="font-semibold mb-2">Entradas</h3>
+    <div *ngFor="let ticket of tickets.controls; let i = index" [formGroupName]="i" class="flex items-center gap-4 mb-2">
+      <span class="w-1/2">{{ ticketTypes[i]?.nombre }}</span>
+      <mat-form-field appearance="fill" class="w-1/2">
+        <mat-label>Cantidad</mat-label>
+        <input matInput type="number" formControlName="cantidad" />
+      </mat-form-field>
+    </div>
+  </div>
+
+  <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+    Guardar reserva
+  </button>
+</form>

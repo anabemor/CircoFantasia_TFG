@@ -1,46 +1,67 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Reserva } from '../../../shared/interfaces/reserva.interface';
+import { ReservaAdminService } from '../../../shared/services/reserva-admin.service';
+import { ReservaFormComponent } from './reserva-form/reserva-form.component';
+
 
 @Component({
   selector: 'app-reservas',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ReservaFormComponent],
   templateUrl: './reservas.component.html',
   styleUrls: ['./reservas.component.css']
 })
-export class ReservasComponent {
-  reservas = [
-    {
-      id: 1,
-      nombre: 'Laura Gómez',
-      telefono: '612345678',
-      email: 'laura@example.com',
-      fecha: '2025-06-21',
-      hora: '17:00',
-      personas: 3,
-      estado: 'pagado'
-    },
-    {
-      id: 2,
-      nombre: 'Juan Pérez',
-      telefono: '698765432',
-      email: 'juan@example.com',
-      fecha: '2025-06-22',
-      hora: '18:30',
-      personas: 2,
-      estado: 'pendiente'
-    }
-  ];
+export class ReservasComponent implements OnInit {
+  reservas: Reserva[] = [];
+  mostrarFormulario = false;
+  reservaEnEdicion: Reserva | null = null;
 
-  crearReserva() {
-    console.log('Crear nueva reserva');
+  constructor(private reservaService: ReservaAdminService) {}
+
+  ngOnInit(): void {
+    this.cargarReservas();
   }
 
-  editarReserva(reserva: any) {
-    console.log('Editar reserva:', reserva);
+  cargarReservas() {
+    this.reservaService.getReservas().subscribe({
+      next: (data) => this.reservas = data,
+      error: () => alert('Error al cargar las reservas')
+    });
+  }
+
+  crearReserva() {
+    this.mostrarFormulario = true;
+    this.reservaEnEdicion = null;
+  }
+
+  editarReserva(reserva: Reserva) {
+    this.mostrarFormulario = true;
+    this.reservaEnEdicion = reserva;
   }
 
   eliminarReserva(id: number) {
-    console.log('Eliminar reserva con ID:', id);
+    if (confirm('¿Estás seguro de eliminar esta reserva?')) {
+      this.reservaService.deleteReserva(id).subscribe(() => this.cargarReservas());
+    }
+  }
+
+  guardarReserva(reserva: Reserva) {
+    if (this.reservaEnEdicion?.id) {
+      this.reservaService.updateReserva(this.reservaEnEdicion.id, reserva).subscribe(() => {
+        this.mostrarFormulario = false;
+        this.cargarReservas();
+      });
+    } else {
+      this.reservaService.createReserva(reserva).subscribe(() => {
+        this.mostrarFormulario = false;
+        this.cargarReservas();
+      });
+    }
+  }
+
+  cancelarFormulario() {
+    this.mostrarFormulario = false;
+    this.reservaEnEdicion = null;
   }
 }
