@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { ActividadService, Actividad } from '../../../shared/services/actividad.service';
+import { ActividadService } from '../../../shared/services/actividad.service';
+import { Actividad } from '../../../shared/interfaces/actividad.interface';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Reserva } from '../interfaces/reserva.interface';
 import { ReservaEnvio } from '../interfaces/reserva-envio.interface';
+import { Actividad } from '../interfaces/actividad.interface';
 
 export interface TicketSeleccionado {
   id: number;
@@ -71,10 +72,19 @@ crearReserva(): ReservaEnvio | null {
     fechaReserva: new Date().toISOString().split('T')[0],
     aceptoCondiciones: this.datosCliente.aceptoCondiciones,
     tickets: this.getTickets().map(ticket => ({
-      ticketType: { id: ticket.id }, // ✅ solo enviamos el id
+      ticketType: { id: ticket.id }, //  solo enviamos el id
       cantidad: ticket.cantidad
     }))
   };
+}
+private actividadSeleccionada: Actividad | null = null;
+
+setActividad(actividad: Actividad): void {
+  this.actividadSeleccionada = actividad;
+}
+
+getActividad(): Actividad | null {
+  return this.actividadSeleccionada;
 }
 }
 

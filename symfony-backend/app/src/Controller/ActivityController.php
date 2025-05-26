@@ -87,4 +87,30 @@ class ActivityController extends AbstractController
 
         return $this->json(['message' => 'Actividad eliminada con éxito']);
     }
+
+      #[Route('/activa', name: 'actividad_activa', methods: ['GET'])]
+    public function actividadActiva(EntityManagerInterface $em): JsonResponse
+    {
+        $ahora = new \DateTime();
+        $actividad = $em->getRepository(Activity::class)->createQueryBuilder('a')
+            ->where('a.activa = true')
+            ->andWhere('a.fechaInicio <= :ahora')
+            ->andWhere('a.fechaFin >= :ahora')
+            ->setParameter('ahora', $ahora)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if (!$actividad) {
+            return $this->json(['error' => 'No hay actividad activa'], 404);
+        }
+
+        return $this->json([
+            'id' => $actividad->getId(),
+            'nombre' => $actividad->getNombre(),
+            'descripcion' => $actividad->getDescripcion(),
+            'fechaInicio' => $actividad->getFechaInicio()->format('Y-m-d'),
+            'fechaFin' => $actividad->getFechaFin()->format('Y-m-d'),
+        ]);
+    }
 }

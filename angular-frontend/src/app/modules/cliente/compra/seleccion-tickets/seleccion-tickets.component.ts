@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { TicketTypeService} from '../../../../shared/services/ticket-type.service';
 import { CompraService, TicketSeleccionado } from '../../../../shared/services/compra.service';
 import { TicketType } from '../../../../shared/interfaces/ticket-type.interface';
+import { ActividadService } from '../../../../shared/services/actividad.service';
 
 @Component({
   selector: 'app-seleccion-tickets',
@@ -11,6 +12,7 @@ import { TicketType } from '../../../../shared/interfaces/ticket-type.interface'
   imports: [CommonModule],
   templateUrl: './seleccion-tickets.component.html'
 })
+
 export class SeleccionTicketsComponent implements OnInit {
   tiposTicket: TicketType[] = [];
   cantidades: { [id: number]: number } = {};
@@ -18,19 +20,27 @@ export class SeleccionTicketsComponent implements OnInit {
   constructor(
     private ticketTypeService: TicketTypeService,
     private compraService: CompraService,
+    private actividadService: ActividadService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.ticketTypeService.getTiposTicket().subscribe((tipos) => {
-      this.tiposTicket = tipos;
-     // this.tiposTicket = tipos.filter(t => t.activo); // anulo temporal: por si más adelante filtras por estado
-      // Inicializar las cantidades en 0
-      for (let tipo of this.tiposTicket) {
-        this.cantidades[tipo.id] = 0;
+      this.actividadService.getActividadActiva().subscribe({
+      next: (actividad) => {
+        this.compraService.setActividad(actividad);
+      },
+      error: () => {
+        alert('No hay una actividad activa en este momento.');
       }
     });
-  }
+
+     this.ticketTypeService.getTiposTicket().subscribe((tipos) => {
+    this.tiposTicket = tipos.filter(t => t.activo);
+    for (let tipo of tipos) {
+      this.cantidades[tipo.id] = 0;
+    }
+  });
+}
 
    restarCantidad(id: number): void {
     this.cantidades[id] = Math.max(0, this.cantidades[id] - 1);

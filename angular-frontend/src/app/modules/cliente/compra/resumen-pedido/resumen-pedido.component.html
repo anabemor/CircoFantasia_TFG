@@ -1,6 +1,16 @@
 <div class="bg-white p-4 rounded shadow">
   <h2 class="text-lg font-bold mb-4">Resumen del Pedido</h2>
 
+  <!-- ✅ Actividad activa -->
+  <div *ngIf="compraService.getActividad()" class="text-sm text-gray-700 mb-2">
+    Actividad: <strong>{{ compraService.getActividad()?.nombre }}</strong>
+  </div>
+
+  <!-- ✅ Fecha seleccionada -->
+  <div *ngIf="compraService.getFecha()" class="text-sm text-gray-700 mb-4">
+    Fecha: <strong>{{ compraService.getFecha() }}</strong>
+  </div>
+
   <ng-container *ngIf="tickets$ | async as tickets">
     <ul *ngIf="tickets.length > 0; else vacio" class="space-y-2">
       <li *ngFor="let t of tickets" class="flex justify-between">
@@ -20,5 +30,5 @@
   <ng-template #vacio>
     <p class="text-sm text-gray-500">No has seleccionado entradas aún.</p>
   </ng-template>
-
+</div>
   

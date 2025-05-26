@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
 export class ResumenPedidoComponent {
   tickets$: Observable<TicketSeleccionado[]>;
 
-   constructor(private compraService: CompraService) {
+   constructor(public compraService: CompraService) {
     this.tickets$ = this.compraService.tickets$;
   }
 

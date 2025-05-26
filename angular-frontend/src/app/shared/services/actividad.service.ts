@@ -1,16 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-export interface Actividad {
-  id?: number;
-  nombre: string;
-  descripcion: string;
-  fechaInicio: string;
-  fechaFin: string;
-  activa: boolean;
-  vigente?: boolean;
-}
+import { Actividad } from '../interfaces/actividad.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -35,4 +26,8 @@ export class ActividadService {
   eliminarActividad(id: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/${id}`);
   }
+
+   getActividadActiva(): Observable<Actividad> {
+    return this.http.get<Actividad>(`${this.baseUrl}/activa`);
+   }
 }
