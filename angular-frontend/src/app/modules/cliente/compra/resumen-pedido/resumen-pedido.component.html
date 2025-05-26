@@ -1,27 +1,28 @@
-<div class="bg-white p-4 rounded shadow">
-  <h2 class="text-lg font-bold mb-4">Resumen del Pedido</h2>
+<div class="bg-white p-4 rounded shadow space-y-4">
+  <h2 class="text-lg font-bold">Resumen del Pedido</h2>
 
-  <!-- ✅ Actividad activa -->
-  <div *ngIf="compraService.getActividad()" class="text-sm text-gray-700 mb-2">
-    Actividad: <strong>{{ compraService.getActividad()?.nombre }}</strong>
+  <!-- Actividad -->
+  <div *ngIf="compraService.getActividad()" class="text-sm text-gray-700">
+    <span class="font-medium">Actividad:</span>
+    <span>{{ compraService.getActividad()?.nombre }}</span>
   </div>
 
-  <!-- ✅ Fecha seleccionada -->
-  <div *ngIf="compraService.getFecha()" class="text-sm text-gray-700 mb-4">
-    Fecha: <strong>{{ compraService.getFecha() }}</strong>
+  <!-- Fecha -->
+  <div *ngIf="compraService.getFecha()" class="text-sm text-gray-700">
+    <span class="font-medium">Fecha:</span>
+    <span>{{ compraService.getFecha() | date:'fullDate' }}</span>
   </div>
 
+  <!-- Tickets -->
   <ng-container *ngIf="tickets$ | async as tickets">
-    <ul *ngIf="tickets.length > 0; else vacio" class="space-y-2">
-      <li *ngFor="let t of tickets" class="flex justify-between">
+    <ul *ngIf="tickets.length > 0; else vacio" class="divide-y divide-gray-200">
+      <li *ngFor="let t of tickets" class="flex justify-between py-2">
         <span>{{ t.nombre }} x{{ t.cantidad }}</span>
         <span>{{ (t.precio * t.cantidad) | currency:'EUR' }}</span>
       </li>
     </ul>
 
-    <hr class="my-3" *ngIf="tickets.length > 0">
-
-    <div class="flex justify-between font-semibold" *ngIf="tickets.length > 0">
+    <div *ngIf="tickets.length > 0" class="flex justify-between font-semibold pt-4 border-t border-gray-300">
       <span>Total</span>
       <span>{{ calcularTotal(tickets) | currency:'EUR' }}</span>
     </div>
@@ -31,4 +32,3 @@
     <p class="text-sm text-gray-500">No has seleccionado entradas aún.</p>
   </ng-template>
 </div>
-  

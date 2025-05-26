@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ResumenPedidoComponent } from '../resumen-pedido/resumen-pedido.component';
 
@@ -11,5 +11,11 @@ import { ResumenPedidoComponent } from '../resumen-pedido/resumen-pedido.compone
 })
 
 export class CompraComponent {
+  constructor(private router: Router) {}
+
+  get esConfirmacion(): boolean {
+    return this.router.url.startsWith('/compra/confirmacion');
+  }
+
   currentYear = new Date().getFullYear(); 
 }

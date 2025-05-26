@@ -26,13 +26,13 @@ export class CompraService {
 
   private fechaSeleccionada: Date | null = null;
 
-setFecha(fecha: Date): void {
+  setFecha(fecha: Date | null): void {
   this.fechaSeleccionada = fecha;
 }
 
-getFecha(): Date | null {
-  return this.fechaSeleccionada;
-}
+  getFecha(): Date | null {
+    return this.fechaSeleccionada;
+    }
 
 //para que genere el objeto Reserva (con los todos los datos del cliente)
 private datosCliente: {
@@ -79,12 +79,19 @@ crearReserva(): ReservaEnvio | null {
 }
 private actividadSeleccionada: Actividad | null = null;
 
-setActividad(actividad: Actividad): void {
+setActividad(actividad: Actividad | null): void {
   this.actividadSeleccionada = actividad;
 }
 
 getActividad(): Actividad | null {
   return this.actividadSeleccionada;
 }
+
+limpiar(): void {
+  this.setTickets([]);
+  this.setFecha(null);
+  this.setActividad(null);
+}
+
 }
 

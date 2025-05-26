@@ -14,9 +14,10 @@
       <router-outlet></router-outlet>
     </div>
 
-     <div class="w-full md:w-80">
-      <app-resumen-pedido></app-resumen-pedido> <!-- 👈 componente resumen -->
-    </div>
+     <div class="w-full md:w-80" *ngIf="!esConfirmacion">
+        <app-resumen-pedido></app-resumen-pedido>
+     </div> 
+
   </main>
   
   <!-- Footer simple -->
