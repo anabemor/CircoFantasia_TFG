@@ -5,13 +5,14 @@ import { RouterModule } from '@angular/router';
 import { ActividadService } from '../../../shared/services/actividad.service';
 import { Actividad } from '../../../shared/interfaces/actividad.interface';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { NavbarAdminComponent } from '../../../shared/components/navbar-admin.component';
 
 @Component({
   selector: 'app-actividades',
   standalone: true,
   templateUrl: './actividades.component.html',
   styleUrls: ['./actividades.component.css'],
-  imports: [CommonModule, FormsModule, RouterModule]
+  imports: [CommonModule, FormsModule, RouterModule, NavbarAdminComponent]
 })
 export class ActividadesComponent implements OnInit {
   actividades: Actividad[] = [];

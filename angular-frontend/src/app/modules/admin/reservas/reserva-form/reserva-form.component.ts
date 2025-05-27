@@ -51,10 +51,13 @@ export class ReservaFormComponent implements OnInit {
 
     this.ticketService.getTiposTicket().subscribe(tipos => {
       this.ticketTypes = tipos;
+      console.log('Tipos de ticket cargados:', this.ticketTypes);
+
       this.initTickets();
     });
 
     if (this.reserva) {
+      console.log('Reserva recibida:', this.reserva);
       this.form.patchValue({ ...this.reserva });
     }
   }
@@ -64,6 +67,11 @@ export class ReservaFormComponent implements OnInit {
   }
 
   initTickets() {
+    // 💥 Limpia el FormArray
+    while (this.tickets.length > 0) {
+      this.tickets.removeAt(0);
+    }
+
     this.ticketTypes.forEach(ticket => {
       const cantidad = this.reserva?.tickets.find(t => t.ticketType.id === ticket.id)?.cantidad || 0;
       this.tickets.push(

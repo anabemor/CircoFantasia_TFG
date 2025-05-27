@@ -3,12 +3,12 @@ import { CommonModule } from '@angular/common';
 import { Reserva } from '../../../shared/interfaces/reserva.interface';
 import { ReservaAdminService } from '../../../shared/services/reserva-admin.service';
 import { ReservaFormComponent } from './reserva-form/reserva-form.component';
-
+import { NavbarAdminComponent } from '../../../shared/components/navbar-admin.component';
 
 @Component({
   selector: 'app-reservas',
   standalone: true,
-  imports: [CommonModule, ReservaFormComponent],
+  imports: [CommonModule, ReservaFormComponent, NavbarAdminComponent],
   templateUrl: './reservas.component.html',
   styleUrls: ['./reservas.component.css']
 })
@@ -64,4 +64,35 @@ export class ReservasComponent implements OnInit {
     this.mostrarFormulario = false;
     this.reservaEnEdicion = null;
   }
+
+  contarEntradas(reserva: Reserva, tipo: string): number {
+    return reserva.tickets
+      .filter(t => t.ticketType.nombre.toLowerCase() === tipo.toLowerCase())
+      .reduce((total, t) => total + t.cantidad, 0);
+  }
+
+  calcularPrecioTotal(reserva: Reserva): number {
+    return reserva.tickets.reduce((total, t) =>
+      total + t.cantidad * t.ticketType.precio, 0);
+  }
+
+  cancelarReserva(reserva: Reserva): void {
+    if (confirm('¿Seguro que deseas cancelar esta reserva?')) {
+      const reservaActualizada: Reserva = {
+        ...reserva,
+        estado: 'cancelado'
+      };
+
+      this.reservaService.updateReserva(reserva.id!, reservaActualizada).subscribe({
+        next: () => {
+          alert(`Reserva cancelada. Reembolso simulado: ${this.calcularPrecioTotal(reserva)} €`);
+          this.cargarReservas();
+        },
+        error: () => {
+          alert('Error al cancelar la reserva.');
+        }
+      });
+    }
+  }
 }
+

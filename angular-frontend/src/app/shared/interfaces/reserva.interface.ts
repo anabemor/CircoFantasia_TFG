@@ -11,4 +11,5 @@ export interface Reserva {
   fechaReserva: string; // formato ISO, se puede autocompletar en backend
   aceptoCondiciones: boolean;
   tickets: ReservaTicket[]; // relación con los tickets
+  estado: 'pendiente' | 'pagado' | 'cancelado';
 }

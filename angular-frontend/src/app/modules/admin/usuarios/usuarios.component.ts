@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Usuario, UsuariosService } from '../../../shared/services/usuarios.service';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
+import { NavbarAdminComponent } from '../../../shared/components/navbar-admin.component';
 
 @Component({
   selector: 'app-usuarios',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatSnackBarModule],
+  imports: [CommonModule, FormsModule, MatSnackBarModule, NavbarAdminComponent],
   templateUrl: './usuarios.component.html',
   styleUrls: ['./usuarios.component.css']
 })
@@ -16,7 +17,12 @@ export class UsuariosComponent {
   usuarioSeleccionado: Usuario | null = null;
   mostrarModal: boolean = false;
 
-  constructor(private usuariosService: UsuariosService,  private snackBar: MatSnackBar) {}
+  constructor(
+    private usuariosService: UsuariosService,  
+    private snackBar: MatSnackBar)
+    {}
+  
+    
 
   ngOnInit(): void {
     this.cargarUsuarios();

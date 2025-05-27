@@ -44,7 +44,7 @@ class ReservaAdminController extends AbstractController
                 'telefono' => $reserva->getTelefono(),
                 'fechaVisita' => $reserva->getFechaVisita()->format('Y-m-d'),
                 'fechaReserva' => $reserva->getFechaReserva()->format('Y-m-d H:i:s'),
-                'aceptoCondiciones' => $reserva->getAceptoCondiciones(),
+                'aceptoCondiciones' => $reserva->isAceptoCondiciones(),
                 'tickets' => $tickets
             ];
         }
@@ -78,9 +78,67 @@ class ReservaAdminController extends AbstractController
             'telefono' => $reserva->getTelefono(),
             'fechaVisita' => $reserva->getFechaVisita()->format('Y-m-d'),
             'fechaReserva' => $reserva->getFechaReserva()->format('Y-m-d H:i:s'),
-            'aceptoCondiciones' => $reserva->getAceptoCondiciones(),
+            'aceptoCondiciones' => $reserva->isAceptoCondiciones(),
             'tickets' => $tickets
         ]);
+    }
+
+    #[Route('/crear', name: 'admin_reserva_create', methods: ['POST'])]
+    public function create(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        if (!$data || !isset($data['tickets']) || !is_array($data['tickets'])) {
+            return $this->json(['error' => 'Datos de reserva incompletos o incorrectos'], 400);
+        }
+
+        // Validación de aforo
+        $fechaVisita = new \DateTime($data['fechaVisita']);
+        $reservasEseDia = $em->getRepository(Reserva::class)->findBy(['fechaVisita' => $fechaVisita]);
+
+        $aforoActual = 0;
+        foreach ($reservasEseDia as $reservaExistente) {
+            foreach ($reservaExistente->getReservaTickets() as $ticket) {
+                $aforoActual += $ticket->getCantidad();
+            }
+        }
+
+        $aforoNuevo = 0;
+        foreach ($data['tickets'] as $ticket) {
+            $aforoNuevo += $ticket['cantidad'] ?? 0;
+        }
+
+        if (($aforoActual + $aforoNuevo) > 60) {
+            return $this->json([
+                'error' => 'No hay suficientes plazas disponibles para esa fecha. Aforo completo.'
+            ], 400);
+        }
+
+        // Crear nueva reserva
+        $reserva = new Reserva();
+        $reserva->setNombre($data['nombre']);
+        $reserva->setApellidos($data['apellidos']);
+        $reserva->setFechaNacimiento(new \DateTime($data['fechaNacimiento']));
+        $reserva->setEmail($data['email']);
+        $reserva->setTelefono($data['telefono']);
+        $reserva->setFechaVisita($fechaVisita);
+        $reserva->setFechaReserva(new \DateTime());
+        $reserva->setAceptoCondiciones($data['aceptoCondiciones'] ?? false);
+
+        foreach ($data['tickets'] as $ticketData) {
+            $ticketType = $em->getRepository(TicketType::class)->find($ticketData['ticketType']['id']);
+            if (!$ticketType) continue;
+
+            $rt = new ReservaTicket();
+            $rt->setTicketType($ticketType);
+            $rt->setCantidad($ticketData['cantidad']);
+            $reserva->addReservaTicket($rt);
+        }
+
+        $em->persist($reserva);
+        $em->flush();
+
+        return $this->json(['message' => 'Reserva creada correctamente desde admin'], 201);
     }
 
     #[Route('/{id}', name: 'admin_reserva_update', methods: ['PUT'])]

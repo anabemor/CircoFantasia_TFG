@@ -41,6 +41,9 @@ class Reserva
     #[ORM\Column]
     private ?bool $aceptoCondiciones = null;
 
+    #[ORM\Column(length: 20)]
+    private ?string $estado = 'pagado';
+
     #[ORM\OneToMany(mappedBy: 'reserva', targetEntity: ReservaTicket::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $reservaTickets;
 
@@ -142,6 +145,17 @@ class Reserva
         return $this;
     }
 
+    public function getEstado(): ?string
+    {
+        return $this->estado;
+    }
+
+    public function setEstado(string $estado): static
+    {   
+        $this->estado = $estado;
+        return $this;
+    }
+    
     /**
      * @return Collection<int, ReservaTicket>
      */

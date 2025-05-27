@@ -23,27 +23,49 @@ class ReservaController extends AbstractController
             return $this->json(['error' => 'Datos de reserva incompletos o incorrectos'], 400);
         }
 
-        // Validar mayor de edad
+        // Validar edad mínima
         $fechaNacimiento = new \DateTime($data['fechaNacimiento']);
         $edad = $fechaNacimiento->diff(new \DateTime())->y;
         if ($edad < 18) {
             return $this->json(['error' => 'Debes ser mayor de edad para hacer una reserva'], 400);
         }
 
-        // Crear la reserva principal
+        // Validación de aforo
+        $fechaVisita = new \DateTime($data['fechaVisita']);
+        $reservasEseDia = $em->getRepository(Reserva::class)->findBy(['fechaVisita' => $fechaVisita]);
+
+        $aforoActual = 0;
+        foreach ($reservasEseDia as $reservaExistente) {
+            foreach ($reservaExistente->getReservaTickets() as $ticket) {
+                $aforoActual += $ticket->getCantidad();
+            }
+        }
+
+        $aforoNuevo = 0;
+        foreach ($data['tickets'] as $ticket) {
+            $aforoNuevo += $ticket['cantidad'] ?? 0;
+        }
+
+        if (($aforoActual + $aforoNuevo) > 60) {
+            return $this->json([
+                'error' => 'No hay suficientes plazas disponibles para esa fecha. Aforo completo.'
+            ], 400);
+        }
+
+        // Crear reserva
         $reserva = new Reserva();
         $reserva->setNombre($data['nombre']);
         $reserva->setApellidos($data['apellidos']);
         $reserva->setFechaNacimiento($fechaNacimiento);
         $reserva->setEmail($data['email']);
         $reserva->setTelefono($data['telefono']);
-        $reserva->setFechaVisita(new \DateTime($data['fechaVisita']));
+        $reserva->setFechaVisita($fechaVisita);
         $reserva->setFechaReserva(new \DateTime());
         $reserva->setAceptoCondiciones($data['aceptoCondiciones'] ?? false);
 
         foreach ($data['tickets'] as $ticket) {
             if (!isset($ticket['ticketType']['id'], $ticket['cantidad'])) continue;
-            
+
             $tipo = $em->getRepository(TicketType::class)->find($ticket['ticketType']['id']);
             if (!$tipo) continue;
 

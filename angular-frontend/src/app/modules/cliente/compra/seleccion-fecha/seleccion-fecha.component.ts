@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -6,13 +6,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
 import { FormsModule } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CompraService } from '../../../../shared/services/compra.service';
+import { ReservaService } from '../../../../shared/services/reserva.service';
 
 @Component({
   selector: 'app-seleccion-fecha',
   standalone: true,
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     FormsModule,
     MatDatepickerModule,
     MatFormFieldModule,
@@ -21,32 +24,71 @@ import { CompraService } from '../../../../shared/services/compra.service';
   ],
   templateUrl: './seleccion-fecha.component.html'
 })
-export class SeleccionFechaComponent {
+export class SeleccionFechaComponent implements OnInit {
   fechaSeleccionada: Date | null = null;
   aforoDisponible: number | null = null;
+  fechasBloqueadas = new Set<string>();
 
   constructor(
+    private reservaService: ReservaService,
     private compraService: CompraService,
     private router: Router
   ) {}
 
-  onFechaCambiada(fecha: Date | null) {
-    this.fechaSeleccionada = fecha;
-    if (fecha) {
-      this.aforoDisponible = null; // Mientras no tengamos el backend
+  ngOnInit(): void {
+    this.consultarAforoProximosDias();
+  }
 
-      // Más adelante: consultar el aforo real
-      // this.aforoService.getAforo(fecha).subscribe((aforo) => {
-      //   this.aforoDisponible = aforo;
-      // });
+  consultarAforoProximosDias(): void {
+    const hoy = new Date();
+    const dias = 30;
 
-      this.compraService.setFecha(fecha); // Guardamos la fecha en el servicio
+    for (let i = 0; i < dias; i++) {
+      const fecha = new Date(hoy);
+      fecha.setDate(hoy.getDate() + i);
+      const fechaISO = fecha.toISOString().split('T')[0];
+
+      this.reservaService.getAforoPorFecha(fechaISO).subscribe({
+        next: (res) => {
+          if (res.disponible === 0) {
+            this.fechasBloqueadas.add(res.fecha); // bloquear si está lleno
+          }
+        },
+        error: () => {
+          console.warn('Error al consultar aforo para', fechaISO);
+        }
+      });
     }
   }
 
-  continuar() {
+  filtroFecha = (d: Date | null): boolean => {
+    if (!d) return false;
+    const iso = d.toISOString().split('T')[0];
+    return !this.fechasBloqueadas.has(iso);
+  };
+
+  onFechaCambiada(fecha: Date | null): void {
+    if (!fecha) {
+      this.aforoDisponible = null;
+      return;
+    }
+
+    const iso = fecha.toISOString().split('T')[0];
+    this.reservaService.getAforoPorFecha(iso).subscribe({
+      next: (res) => {
+        this.aforoDisponible = res.disponible;
+        this.compraService.setFecha(fecha); // guardamos la fecha elegida
+      },
+      error: () => {
+        this.aforoDisponible = null;
+        console.warn('No se pudo obtener el aforo de', iso);
+      }
+    });
+  }
+
+  continuar(): void {
     if (!this.fechaSeleccionada) {
-      alert('Por favor selecciona una fecha.');
+      alert('Por favor, selecciona una fecha válida.');
       return;
     }
 

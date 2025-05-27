@@ -13,4 +13,10 @@ export class ReservaService {
     return this.http.post(`${this.baseUrl}/reservas`, reserva);
 
   }
+
+  getAforoPorFecha(fecha: string): Observable<{ fecha: string; ocupado: number; disponible: number }> {
+  return this.http.get<{ fecha: string; ocupado: number; disponible: number }>(
+    `${this.baseUrl}/reservas/aforo/${fecha}`
+  );
+}
 }

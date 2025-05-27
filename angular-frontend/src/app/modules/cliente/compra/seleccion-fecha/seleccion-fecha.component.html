@@ -3,14 +3,23 @@
 
   <mat-form-field appearance="fill" class="w-full">
     <mat-label>Fecha de visita</mat-label>
-    <input matInput [matDatepicker]="picker" [(ngModel)]="fechaSeleccionada" (dateChange)="onFechaCambiada($event.value)">
+    <input
+      matInput
+      [matDatepicker]="picker"
+      [(ngModel)]="fechaSeleccionada"
+      [matDatepickerFilter]="filtroFecha"
+      (dateChange)="onFechaCambiada($event.value)"
+      name="fecha"
+    />
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
   </mat-form-field>
 
   <div *ngIf="fechaSeleccionada" class="mt-4 text-sm">
     Aforo máximo: <strong>60 personas</strong><br>
-    Aforo disponible: <span *ngIf="aforoDisponible !== null">{{ aforoDisponible }}</span><span *ngIf="aforoDisponible === null">[consultando o simulado]</span>
+    Aforo disponible:
+    <span *ngIf="aforoDisponible !== null">{{ aforoDisponible }}</span>
+    <span *ngIf="aforoDisponible === null">[consultando o simulado]</span>
   </div>
 
   <button
