@@ -18,6 +18,6 @@ export class NavbarAdminComponent {
 
   logout(): void {
     localStorage.clear();
-    this.router.navigate(['/login']);
+    this.router.navigate(['']);
   }
 }

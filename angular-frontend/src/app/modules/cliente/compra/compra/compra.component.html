@@ -6,21 +6,48 @@
     </div>
   </header>
 
+  <!-- Contador de pasos -->
+  <div class="w-full bg-white shadow py-4">
+    <div class="max-w-xl mx-auto px-4">
 
+      <!-- Barra de progreso -->
+      <div class="w-full bg-gray-200 h-2 rounded-full overflow-hidden mb-3">
+        <div
+          class="h-full bg-blue-600 transition-all duration-300"
+          [style.width.%]="(pasoActual / totalPasos) * 100"
+        ></div>
+      </div>
 
-  <!-- Layout de contenido + resumen -->>
-   <main class="flex-grow container mx-auto px-4 py-8 flex flex-col md:flex-row gap-6">
+      <!-- Círculo y texto -->
+      <div class="flex flex-col items-center text-center">
+        <div class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center text-lg font-bold">
+          {{ pasoActual }}/{{ totalPasos }}
+        </div>
+
+        <div *ngIf="mostrarSiguiente" class="mt-2 text-sm text-gray-700 italic">
+          Siguiente: {{ siguientePaso }}
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Layout de contenido + resumen -->
+  <main class="flex-grow container mx-auto px-4 py-8 flex flex-col md:flex-row gap-6">
+
+    <!-- Paso actual (visitantes, fecha, datos...) -->
     <div class="flex-1">
       <router-outlet></router-outlet>
     </div>
 
-     <div class="w-full md:w-80" *ngIf="!esConfirmacion">
-        <app-resumen-pedido></app-resumen-pedido>
-     </div> 
+    <!-- Resumen del pedido -->
+    <div class="w-full md:w-80" *ngIf="!esConfirmacion">
+      <app-resumen-pedido></app-resumen-pedido>
+    </div>
 
   </main>
-  
-  <!-- Footer simple -->
+
+  <!-- Footer -->
   <footer class="bg-gray-100 text-center py-3 text-sm text-gray-600">
     © {{ currentYear }} Circo Escuela Fantasía
   </footer>

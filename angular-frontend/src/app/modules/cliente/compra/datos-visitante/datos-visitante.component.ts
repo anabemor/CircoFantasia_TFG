@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CompraService } from '../../../../shared/services/compra.service';
 import { ReservaService } from '../../../../shared/services/reserva.service';
+import { ToastService } from '../../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-datos-visitante',
@@ -14,21 +15,30 @@ import { ReservaService } from '../../../../shared/services/reserva.service';
 export class DatosVisitanteComponent {
   nombre = '';
   apellidos = '';
-  fechaNacimiento = '';
+  fechaNacimiento = ''; // formato string
   email = '';
   telefono = '';
   confirmarEmail = '';
   aceptoCondiciones = false;
 
+  hoy = new Date().toISOString().split('T')[0];
+  
   constructor(
     private compraService: CompraService,
     private reservaService: ReservaService,
-    private router: Router
+    private router: Router,
+    private toast: ToastService // 
   ) {}
 
   continuar() {
     if (!this.todosLosDatosSonValidos()) {
-      alert('Por favor, completa todos los campos correctamente.');
+      this.toast.error('Por favor, completa todos los campos correctamente.');
+      return;
+    }
+
+    const edad = this.calcularEdad(this.fechaNacimiento);
+    if (edad < 18) {
+      this.toast.error('Ups! Eres menor de edad, no puedes comprar!');
       return;
     }
 
@@ -44,17 +54,17 @@ export class DatosVisitanteComponent {
     const reserva = this.compraService.crearReserva();
 
     if (!reserva) {
-      alert('Error al preparar la reserva. Asegúrate de haber completado todos los pasos.');
+      this.toast.error('Error al preparar la reserva. Asegúrate de haber completado todos los pasos.');
       return;
     }
 
     this.reservaService.enviarReserva(reserva).subscribe({
       next: () => this.router.navigate(['/compra/pago']),
-    error: (err) => {
-    console.error('Error al guardar la reserva:', err);
-    alert('Hubo un problema al guardar la reserva');
-    }
-  });
+      error: (err) => {
+        console.error('Error al guardar la reserva:', err);
+        this.toast.error('Hubo un problema al guardar la reserva.');
+      }
+    });
   }
 
   todosLosDatosSonValidos(): boolean {
@@ -67,5 +77,16 @@ export class DatosVisitanteComponent {
       this.telefono.trim() !== '' &&
       this.aceptoCondiciones
     );
+  }
+
+  calcularEdad(fechaString: string): number {
+    const fecha = new Date(fechaString);
+    const hoy = new Date();
+    let edad = hoy.getFullYear() - fecha.getFullYear();
+    const m = hoy.getMonth() - fecha.getMonth();
+    if (m < 0 || (m === 0 && hoy.getDate() < fecha.getDate())) {
+      edad--;
+    }
+    return edad;
   }
 }

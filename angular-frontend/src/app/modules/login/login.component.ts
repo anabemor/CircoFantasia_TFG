@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { AuthService } from '../../../shared/services/auth.service'// ✅ Ajusta según ruta real
+import { AuthService } from '../../shared/services/auth.service'// ✅ Ajusta según ruta real
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -55,9 +55,10 @@ export class LoginComponent {
     });
   }
 
-  onPasswordReset(): void {
-    alert('Funcionalidad de recuperación aún no implementada.');
+   onPasswordReset(): void {
+    this.router.navigate(['/recuperar-password']);
   }
+
 
   switchToSignup(): void {
     // Lógica para mostrar el formulario de registro si quieres en esta vista

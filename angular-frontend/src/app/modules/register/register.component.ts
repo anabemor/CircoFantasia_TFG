@@ -63,7 +63,7 @@ export class RegisterComponent {
         this.successMessage = 'Usuario registrado correctamente. Redirigiendo al login...';
 
         setTimeout(() => {
-          this.router.navigate(['/login']);
+          this.router.navigate(['']);
         }, 2000);
       },
       error: (err: HttpErrorResponse) => {

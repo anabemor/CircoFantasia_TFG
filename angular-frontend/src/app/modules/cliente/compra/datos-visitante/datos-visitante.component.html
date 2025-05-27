@@ -2,46 +2,100 @@
   <h2 class="text-2xl font-bold mb-6 text-center">Datos del Visitante</h2>
 
   <form (ngSubmit)="continuar()" class="space-y-4">
+
+    <!-- Nombre -->
     <div>
       <label class="block font-semibold">Nombre *</label>
-      <input type="text" [(ngModel)]="nombre" name="nombre" required class="w-full p-2 border rounded" />
+      <input
+        type="text"
+        [(ngModel)]="nombre"
+        name="nombre"
+        required
+        class="w-full p-2 border rounded"
+      />
     </div>
 
+    <!-- Apellidos -->
     <div>
       <label class="block font-semibold">Apellidos *</label>
-      <input type="text" [(ngModel)]="apellidos" name="apellidos" required class="w-full p-2 border rounded" />
+      <input
+        type="text"
+        [(ngModel)]="apellidos"
+        name="apellidos"
+        required
+        class="w-full p-2 border rounded"
+      />
     </div>
 
+    <!-- Fecha de nacimiento -->
     <div>
       <label class="block font-semibold">Fecha de nacimiento *</label>
-      <input type="date" [(ngModel)]="fechaNacimiento" name="fechaNacimiento" required class="w-full p-2 border rounded" />
+      <input
+        type="date"
+        [(ngModel)]="fechaNacimiento"
+        name="fechaNacimiento"
+        required
+        class="w-full p-2 border rounded"
+        max="{{ hoy }}"
+      />
     </div>
 
+    <!-- Email -->
     <div>
       <label class="block font-semibold">Email *</label>
-      <input type="email" [(ngModel)]="email" name="email" required class="w-full p-2 border rounded" />
+      <input
+        type="email"
+        [(ngModel)]="email"
+        name="email"
+        required
+        class="w-full p-2 border rounded"
+      />
     </div>
 
+    <!-- Confirmar Email -->
     <div>
       <label class="block font-semibold">Confirmar email *</label>
-      <input type="email" [(ngModel)]="confirmarEmail" name="confirmarEmail" required class="w-full p-2 border rounded" />
+      <input
+        type="email"
+        [(ngModel)]="confirmarEmail"
+        name="confirmarEmail"
+        required
+        class="w-full p-2 border rounded"
+      />
     </div>
 
+    <!-- Teléfono -->
     <div>
       <label class="block font-semibold">Teléfono *</label>
-      <input type="tel" [(ngModel)]="telefono" name="telefono" required class="w-full p-2 border rounded" />
+      <input
+        type="tel"
+        [(ngModel)]="telefono"
+        name="telefono"
+        required
+        class="w-full p-2 border rounded"
+      />
     </div>
 
+    <!-- Aceptar condiciones -->
     <div class="flex items-start space-x-2">
-      <input type="checkbox" [(ngModel)]="aceptoCondiciones" name="aceptoCondiciones" required />
-      <label class="text-sm">He leído y acepto los términos y condiciones de compra y las normas de funcionamiento del parque *</label>
+      <input
+        type="checkbox"
+        [(ngModel)]="aceptoCondiciones"
+        name="aceptoCondiciones"
+        required
+      />
+      <label class="text-sm">
+        He leído y acepto los términos y condiciones de compra y las normas de funcionamiento del parque *
+      </label>
     </div>
 
+    <!-- Botón -->
     <button
       type="submit"
       class="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 transition"
     >
       Confirmar y continuar
     </button>
+
   </form>
 </div>

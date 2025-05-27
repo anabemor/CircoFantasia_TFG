@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { Router, NavigationEnd, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ResumenPedidoComponent } from '../resumen-pedido/resumen-pedido.component';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-compra',
@@ -9,13 +10,50 @@ import { ResumenPedidoComponent } from '../resumen-pedido/resumen-pedido.compone
   imports: [CommonModule, RouterModule, ResumenPedidoComponent],
   templateUrl: './compra.component.html'
 })
-
 export class CompraComponent {
-  constructor(private router: Router) {}
+  pasoActual = 1;
+  totalPasos = 5;
+  siguientePaso = '';
+  mostrarSiguiente = true;
+  currentYear = new Date().getFullYear();
+
+  constructor(private router: Router) {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.actualizarPaso(this.router.url);
+    });
+  }
 
   get esConfirmacion(): boolean {
     return this.router.url.startsWith('/compra/confirmacion');
   }
 
-  currentYear = new Date().getFullYear(); 
+  private actualizarPaso(url: string): void {
+    if (url.includes('visitantes')) {
+      this.pasoActual = 1;
+      this.siguientePaso = 'Elección de fecha';
+      this.mostrarSiguiente = true;
+    } else if (url.includes('fecha')) {
+      this.pasoActual = 2;
+      this.siguientePaso = 'Datos del visitante';
+      this.mostrarSiguiente = true;
+    } else if (url.includes('datos')) {
+      this.pasoActual = 3;
+      this.siguientePaso = 'Simulación de pago';
+      this.mostrarSiguiente = true;
+    } else if (url.includes('pago')) {
+      this.pasoActual = 4;
+      this.siguientePaso = 'Confirmación de reserva';
+      this.mostrarSiguiente = true;
+    } else if (url.includes('confirmacion')) {
+      this.pasoActual = 5;
+      this.siguientePaso = '';
+      this.mostrarSiguiente = false;
+    } else {
+      this.pasoActual = 1;
+      this.siguientePaso = '';
+      this.mostrarSiguiente = true;
+    }
+  }
 }
