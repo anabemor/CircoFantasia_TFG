@@ -19,35 +19,32 @@ class ReservaAdminController extends AbstractController
     public function index(ReservaRepository $reservaRepository): JsonResponse
     {
         $reservas = $reservaRepository->findAll();
-        $data = [];
 
-        foreach ($reservas as $reserva) {
-            $tickets = [];
-            foreach ($reserva->getReservaTickets() as $rt) {
-                $tickets[] = [
-                    'id' => $rt->getId(),
-                    'cantidad' => $rt->getCantidad(),
-                    'ticketType' => [
-                        'id' => $rt->getTicketType()->getId(),
-                        'nombre' => $rt->getTicketType()->getNombre(),
-                        'precio' => $rt->getTicketType()->getPrecio()
-                    ]
-                ];
-            }
-
-            $data[] = [
+        $data = array_map(function ($reserva) {
+            return [
                 'id' => $reserva->getId(),
                 'nombre' => $reserva->getNombre(),
                 'apellidos' => $reserva->getApellidos(),
-                'fechaNacimiento' => $reserva->getFechaNacimiento()->format('Y-m-d'),
                 'email' => $reserva->getEmail(),
                 'telefono' => $reserva->getTelefono(),
-                'fechaVisita' => $reserva->getFechaVisita()->format('Y-m-d'),
-                'fechaReserva' => $reserva->getFechaReserva()->format('Y-m-d H:i:s'),
+                'fechaNacimiento' => $reserva->getFechaNacimiento()?->format('Y-m-d'),
+                'fechaVisita' => $reserva->getFechaVisita()?->format('Y-m-d'),
+                'fechaReserva' => $reserva->getFechaReserva()?->format('Y-m-d H:i:s'),
                 'aceptoCondiciones' => $reserva->isAceptoCondiciones(),
-                'tickets' => $tickets
+                'estado' => $reserva->getEstado(),
+                'tickets' => array_map(function ($rt) {
+                    return [
+                        'id' => $rt->getId(),
+                        'cantidad' => $rt->getCantidad(),
+                        'ticketType' => [
+                            'id' => $rt->getTicketType()->getId(),
+                            'nombre' => $rt->getTicketType()->getNombre(),
+                            'precio' => $rt->getTicketType()->getPrecio(),
+                        ],
+                    ];
+                }, $reserva->getReservaTickets()->toArray())
             ];
-        }
+        }, $reservas);
 
         return $this->json($data);
     }
@@ -55,7 +52,6 @@ class ReservaAdminController extends AbstractController
     #[Route('/{id}', name: 'admin_reserva_show', methods: ['GET'])]
     public function show(Reserva $reserva): JsonResponse
     {
-        // igual que en index pero solo para 1
         $tickets = [];
         foreach ($reserva->getReservaTickets() as $rt) {
             $tickets[] = [
@@ -79,6 +75,7 @@ class ReservaAdminController extends AbstractController
             'fechaVisita' => $reserva->getFechaVisita()->format('Y-m-d'),
             'fechaReserva' => $reserva->getFechaReserva()->format('Y-m-d H:i:s'),
             'aceptoCondiciones' => $reserva->isAceptoCondiciones(),
+            'estado' => $reserva->getEstado(),
             'tickets' => $tickets
         ]);
     }
@@ -92,7 +89,6 @@ class ReservaAdminController extends AbstractController
             return $this->json(['error' => 'Datos de reserva incompletos o incorrectos'], 400);
         }
 
-        // Validación de aforo
         $fechaVisita = new \DateTime($data['fechaVisita']);
         $reservasEseDia = $em->getRepository(Reserva::class)->findBy(['fechaVisita' => $fechaVisita]);
 
@@ -114,7 +110,6 @@ class ReservaAdminController extends AbstractController
             ], 400);
         }
 
-        // Crear nueva reserva
         $reserva = new Reserva();
         $reserva->setNombre($data['nombre']);
         $reserva->setApellidos($data['apellidos']);
@@ -124,6 +119,7 @@ class ReservaAdminController extends AbstractController
         $reserva->setFechaVisita($fechaVisita);
         $reserva->setFechaReserva(new \DateTime());
         $reserva->setAceptoCondiciones($data['aceptoCondiciones'] ?? false);
+        $reserva->setEstado('pendiente');
 
         foreach ($data['tickets'] as $ticketData) {
             $ticketType = $em->getRepository(TicketType::class)->find($ticketData['ticketType']['id']);
@@ -158,13 +154,12 @@ class ReservaAdminController extends AbstractController
         $reserva->setTelefono($data['telefono']);
         $reserva->setFechaVisita(new \DateTime($data['fechaVisita']));
         $reserva->setAceptoCondiciones($data['aceptoCondiciones']);
+        $reserva->setEstado($data['estado'] ?? $reserva->getEstado());
 
-        // Eliminar tickets actuales
         foreach ($reserva->getReservaTickets() as $rt) {
             $em->remove($rt);
         }
 
-        // Añadir tickets nuevos
         foreach ($data['tickets'] as $ticketData) {
             $ticketType = $em->getRepository(TicketType::class)->find($ticketData['ticketType']['id']);
             if (!$ticketType) continue;

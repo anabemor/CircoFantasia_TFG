@@ -24,11 +24,15 @@ export class ReservasComponent implements OnInit {
   }
 
   cargarReservas() {
-    this.reservaService.getReservas().subscribe({
-      next: (data) => this.reservas = data,
+  this.reservaService.getReservas().subscribe({
+      next: (data) => {
+        console.log('Reservas recibidas:', data);
+        this.reservas = data;
+      },
       error: () => alert('Error al cargar las reservas')
     });
   }
+  
 
   crearReserva() {
     this.mostrarFormulario = true;
