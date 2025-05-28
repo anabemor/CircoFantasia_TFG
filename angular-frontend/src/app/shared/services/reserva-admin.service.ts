@@ -18,8 +18,8 @@ export class ReservaAdminService {
   }
 
   createReserva(reserva: Reserva): Observable<Reserva> {
-    return this.http.post<Reserva>(this.baseUrl, reserva);
-  }
+  return this.http.post<Reserva>('http://localhost:8000/api/admin/reservas/crear', reserva);
+}
 
   updateReserva(id: number, reserva: Reserva): Observable<Reserva> {
     return this.http.put<Reserva>(`${this.baseUrl}/${id}`, reserva);

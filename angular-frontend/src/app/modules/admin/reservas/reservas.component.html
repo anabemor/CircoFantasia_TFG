@@ -3,27 +3,30 @@
 <div class="p-6 max-w-7xl mx-auto">
   <h2 class="text-2xl font-bold mb-4 text-gray-800">Gestión de Reservas</h2>
 
-  <ng-container *ngIf="!mostrarFormulario; else formulario">
+  <!-- Botón para crear -->
+  <button
+    class="mb-4 bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600"
+    (click)="abrirFormularioCrear()"
+  >
+    Crear nueva reserva
+  </button>
 
-    <button
-      class="mb-4 bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600"
-      (click)="crearReserva()"
-    >
-      Crear nueva reserva
-    </button>
-
+  <!-- Tabla solo si NO hay formulario activo -->
+  <ng-container *ngIf="!mostrarFormularioCreacion && !mostrarFormularioEdicion; else formularioActivo">
     <table class="min-w-full bg-white border border-gray-200 rounded-lg overflow-hidden shadow">
+      <!-- Encabezados -->
       <thead class="bg-indigo-600 text-white">
         <tr>
-          <th class="px-4 py-2 text-left">Nombre</th>
-          <th class="px-4 py-2 text-left">Email</th>
-          <th class="px-4 py-2 text-left">Teléfono</th>
-          <th class="px-4 py-2 text-left">Fecha Visita</th>
-          <th class="px-4 py-2 text-left">Adultos</th>
-          <th class="px-4 py-2 text-left">Niños</th>
-          <th class="px-4 py-2 text-left">Precio Total</th>
-          <th class="px-4 py-2 text-left">Estado</th>
-          <th class="px-4 py-2 text-left">Acciones</th>
+          <th class="px-4 py-2">Nombre</th>
+          <th class="px-4 py-2">Email</th>
+          <th class="px-4 py-2">Teléfono</th>
+          <th class="px-4 py-2">Fecha Visita</th>
+          <th class="px-4 py-2">Fecha Reserva</th>
+          <th class="px-4 py-2">Adultos</th>
+          <th class="px-4 py-2">Niños</th>
+          <th class="px-4 py-2">Total</th>
+          <th class="px-4 py-2">Estado</th>
+          <th class="px-4 py-2">Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -32,40 +35,41 @@
           <td class="px-4 py-2">{{ reserva.email }}</td>
           <td class="px-4 py-2">{{ reserva.telefono }}</td>
           <td class="px-4 py-2">{{ reserva.fechaVisita }}</td>
+          <td class="px-4 py-2">{{ reserva.fechaReserva }}</td>
           <td class="px-4 py-2">{{ contarEntradas(reserva, 'adulto') }}</td>
           <td class="px-4 py-2">{{ contarEntradas(reserva, 'niño') }}</td>
           <td class="px-4 py-2">{{ calcularPrecioTotal(reserva) | currency:'EUR' }}</td>
           <td class="px-4 py-2">
-              <span
-                [ngClass]="{
-                  'text-yellow-600 font-semibold': reserva.estado === 'pendiente',
-                  'text-green-600 font-semibold': reserva.estado === 'pagado',
-                  'text-red-600 font-semibold': reserva.estado === 'cancelado'
-                }"
-              >
-                {{ getEstadoVisual(reserva.estado) }}
-              </span>
-            </td>
-
+            <span [ngClass]="{
+              'text-yellow-600 font-semibold': reserva.estado === 'pendiente',
+              'text-green-600 font-semibold': reserva.estado === 'pagado',
+              'text-red-600 font-semibold': reserva.estado === 'cancelado'
+            }">
+              {{ getEstadoVisual(reserva.estado) }}
+            </span>
+          </td>
           <td class="px-4 py-2 space-x-2">
             <button class="text-blue-600 hover:underline" (click)="editarReserva(reserva)">Editar</button>
             <button class="text-red-600 hover:underline" (click)="eliminarReserva(reserva.id!)">Eliminar</button>
-            <button class="text-yellow-600 hover:underline" *ngIf="reserva.estado !== 'cancelado'" (click)="cancelarReserva(reserva)">Cancelar
-            </button>
+            <button class="text-yellow-600 hover:underline" *ngIf="reserva.estado !== 'cancelado'" (click)="cancelarReserva(reserva)">Cancelar</button>
           </td>
         </tr>
       </tbody>
     </table>
   </ng-container>
 
-  <ng-template #formulario>
+  <ng-template #formularioActivo>
+    <!-- Formulario de creación -->
+    <app-reserva-create-form
+      *ngIf="mostrarFormularioCreacion"
+      (formSubmit)="crearReserva($event)"
+    ></app-reserva-create-form>
+
+    <!-- Formulario de edición -->
     <app-reserva-form
+      *ngIf="mostrarFormularioEdicion"
       [reserva]="reservaEnEdicion"
       (formSubmit)="guardarReserva($event)"
     ></app-reserva-form>
-
-    <button class="mt-4 text-gray-500 hover:underline" (click)="cancelarFormulario()">
-      Cancelar
-    </button>
   </ng-template>
 </div>

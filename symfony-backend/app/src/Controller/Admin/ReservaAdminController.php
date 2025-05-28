@@ -118,7 +118,7 @@ class ReservaAdminController extends AbstractController
         $reserva->setTelefono($data['telefono']);
         $reserva->setFechaVisita($fechaVisita);
         $reserva->setFechaReserva(new \DateTime());
-        $reserva->setAceptoCondiciones($data['aceptoCondiciones'] ?? false);
+        $reserva->setAceptoCondiciones(true);
         $reserva->setEstado('pendiente');
 
         foreach ($data['tickets'] as $ticketData) {
@@ -153,7 +153,9 @@ class ReservaAdminController extends AbstractController
         $reserva->setEmail($data['email']);
         $reserva->setTelefono($data['telefono']);
         $reserva->setFechaVisita(new \DateTime($data['fechaVisita']));
+        if (array_key_exists('aceptoCondiciones', $data)) {
         $reserva->setAceptoCondiciones($data['aceptoCondiciones']);
+        }   
         $reserva->setEstado($data['estado'] ?? $reserva->getEstado());
 
         foreach ($reserva->getReservaTickets() as $rt) {

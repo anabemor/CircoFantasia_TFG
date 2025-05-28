@@ -1,13 +1,12 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, FormArray, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
-import { MatSelectModule } from '@angular/material/select';
 import { MatNativeDateModule } from '@angular/material/core';
+import { Router } from '@angular/router';
 import { TicketTypeService } from '../../../../shared/services/ticket-type.service';
 import { TicketType } from '../../../../shared/interfaces/ticket-type.interface';
 import { Reserva } from '../../../../shared/interfaces/reserva.interface';
@@ -21,9 +20,7 @@ import { Reserva } from '../../../../shared/interfaces/reserva.interface';
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
-    MatCheckboxModule,
     MatButtonModule,
-    MatSelectModule,
     MatNativeDateModule
   ],
   templateUrl: './reserva-form.component.html'
@@ -33,80 +30,59 @@ export class ReservaFormComponent implements OnInit {
   @Output() formSubmit = new EventEmitter<Reserva>();
 
   form!: FormGroup;
-  ticketTypes: TicketType[] = [];
+  ticketResumen: { nombre: string, precio: number, cantidad: number }[] = [];
+  esEdicion: boolean = false;
 
-  constructor(private fb: FormBuilder, private ticketService: TicketTypeService) {}
+  constructor(
+    private fb: FormBuilder,
+    private ticketService: TicketTypeService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
+    this.esEdicion = !!this.reserva;
+
     this.form = this.fb.group({
-      nombre: ['', Validators.required],
-      apellidos: ['', Validators.required],
-      fechaNacimiento: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      telefono: ['', Validators.required],
-      fechaVisita: ['', Validators.required],
-      aceptoCondiciones: [false, Validators.requiredTrue],
-      tickets: this.fb.array([])
-    });
-
-    this.ticketService.getTiposTicket().subscribe(tipos => {
-      this.ticketTypes = tipos;
-      console.log('Tipos de ticket cargados:', this.ticketTypes);
-
-      this.initTickets();
+      nombre: [{ value: this.reserva?.nombre || '', disabled: true }],
+      apellidos: [{ value: this.reserva?.apellidos || '', disabled: true }],
+      fechaNacimiento: [{ value: this.reserva?.fechaNacimiento || '', disabled: true }],
+      email: [
+        this.reserva?.email || '',
+        [
+          Validators.required,
+          Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
+        ]
+      ],
+      telefono: [this.reserva?.telefono || '', [Validators.required, Validators.pattern(/^[0-9]{9}$/)]],
+      fechaVisita: [{ value: this.reserva?.fechaVisita || '', disabled: true }]
     });
 
     if (this.reserva) {
-      console.log('Reserva recibida:', this.reserva);
-      this.form.patchValue({ ...this.reserva });
+      this.ticketResumen = this.reserva.tickets.map(t => ({
+        nombre: t.ticketType.nombre,
+        precio: t.ticketType.precio,
+        cantidad: t.cantidad
+      }));
     }
   }
 
-  get tickets(): FormArray {
-    return this.form.get('tickets') as FormArray;
+  getPrecioTotal(): number {
+    return this.ticketResumen.reduce((total, t) => total + t.precio * t.cantidad, 0);
   }
 
-  initTickets() {
-    // 💥 Limpia el FormArray
-    while (this.tickets.length > 0) {
-      this.tickets.removeAt(0);
-    }
+  submit(): void {
+    if (!this.reserva) return;
 
-    this.ticketTypes.forEach(ticket => {
-      const cantidad = this.reserva?.tickets.find(t => t.ticketType.id === ticket.id)?.cantidad || 0;
-      this.tickets.push(
-        this.fb.group({
-          ticketType: [ticket],
-          cantidad: [cantidad, [Validators.min(0)]]
-        })
-      );
-    });
-  }
-
-  submit() {
-    const raw = this.form.getRawValue();
-
-    const reserva: Reserva = {
-      ...raw,
-      fechaNacimiento: this.formatFecha(raw.fechaNacimiento),
-      fechaVisita: this.formatFecha(raw.fechaVisita),
-      fechaReserva: new Date().toISOString(),
-      tickets: raw.tickets
-        .filter((t: any) => t.cantidad > 0)
-        .map((t: any) => ({
-          ticketType: {
-            id: t.ticketType.id,
-            nombre: t.ticketType.nombre,
-            precio: t.ticketType.precio
-          },
-          cantidad: t.cantidad
-        }))
+    const updatedReserva: Reserva = {
+      ...this.reserva,
+      email: this.form.value.email,
+      telefono: this.form.value.telefono
     };
 
-    this.formSubmit.emit(reserva);
+    this.formSubmit.emit(updatedReserva);
   }
 
-  private formatFecha(date: Date): string {
-    return date.toISOString().split('T')[0]; // YYYY-MM-DD
+  volver(): void {
+     window.location.href = '/admin/reservas';
   }
 }
