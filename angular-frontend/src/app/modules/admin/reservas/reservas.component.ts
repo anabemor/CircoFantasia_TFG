@@ -98,5 +98,19 @@ export class ReservasComponent implements OnInit {
       });
     }
   }
+
+  getEstadoVisual(estado: string): string {
+  switch (estado) {
+    case 'pagado':
+      return '🟢 Pagado';
+    case 'pendiente':
+      return '🟡 Pendiente';
+    case 'cancelado':
+      return '🔴 Cancelado';
+    default:
+      return estado;
+  }
+}
+
 }
 
