@@ -6,21 +6,23 @@ import { ActividadService } from '../../../shared/services/actividad.service';
 import { Actividad } from '../../../shared/interfaces/actividad.interface';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NavbarAdminComponent } from '../../../shared/components/navbar-admin.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog.component';
 
 @Component({
   selector: 'app-actividades',
   standalone: true,
   templateUrl: './actividades.component.html',
   styleUrls: ['./actividades.component.css'],
-  imports: [CommonModule, FormsModule, RouterModule, NavbarAdminComponent]
+  imports: [CommonModule, FormsModule, RouterModule, NavbarAdminComponent ]
 })
 export class ActividadesComponent implements OnInit {
   actividades: Actividad[] = [];
   actividadEnEdicion: Actividad | null = null;
   mostrarFormulario = false;
   modoEdicion = false;
-
   fechasInvalidas: boolean = false;
+  
   // Modelo del formulario
   formActividad: Actividad = {
     nombre: '',
@@ -30,7 +32,10 @@ export class ActividadesComponent implements OnInit {
     activa: true
   };
 
-  constructor(private actividadService: ActividadService, private snackBar: MatSnackBar) {}
+  constructor(private actividadService: ActividadService, 
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.cargarActividades();
@@ -92,17 +97,27 @@ export class ActividadesComponent implements OnInit {
   }
 
   eliminarActividad(id: number) {
-    if (confirm('¿Seguro que deseas eliminar esta actividad?')) {
-      this.actividadService.eliminarActividad(id).subscribe(() => {
-        this.snackBar.open('Actividad eliminada', 'Cerrar', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '350px',
+      data: {
+        mensaje: '¿Seguro que deseas eliminar esta actividad?'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmado => {
+      if (confirmado) {
+        this.actividadService.eliminarActividad(id).subscribe(() => {
+          this.snackBar.open('Actividad eliminada', 'Cerrar', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+          });
+          this.cargarActividades();
         });
-        this.cargarActividades();
-      });
-    }
+      }
+    });
   }
+
 
   cancelar() {
     this.mostrarFormulario = false;

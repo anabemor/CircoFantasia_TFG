@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { Usuario, UsuariosService } from '../../../shared/services/usuarios.service';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { NavbarAdminComponent } from '../../../shared/components/navbar-admin.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog.component'; // ajusta la ruta si es distinta
 
 @Component({
   selector: 'app-usuarios',
@@ -19,8 +21,9 @@ export class UsuariosComponent {
 
   constructor(
     private usuariosService: UsuariosService,  
-    private snackBar: MatSnackBar)
-    {}
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
+  ) {}
   
     
 
@@ -54,11 +57,35 @@ export class UsuariosComponent {
   }
 
   eliminarUsuario(id: number): void {
-    this.usuariosService.eliminarUsuario(id).subscribe({
-      next: () => this.cargarUsuarios(),
-      error: (err) => console.error('Error al eliminar usuario:', err),
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '350px',
+      data: {
+        mensaje: '¿Estás seguro de que deseas eliminar este usuario?'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmado => {
+      if (confirmado) {
+        this.usuariosService.eliminarUsuario(id).subscribe({
+          next: () => {
+            this.cargarUsuarios();
+            this.snackBar.open('Usuario eliminado correctamente', 'Cerrar', {
+              duration: 3000,
+              verticalPosition: 'top',
+            });
+          },
+          error: (err) => {
+            console.error('Error al eliminar usuario:', err);
+            this.snackBar.open('Error al eliminar usuario', 'Cerrar', {
+              duration: 3000,
+              verticalPosition: 'top',
+            });
+          },
+        });
+      }
     });
   }
+
 
   guardarUsuario(): void {
     if (!this.usuarioSeleccionado) return;
