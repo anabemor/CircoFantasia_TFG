@@ -33,6 +33,7 @@ export class ReservaCreateFormComponent implements OnInit {
 
   form!: FormGroup;
   ticketTypes: TicketType[] = [];
+  fechaMinima: Date = new Date();
 
   constructor(
     private fb: FormBuilder,

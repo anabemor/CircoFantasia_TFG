@@ -8,6 +8,7 @@
       [matDatepicker]="picker"
       [(ngModel)]="fechaSeleccionada"
       [matDatepickerFilter]="filtroFecha"
+      [min]="fechaMinima"
       (dateChange)="onFechaCambiada($event.value)"
       name="fecha"
     />

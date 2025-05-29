@@ -16,10 +16,9 @@ export class ToastComponent {
       actionLabel?: string,
       actionCallback?: () => void
     },
-    private snackBarRef: MatSnackBarRef<ToastComponent> // ✅ AÑADIDO
+    private snackBarRef: MatSnackBarRef<ToastComponent>
   ) {}
 
-   
   get icon(): string {
     switch (this.data.type) {
       case 'success': return '✅';
@@ -34,7 +33,7 @@ export class ToastComponent {
     switch (this.data.type) {
       case 'success': return 'bg-green-600';
       case 'error': return 'bg-red-600';
-      case 'warning': return 'bg-yellow-500 text-black';
+      case 'warning': return 'bg-yellow-400 text-black';
       case 'info': return 'bg-blue-600';
       default: return 'bg-gray-700';
     }

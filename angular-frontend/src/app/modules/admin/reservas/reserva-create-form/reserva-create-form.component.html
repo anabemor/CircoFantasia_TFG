@@ -34,10 +34,17 @@
 
   <mat-form-field appearance="fill" class="w-full">
     <mat-label>Fecha de visita</mat-label>
-    <input matInput [matDatepicker]="picker2" formControlName="fechaVisita" />
+    <input
+      matInput
+      [matDatepicker]="picker2"
+      [min]="fechaMinima"
+      formControlName="fechaVisita"
+    />
     <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
     <mat-datepicker #picker2></mat-datepicker>
-    <mat-error *ngIf="form.get('fechaVisita')?.invalid && form.get('fechaVisita')?.touched">Campo obligatorio</mat-error>
+    <mat-error *ngIf="form.get('fechaVisita')?.invalid && form.get('fechaVisita')?.touched">
+      Campo obligatorio
+    </mat-error>
   </mat-form-field>
 
   <mat-form-field appearance="fill" class="w-full">

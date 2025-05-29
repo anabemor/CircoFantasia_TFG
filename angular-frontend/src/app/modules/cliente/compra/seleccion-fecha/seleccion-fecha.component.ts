@@ -28,6 +28,7 @@ export class SeleccionFechaComponent implements OnInit {
   fechaSeleccionada: Date | null = null;
   aforoDisponible: number | null = null;
   fechasBloqueadas = new Set<string>();
+  fechaMinima: Date = new Date(); //fecha mínima hoy
 
   constructor(
     private reservaService: ReservaService,

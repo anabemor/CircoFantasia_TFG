@@ -1,6 +1,6 @@
-/* You can add global styles to this file, and also import other style files */
 @import "tailwindcss";
 
+/* Posición centrada */
 .custom-snackbar-overlay {
   position: fixed !important;
   top: 50% !important;
@@ -10,20 +10,19 @@
   display: flex !important;
   justify-content: center;
   align-items: center;
-  width: auto !important;
   background: transparent !important;
   box-shadow: none !important;
   padding: 0 !important;
 }
 
-/* Elimina fondo negro de Angular Material */
+/* Elimina fondo por defecto de Angular Material */
 .mat-mdc-snack-bar-container {
   background: transparent !important;
   box-shadow: none !important;
   padding: 0 !important;
 }
 
-/* Toast container personalizada */
+/* Toast contenedor */
 .toast-container {
   width: 100%;
 }
