@@ -5,6 +5,9 @@ import { ReservaAdminService } from '../../../shared/services/reserva-admin.serv
 import { ReservaFormComponent } from './reserva-form/reserva-form.component';
 import { ReservaCreateFormComponent } from './reserva-create-form/reserva-create-form.component';
 import { NavbarAdminComponent } from '../../../shared/components/navbar-admin.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog.component';
 
 @Component({
   selector: 'app-reservas',
@@ -14,7 +17,7 @@ import { NavbarAdminComponent } from '../../../shared/components/navbar-admin.co
     ReservaFormComponent,
     ReservaCreateFormComponent,
     NavbarAdminComponent
-  ],
+],
   templateUrl: './reservas.component.html',
   styleUrls: ['./reservas.component.css']
 })
@@ -26,7 +29,11 @@ export class ReservasComponent implements OnInit {
   mostrarFormularioCreacion = false;
   reservaEnEdicion: Reserva | null = null;
 
-  constructor(private reservaService: ReservaAdminService) {}
+  constructor(private reservaService: ReservaAdminService,
+  private snackBar: MatSnackBar,  
+  private dialog: MatDialog
+  ) {}
+  
 
   ngOnInit(): void {
     this.cargarReservas();
@@ -77,29 +84,66 @@ export class ReservasComponent implements OnInit {
     this.reservaEnEdicion = null;
   }
 
-  eliminarReserva(id: number): void {
-    if (confirm('¿Estás seguro de eliminar esta reserva?')) {
-      this.reservaService.deleteReserva(id).subscribe(() => this.cargarReservas());
-    }
+ eliminarReserva(id: number): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        titulo: 'Eliminar reserva',
+        mensaje: '¿Estás seguro de eliminar esta reserva?'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmado => {
+      if (confirmado) {
+        this.reservaService.deleteReserva(id).subscribe({
+          next: () => {
+            this.snackBar.open('Reserva eliminada correctamente', 'Cerrar', {
+              duration: 3000,
+              horizontalPosition: 'right',
+              verticalPosition: 'top'
+            });
+            this.cargarReservas();
+          },
+          error: () => {
+            this.snackBar.open('Error al eliminar la reserva', 'Cerrar', {
+              duration: 3000,
+              panelClass: ['bg-red-500', 'text-white']
+            });
+          }
+        });
+      }
+    });
   }
 
   cancelarReserva(reserva: Reserva): void {
-    if (confirm('¿Seguro que deseas cancelar esta reserva?')) {
-      const reservaActualizada: Reserva = {
-        ...reserva,
-        estado: 'cancelado'
-      };
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        titulo: 'Cancelar reserva',
+        mensaje: '¿Seguro que deseas cancelar esta reserva?'
+      }
+    });
 
-      this.reservaService.updateReserva(reserva.id!, reservaActualizada).subscribe({
-        next: () => {
-          alert(`Reserva cancelada. Reembolso simulado: ${this.calcularPrecioTotal(reserva)} €`);
-          this.cargarReservas();
-        },
-        error: () => {
-          alert('Error al cancelar la reserva.');
-        }
-      });
-    }
+    dialogRef.afterClosed().subscribe(confirmado => {
+      if (confirmado) {
+        const reservaActualizada: Reserva = { ...reserva, estado: 'cancelado' };
+
+        this.reservaService.updateReserva(reserva.id!, reservaActualizada).subscribe({
+          next: () => {
+            this.snackBar.open(`Reserva cancelada. Reembolso simulado: ${this.calcularPrecioTotal(reserva)} €`, 'Cerrar', {
+              duration: 4000,
+              horizontalPosition: 'right',
+              verticalPosition: 'top'
+            });
+            this.cargarReservas();
+          },
+          error: () => {
+            this.snackBar.open('Error al cancelar la reserva', 'Cerrar', {
+              duration: 3000,
+              panelClass: ['bg-red-500', 'text-white']
+            });
+          }
+        });
+      }
+    });
   }
 
   contarEntradas(reserva: Reserva, tipo: string): number {

@@ -7,6 +7,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { TicketTypeService } from '../../../../shared/services/ticket-type.service';
 import { TicketType } from '../../../../shared/interfaces/ticket-type.interface';
@@ -23,8 +24,9 @@ import { Reserva } from '../../../../shared/interfaces/reserva.interface';
     MatDatepickerModule,
     MatButtonModule,
     MatSelectModule,
-    MatNativeDateModule
-  ],
+    MatNativeDateModule,
+    MatSnackBarModule,
+    ],
   templateUrl: './reserva-form.component.html'
 })
 export class ReservaFormComponent implements OnInit {
@@ -38,7 +40,8 @@ export class ReservaFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private ticketService: TicketTypeService,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -87,6 +90,22 @@ export class ReservaFormComponent implements OnInit {
     };
 
     this.formSubmit.emit(updatedReserva);
+
+    this.snackBar.open('Cambios guardados con éxito', 'Cerrar', {
+      duration: 3000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top'
+    });
+
+    if (this.form.invalid) {
+    this.snackBar.open('Formulario no válido', 'Cerrar', {
+      duration: 3000,
+      panelClass: ['bg-red-500', 'text-white'],
+      horizontalPosition: 'right',
+      verticalPosition: 'top'
+    });
+    return;
+  }
   }
 
   volver(): void {
