@@ -54,11 +54,18 @@ export class ReservaCreateFormComponent implements OnInit {
 
     this.ticketService.getTiposTicket().subscribe(tipos => {
       this.ticketTypes = tipos;
-      console.log('TICKETS CARGADOS:', this.ticketTypes);
-      this.initTickets();
+      const ticketsFormArray = this.form.get('tickets') as FormArray;
+      tipos.forEach(tipo => {
+        ticketsFormArray.push(
+          this.fb.group({
+            ticketType: [tipo], // objeto completo
+            cantidad: [0, [Validators.required, Validators.min(0)]]
+          })
+        );
+      });
     });
   }
-
+    
   get tickets(): FormArray {
     return this.form.get('tickets') as FormArray;
   }
@@ -82,6 +89,11 @@ export class ReservaCreateFormComponent implements OnInit {
   }
 
   submit(): void {
+      if (this.getPrecioTotal() === 0) {
+      alert('Debes seleccionar al menos una entrada');
+      return;
+    }
+    
     const raw = this.form.getRawValue();
 
     const reserva: Reserva = {
@@ -89,7 +101,9 @@ export class ReservaCreateFormComponent implements OnInit {
       fechaNacimiento: this.formatFecha(raw.fechaNacimiento),
       fechaVisita: this.formatFecha(raw.fechaVisita),
       fechaReserva: new Date().toISOString(),
-      tickets: raw.tickets.map((t: any) => ({
+      tickets: raw.tickets
+      .filter((t: any) => t.cantidad > 0)
+      .map((t: any) => ({
         ticketType: {
           id: t.ticketType.id,
           nombre: t.ticketType.nombre,
