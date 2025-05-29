@@ -5,6 +5,7 @@
 
   <!-- Botón para crear -->
   <button
+    *ngIf="!mostrarFormularioCreacion && !mostrarFormularioEdicion"
     class="mb-4 bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600"
     (click)="abrirFormularioCrear()"
   >
