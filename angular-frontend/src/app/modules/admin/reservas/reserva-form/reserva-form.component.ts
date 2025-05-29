@@ -5,6 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
 import { MatNativeDateModule } from '@angular/material/core';
 import { Router } from '@angular/router';
 import { TicketTypeService } from '../../../../shared/services/ticket-type.service';
@@ -21,6 +22,7 @@ import { Reserva } from '../../../../shared/interfaces/reserva.interface';
     MatInputModule,
     MatDatepickerModule,
     MatButtonModule,
+    MatSelectModule,
     MatNativeDateModule
   ],
   templateUrl: './reserva-form.component.html'
@@ -48,13 +50,14 @@ export class ReservaFormComponent implements OnInit {
       fechaNacimiento: [{ value: this.reserva?.fechaNacimiento || '', disabled: true }],
       email: [
         this.reserva?.email || '',
-        [
-          Validators.required,
-          Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
-        ]
+        [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]
       ],
-      telefono: [this.reserva?.telefono || '', [Validators.required, Validators.pattern(/^[0-9]{9}$/)]],
-      fechaVisita: [{ value: this.reserva?.fechaVisita || '', disabled: true }]
+      telefono: [
+        this.reserva?.telefono || '',
+        [Validators.required, Validators.pattern(/^[0-9]{9}$/)]
+      ],
+      fechaVisita: [{ value: this.reserva?.fechaVisita || '', disabled: true }],
+      estado: [this.reserva?.estado || 'pendiente', Validators.required]
     });
 
     if (this.reserva) {
@@ -73,16 +76,20 @@ export class ReservaFormComponent implements OnInit {
   submit(): void {
     if (!this.reserva) return;
 
+    const estadoActual = this.reserva.estado;
+    const nuevoEstado = this.form.value.estado;
+
     const updatedReserva: Reserva = {
       ...this.reserva,
       email: this.form.value.email,
-      telefono: this.form.value.telefono
+      telefono: this.form.value.telefono,
+      estado: estadoActual === 'pendiente' ? nuevoEstado : estadoActual
     };
 
     this.formSubmit.emit(updatedReserva);
   }
 
   volver(): void {
-     window.location.href = '/admin/reservas';
+    window.location.href = '/admin/reservas';
   }
 }
