@@ -130,4 +130,33 @@ export class UsuariosComponent {
     this.mostrarModal = false;
     this.usuarioSeleccionado = null;
   }
+
+  ordenActual: keyof Usuario | 'rol' | '' = '';
+  ordenAscendente: boolean = true;
+
+  ordenarPor(campo: keyof Usuario | 'rol'): void {
+  if (this.ordenActual === campo) {
+    this.ordenAscendente = !this.ordenAscendente;
+  } else {
+    this.ordenActual = campo;
+    this.ordenAscendente = true;
+  }
+
+  this.usuarios.sort((a, b) => {
+    let valorA: string;
+    let valorB: string;
+
+    if (campo === 'rol') {
+      valorA = a.roles.includes('ROLE_ADMIN') ? 'Administrador' : 'Gestor';
+      valorB = b.roles.includes('ROLE_ADMIN') ? 'Administrador' : 'Gestor';
+    } else {
+      valorA = a[campo]?.toString().toLowerCase() ?? '';
+      valorB = b[campo]?.toString().toLowerCase() ?? '';
+    }
+
+    return this.ordenAscendente
+      ? valorA.localeCompare(valorB)
+      : valorB.localeCompare(valorA);
+  });
+}
 }

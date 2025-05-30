@@ -1,32 +1,42 @@
 <app-navbar-admin></app-navbar-admin>
 
 <!-- Contenido principal -->
-<div class="p-4">
+<div class="p-6 max-w-7xl mx-auto">
   
 
   <h1 class="text-2xl font-semibold mb-4">Gestión de Usuarios</h1>
 
-  <button (click)="crearUsuario()" class="bg-green-600 text-white px-4 py-2 rounded mb-4">
+  <button (click)="crearUsuario()" class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded mb-4"
+>
     Crear Usuario
   </button>
 
-  <table class="w-full border border-gray-300">
-    <thead class="bg-gray-200">
+  <table class="min-w-full bg-white border border-gray-200 rounded-lg overflow-hidden shadow">
+    <thead class="bg-indigo-600 text-white">
       <tr>
-        <th class="p-2 text-left">Nombre</th>
-        <th class="p-2 text-left">Email</th>
-        <th class="p-2 text-left">Rol</th>
-        <th class="p-2 text-left">Acciones</th>
+        <th class="px-4 py-2 cursor-pointer" (click)="ordenarPor('name')">
+          Nombre
+          <span *ngIf="ordenActual === 'name'">{{ ordenAscendente ? '▲' : '▼' }}</span>
+        </th>
+        <th class="px-4 py-2 cursor-pointer" (click)="ordenarPor('email')">
+          Email
+          <span *ngIf="ordenActual === 'email'">{{ ordenAscendente ? '▲' : '▼' }}</span>
+        </th>
+        <th class="px-4 py-2 cursor-pointer" (click)="ordenarPor('rol')">
+          Rol
+          <span *ngIf="ordenActual === 'rol'">{{ ordenAscendente ? '▲' : '▼' }}</span>
+        </th>
+        <th class="px-4 py-2">Acciones</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let usuario of usuarios" class="border-t">
-        <td class="p-2">{{ usuario.name }}</td>
-        <td class="p-2">{{ usuario.email }}</td>
-        <td class="p-2">
+      <tr *ngFor="let usuario of usuarios" class="border-t border-gray-200">
+        <td class="px-4 py-2">{{ usuario.name }}</td>
+        <td class="px-4 py-2">{{ usuario.email }}</td>
+        <td class="px-4 py-2">
           {{ usuario.roles.includes('ROLE_ADMIN') ? 'Administrador' : 'Gestor' }}
         </td>
-        <td class="p-2">
+        <td class="px-4 py-2">
           <button (click)="editarUsuario(usuario)" class="text-blue-600 hover:underline mr-2">Editar</button>
           <button (click)="eliminarUsuario(usuario.id!)" class="text-red-600 hover:underline">Eliminar</button>
         </td>

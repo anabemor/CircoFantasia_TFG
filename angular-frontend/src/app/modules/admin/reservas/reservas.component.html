@@ -37,7 +37,7 @@
             Email
             <span *ngIf="ordenActual === 'email'">{{ ordenAscendente ? '▲' : '▼' }}</span>
           </th>
-          <th class="px-4 py-2">Teléfono</th>
+          <th class="px-4 py-2 text-center">Teléfono</th>
           <th class="px-4 py-2 cursor-pointer" (click)="ordenarPor('fechaVisita')">
             Fecha Visita
             <span *ngIf="ordenActual === 'fechaVisita'">{{ ordenAscendente ? '▲' : '▼' }}</span>
@@ -46,10 +46,10 @@
             Fecha Reserva
             <span *ngIf="ordenActual === 'fechaReserva'">{{ ordenAscendente ? '▲' : '▼' }}</span>
           </th>
-          <th class="px-4 py-2">Adultos</th>
-          <th class="px-4 py-2">Niños</th>
-          <th class="px-4 py-2">Total</th>
-          <th class="px-4 py-2 cursor-pointer" (click)="ordenarPor('estado')">
+          <th class="px-4 py-2 text-center">Adultos</th>
+          <th class="px-4 py-2 text-center">Niños</th>
+          <th class="px-4 py-2 text-center">Total</th>
+          <th class="px-4 py-2 text-center cursor-pointer" (click)="ordenarPor('estado')">
             Estado
             <span *ngIf="ordenActual === 'estado'">{{ ordenAscendente ? '▲' : '▼' }}</span>
           </th>
@@ -60,12 +60,12 @@
         <tr *ngFor="let reserva of reservasPaginaActual" class="border-t border-gray-200">
           <td class="px-4 py-2">{{ reserva.nombre }} {{ reserva.apellidos }}</td>
           <td class="px-4 py-2">{{ reserva.email }}</td>
-          <td class="px-4 py-2">{{ reserva.telefono }}</td>
+          <td class="px-4 py-2 text-center">{{ reserva.telefono }}</td>
           <td class="px-4 py-2">{{ reserva.fechaVisita }}</td>
           <td class="px-4 py-2">{{ reserva.fechaReserva }}</td>
-          <td class="px-4 py-2">{{ contarEntradas(reserva, 'adulto') }}</td>
-          <td class="px-4 py-2">{{ contarEntradas(reserva, 'niño') }}</td>
-          <td class="px-4 py-2">{{ calcularPrecioTotal(reserva) | currency:'EUR' }}</td>
+          <td class="px-4 py-2 text-center">{{ contarEntradas(reserva, 'adulto') }}</td>
+          <td class="px-4 py-2 text-center">{{ contarEntradas(reserva, 'niño') }}</td>
+          <td class="px-4 py-2 text-center">{{ calcularPrecioTotal(reserva) | currency:'EUR' }}</td>
           <td class="px-4 py-2">
             <span [ngClass]="{
               'text-yellow-600 font-semibold': reserva.estado === 'pendiente',
