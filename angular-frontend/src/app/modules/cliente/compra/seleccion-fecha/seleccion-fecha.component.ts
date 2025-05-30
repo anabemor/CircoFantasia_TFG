@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
 import { FormsModule } from '@angular/forms';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CompraService } from '../../../../shared/services/compra.service';
 import { ReservaService } from '../../../../shared/services/reserva.service';
+import { MY_DATE_FORMATS } from '../../../../shared/utils/date-formats';
 
 @Component({
   selector: 'app-seleccion-fecha',
@@ -21,14 +22,21 @@ import { ReservaService } from '../../../../shared/services/reserva.service';
     MatFormFieldModule,
     MatInputModule,
     MatNativeDateModule,
-  ],
-  templateUrl: './seleccion-fecha.component.html'
-})
-export class SeleccionFechaComponent implements OnInit {
-  fechaSeleccionada: Date | null = null;
-  aforoDisponible: number | null = null;
-  fechasBloqueadas = new Set<string>();
-  fechaMinima: Date = new Date(); //fecha mínima hoy
+    ],
+
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'es-ES' },
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
+    ],
+  
+    templateUrl: './seleccion-fecha.component.html'
+  })
+  
+  export class SeleccionFechaComponent implements OnInit {
+    fechaSeleccionada: Date | null = null;
+    aforoDisponible: number | null = null;
+    fechasBloqueadas = new Set<string>();
+    fechaMinima: Date = new Date(); //fecha mínima hoy
 
   constructor(
     private reservaService: ReservaService,

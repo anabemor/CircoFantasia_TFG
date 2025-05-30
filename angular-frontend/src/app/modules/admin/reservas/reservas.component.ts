@@ -1,7 +1,6 @@
-//Componente padre: hace la llamada al backend
-
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Reserva } from '../../../shared/interfaces/reserva.interface';
 import { ReservaAdminService } from '../../../shared/services/reserva-admin.service';
 import { ReservaFormComponent } from './reserva-form/reserva-form.component';
@@ -17,16 +16,21 @@ import { AdminAforoComponent } from './aforo/aforo.component';
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     ReservaFormComponent,
     ReservaCreateFormComponent,
     NavbarAdminComponent,
     AdminAforoComponent
-],
+  ],
   templateUrl: './reservas.component.html',
   styleUrls: ['./reservas.component.css']
 })
 export class ReservasComponent implements OnInit {
   reservas: Reserva[] = [];
+  reservasFiltradas: Reserva[] = [];
+
+  filtroTexto: string = '';
+  filtroFecha: string = '';
 
   // NUEVO: mensaje de aforo para el hijo
   aforoError: string | null = null;
@@ -49,16 +53,46 @@ export class ReservasComponent implements OnInit {
 
   cargarReservas(): void {
     this.reservaService.getReservas().subscribe({
-      next: (data) => this.reservas = data,
+      next: (data) => {
+        this.reservas = data;
+        this.aplicarFiltros(); // Aplica filtros automáticamente
+      },
       error: () => alert('Error al cargar las reservas')
     });
+  }
+
+  filtroEstado: string = '';
+
+  aplicarFiltros(): void {
+    const texto = this.filtroTexto.toLowerCase();
+    const fecha = this.filtroFecha;
+    const estado = this.filtroEstado;
+
+    this.reservasFiltradas = this.reservas.filter((reserva) => {
+      const coincideTexto =
+        reserva.nombre.toLowerCase().includes(texto) ||
+        reserva.apellidos.toLowerCase().includes(texto) ||
+        reserva.email.toLowerCase().includes(texto);
+
+      const coincideFecha = fecha
+        ? reserva.fechaVisita.startsWith(fecha)
+        : true;
+
+      const coincideEstado = estado
+        ? reserva.estado === estado
+        : true;
+
+      return coincideTexto && coincideFecha && coincideEstado;
+    });
+
+    this.currentPage = 1;
   }
 
   abrirFormularioCrear(): void {
     this.mostrarFormularioCreacion = true;
     this.mostrarFormularioEdicion = false;
     this.reservaEnEdicion = null;
-    this.aforoError = null; // Limpiar errores al abrir
+    this.aforoError = null;
   }
 
   crearReserva(reserva: Reserva): void {
@@ -73,13 +107,13 @@ export class ReservasComponent implements OnInit {
         });
       },
       error: (err) => {
-        console.error('Error al crear reserva:', err); // 🐞 debería verse aquí
+        console.error('Error al crear reserva:', err);
         const mensaje = err?.error?.error || 'Error al crear la reserva';
         this.aforoError = mensaje;
       }
     });
   }
-  // EDICIÓN
+
   editarReserva(reserva: Reserva): void {
     this.reservaEnEdicion = reserva;
     this.mostrarFormularioEdicion = true;
@@ -101,7 +135,7 @@ export class ReservasComponent implements OnInit {
     this.reservaEnEdicion = null;
   }
 
- eliminarReserva(id: number): void {
+  eliminarReserva(id: number): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         titulo: 'Eliminar reserva',
@@ -185,28 +219,28 @@ export class ReservasComponent implements OnInit {
 
   toggleAforo(): void {
     this.mostrarAforo = !this.mostrarAforo;
-  } 
-
-      // Paginación
-    currentPage = 1;
-    itemsPerPage = 10;
-
-  get totalPages(): number {
-    return Math.ceil(this.reservas.length / this.itemsPerPage);
   }
 
-  get reservasPaginaActual(): Reserva[] {
-    const start = (this.currentPage - 1) * this.itemsPerPage;
-     return this.reservas.slice(start, start + this.itemsPerPage);
+  // Paginación
+  currentPage = 1;
+  itemsPerPage = 10;
+
+  get totalPages(): number {
+    return Math.ceil(this.reservasFiltradas.length / this.itemsPerPage);
+  }
+
+  get reservasFiltradasPaginaActual(): Reserva[] {
+    const inicio = (this.currentPage - 1) * this.itemsPerPage;
+    return this.reservasFiltradas.slice(inicio, inicio + this.itemsPerPage);
   }
 
   cambiarPagina(pagina: number): void {
     if (pagina >= 1 && pagina <= this.totalPages) {
-    this.currentPage = pagina;
+      this.currentPage = pagina;
     }
   }
 
-  // ordernar tabla por campo
+  // Ordenar tabla
   ordenActual: keyof Reserva | '' = '';
   ordenAscendente = true;
 
@@ -218,7 +252,7 @@ export class ReservasComponent implements OnInit {
       this.ordenAscendente = true;
     }
 
-    this.reservas.sort((a, b) => {
+    this.reservasFiltradas.sort((a, b) => {
       const valorA = a[campo] ?? '';
       const valorB = b[campo] ?? '';
 
@@ -235,4 +269,13 @@ export class ReservasComponent implements OnInit {
       return 0;
     });
   }
+  
+
+  limpiarFiltros(): void {
+  this.filtroTexto = '';
+  this.filtroFecha = '';
+  this.filtroEstado= '';
+  this.aplicarFiltros();
+  }
+
 }

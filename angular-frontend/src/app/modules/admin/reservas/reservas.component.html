@@ -21,8 +21,46 @@
   </button>
 </div>
 
+
+
   <!-- Tabla de aforo -->
   <app-aforo *ngIf="mostrarAforo" class="mb-10"></app-aforo>
+
+  <!-- Buscador -->
+  <div class="flex flex-wrap gap-4 mb-6 items-end">
+    <input
+      type="text"
+      [(ngModel)]="filtroTexto"
+      (ngModelChange)="aplicarFiltros()"
+      placeholder="Buscar por nombre o email"
+      class="border p-2 rounded w-full md:w-1/3"
+    />
+
+    <input
+      type="date"
+      [(ngModel)]="filtroFecha"
+      (change)="aplicarFiltros()"
+      class="border p-2 rounded w-full md:w-1/3"
+    />
+
+     <!-- Estado -->
+    <select
+      [(ngModel)]="filtroEstado"
+      (change)="aplicarFiltros()"
+      class="border p-2 rounded w-full md:w-1/4"
+    >
+      <option value="">Todos los estados</option>
+      <option value="pagado">Pagado</option>
+      <option value="pendiente">Pendiente</option>
+      <option value="cancelado">Cancelado</option>
+    </select>
+    <button
+      class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded w-full md:w-auto"
+      (click)="limpiarFiltros()"
+    >
+      Borrar filtros
+    </button>
+  </div>  
 
   <!-- Tabla de reservas -->
   <ng-container *ngIf="!mostrarFormularioCreacion && !mostrarFormularioEdicion; else formularioActivo">
@@ -57,7 +95,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let reserva of reservasPaginaActual" class="border-t border-gray-200">
+        <tr *ngFor="let reserva of reservasFiltradasPaginaActual" class="border-t border-gray-200">
           <td class="px-4 py-2">{{ reserva.nombre }} {{ reserva.apellidos }}</td>
           <td class="px-4 py-2">{{ reserva.email }}</td>
           <td class="px-4 py-2 text-center">{{ reserva.telefono }}</td>
