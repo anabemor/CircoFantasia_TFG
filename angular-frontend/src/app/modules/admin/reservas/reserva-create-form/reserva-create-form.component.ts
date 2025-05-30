@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output, OnInit, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -157,8 +157,8 @@ export class ReservaCreateFormComponent implements OnInit {
   }
 
   formatFecha(date: any): string {
-    if (typeof date === 'string') return date;
-    return date?.toISOString().split('T')[0];
+  if (typeof date === 'string') return date;
+  return formatDate(date, 'yyyy-MM-dd', 'en'); // usa 'en' para evitar errores si 'es-ES' no está registrado
   }
 
   volver(): void {

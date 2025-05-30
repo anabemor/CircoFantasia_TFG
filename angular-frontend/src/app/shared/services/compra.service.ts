@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { Reserva } from '../interfaces/reserva.interface';
 import { ReservaEnvio } from '../interfaces/reserva-envio.interface';
 import { Actividad } from '../interfaces/actividad.interface';
+import { formatDate } from '@angular/common';
 
 export interface TicketSeleccionado {
   id: number;
@@ -68,7 +69,7 @@ crearReserva(): ReservaEnvio | null {
     fechaNacimiento: this.datosCliente.fechaNacimiento,
     email: this.datosCliente.email,
     telefono: this.datosCliente.telefono,
-    fechaVisita: this.fechaSeleccionada.toISOString().split('T')[0],
+    fechaVisita: formatDate(this.fechaSeleccionada, 'yyyy-MM-dd', 'en'),
     fechaReserva: new Date().toISOString().split('T')[0],
     aceptoCondiciones: this.datosCliente.aceptoCondiciones,
     tickets: this.getTickets().map(ticket => ({

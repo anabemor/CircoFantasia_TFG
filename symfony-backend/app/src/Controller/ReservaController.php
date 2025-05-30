@@ -32,7 +32,15 @@ class ReservaController extends AbstractController
 
         // Validación de aforo
         $fechaVisita = new \DateTime($data['fechaVisita']);
-        $reservasEseDia = $em->getRepository(Reserva::class)->findBy(['fechaVisita' => $fechaVisita]);
+
+        // Solo considerar reservas en estado 'pagado' o 'pendiente'
+        $reservasEseDia = $em->getRepository(Reserva::class)->createQueryBuilder('r')
+            ->andWhere('r.fechaVisita = :fecha')
+            ->andWhere('r.estado IN (:estados)')
+            ->setParameter('fecha', $fechaVisita)
+            ->setParameter('estados', ['pagado', 'pendiente'])
+            ->getQuery()
+            ->getResult();
 
         $aforoActual = 0;
         foreach ($reservasEseDia as $reservaExistente) {
@@ -63,6 +71,9 @@ class ReservaController extends AbstractController
         $reserva->setFechaReserva(new \DateTime());
         $reserva->setAceptoCondiciones($data['aceptoCondiciones'] ?? false);
 
+        // Por defecto, establecer estado como 'pendiente'
+        $reserva->setEstado('pendiente');
+
         foreach ($data['tickets'] as $ticket) {
             if (!isset($ticket['ticketType']['id'], $ticket['cantidad'])) continue;
 
@@ -85,7 +96,15 @@ class ReservaController extends AbstractController
     public function consultarAforo(string $fecha, EntityManagerInterface $em): JsonResponse
     {
         $fechaObj = new \DateTime($fecha);
-        $reservas = $em->getRepository(Reserva::class)->findBy(['fechaVisita' => $fechaObj]);
+
+        // Filtrar solo reservas con estado 'pagado' o 'pendiente'
+        $reservas = $em->getRepository(Reserva::class)->createQueryBuilder('r')
+            ->andWhere('r.fechaVisita = :fecha')
+            ->andWhere('r.estado IN (:estados)')
+            ->setParameter('fecha', $fechaObj)
+            ->setParameter('estados', ['pagado', 'pendiente'])
+            ->getQuery()
+            ->getResult();
 
         $total = 0;
         foreach ($reservas as $reserva) {

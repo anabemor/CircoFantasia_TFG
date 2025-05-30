@@ -46,6 +46,12 @@ import { MY_DATE_FORMATS } from '../../../../shared/utils/date-formats';
 
   ngOnInit(): void {
     this.consultarAforoProximosDias();
+
+    const fechaGuardada = this.compraService.getFecha();
+    if (fechaGuardada) {
+      this.fechaSeleccionada = fechaGuardada;
+      this.onFechaCambiada(fechaGuardada); // 🔁 actualiza aforo si ya hay fecha seleccionada
+    }
   }
 
   consultarAforoProximosDias(): void {

@@ -2,8 +2,8 @@
   <h2 class="text-lg font-bold">Resumen del Pedido</h2>
 
   <!-- Actividad -->
-  <div *ngIf="compraService.getActividad()" class="text-sm text-gray-700">
-    <span class="font-medium">Actividad:</span>
+  <div *ngIf="compraService.getActividad()" class="text-sm text-red-800">
+    <span class="font-medium">Actividad: </span>
     <span>{{ compraService.getActividad()?.nombre }}</span>
   </div>
 
