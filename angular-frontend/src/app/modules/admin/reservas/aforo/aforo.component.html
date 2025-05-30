@@ -1,23 +1,47 @@
-<h2 class="text-lg font-semibold mb-4">Aforo próximos 30 días</h2>
-<table class="w-full text-sm border border-gray-300">
-  <thead class="bg-gray-100 text-left">
+<div class="mb-12">
+  
+<h2 class="text-xl font-bold text-gray-700 mb-4">Aforo próximos 30 días</h2>
+
+<table class="min-w-full bg-white border border-gray-200 rounded-lg overflow-hidden shadow text-sm">
+  <thead class="bg-green-500 text-white text-center">
     <tr>
-      <th class="p-2 border">Fecha</th>
-      <th class="p-2 border">Ocupado</th>
-      <th class="p-2 border">Disponible</th>
-      <th class="p-2 border">Estado</th>
+      <th class="px-4 py-2">Fecha</th>
+      <th class="px-4 py-2">Ocupado</th>
+      <th class="px-4 py-2">Disponible</th>
+      <th class="px-4 py-2">Estado</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let aforo of aforoDatos">
-      <td class="p-2 border">{{ aforo.fecha }}</td>
-      <td class="p-2 border">{{ aforo.ocupado }}</td>
-      <td class="p-2 border">{{ aforo.disponible }}</td>
-      <td class="p-2 border">
-        <span [ngClass]="aforo.ocupado >= 60 ? 'text-red-600 font-bold' : 'text-green-600'">
+    <tr *ngFor="let aforo of fechasPaginaActual" class="border-t border-gray-200 text-center">
+      <td class="px-4 py-2">{{ aforo.fecha }}</td>
+      <td class="px-4 py-2">{{ aforo.ocupado }}</td>
+      <td class="px-4 py-2">{{ aforo.disponible }}</td>
+      <td class="px-4 py-2">
+        <span [ngClass]="aforo.ocupado >= 60 ? 'text-red-600 font-bold' : 'text-green-600 font-semibold'">
           {{ aforo.ocupado >= 60 ? '❌ Completo' : '✅ Disponible' }}
         </span>
       </td>
     </tr>
   </tbody>
 </table>
+
+
+<!-- Paginación -->
+<div class="flex justify-end mt-4 space-x-2">
+  <button
+    class="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
+    (click)="cambiarPagina(currentPage - 1)"
+    [disabled]="currentPage === 1"
+  >
+    Anterior
+    </button>
+    <button
+      class="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
+      (click)="cambiarPagina(currentPage + 1)"
+      [disabled]="currentPage === totalPages"
+    >
+      Siguiente
+    </button>
+  </div>
+  
+</div>

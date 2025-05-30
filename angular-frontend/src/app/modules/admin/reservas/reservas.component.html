@@ -4,22 +4,25 @@
   <h2 class="text-2xl font-bold mb-4 text-gray-800">Gestión de Reservas</h2>
 
   <!-- Botones de acción -->
-  <div class="flex justify-between items-center mb-4">
-    <button
-      *ngIf="!mostrarFormularioCreacion && !mostrarFormularioEdicion"
-      class="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600"
-      (click)="abrirFormularioCrear()"
-    >
-      Crear nueva reserva
-    </button>
+<div class="flex justify-between items-center mb-6">
+  <button
+    *ngIf="!mostrarFormularioCreacion && !mostrarFormularioEdicion"
+    class="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600"
+    (click)="abrirFormularioCrear()"
+  >
+    Crear nueva reserva
+  </button>
 
-    <button mat-raised-button color="accent" (click)="toggleAforo()">
-      {{ mostrarAforo ? 'Ocultar aforo' : 'Ver aforo' }}
-    </button>
-  </div>
+  <button
+    class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+    (click)="toggleAforo()"
+  >
+    {{ mostrarAforo ? 'Ocultar aforo' : 'Ver aforo' }}
+  </button>
+</div>
 
   <!-- Tabla de aforo -->
-  <app-aforo *ngIf="mostrarAforo" class="mb-6"></app-aforo>
+  <app-aforo *ngIf="mostrarAforo" class="mb-10"></app-aforo>
 
   <!-- Tabla de reservas -->
   <ng-container *ngIf="!mostrarFormularioCreacion && !mostrarFormularioEdicion; else formularioActivo">
