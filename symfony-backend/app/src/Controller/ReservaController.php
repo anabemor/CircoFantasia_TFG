@@ -72,7 +72,7 @@ class ReservaController extends AbstractController
         $reserva->setAceptoCondiciones($data['aceptoCondiciones'] ?? false);
 
         // Por defecto, establecer estado como 'pendiente'
-        $reserva->setEstado('pendiente');
+        $reserva->setEstado($data['estado'] ?? 'pendiente');
 
         foreach ($data['tickets'] as $ticket) {
             if (!isset($ticket['ticketType']['id'], $ticket['cantidad'])) continue;

@@ -72,6 +72,7 @@ crearReserva(): ReservaEnvio | null {
     fechaVisita: formatDate(this.fechaSeleccionada, 'yyyy-MM-dd', 'en'),
     fechaReserva: new Date().toISOString().split('T')[0],
     aceptoCondiciones: this.datosCliente.aceptoCondiciones,
+    estado: 'pagado',
     tickets: this.getTickets().map(ticket => ({
       ticketType: { id: ticket.id }, //  solo enviamos el id
       cantidad: ticket.cantidad

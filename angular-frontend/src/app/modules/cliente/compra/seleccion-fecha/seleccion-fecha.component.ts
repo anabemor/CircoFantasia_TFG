@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -88,7 +88,7 @@ import { MY_DATE_FORMATS } from '../../../../shared/utils/date-formats';
       return;
     }
 
-    const iso = fecha.toISOString().split('T')[0];
+    const iso = formatDate(fecha, 'yyyy-MM-dd', 'en');
     this.reservaService.getAforoPorFecha(iso).subscribe({
       next: (res) => {
         this.aforoDisponible = res.disponible;

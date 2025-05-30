@@ -7,6 +7,7 @@ export interface ReservaEnvio {
   fechaVisita: string;
   fechaReserva: string;
   aceptoCondiciones: boolean;
+  estado: string;
   tickets: {
     ticketType: {
       id: number;
