@@ -32,16 +32,17 @@
     <mat-error *ngIf="form.get('telefono')?.invalid && form.get('telefono')?.touched">Debe tener 9 dígitos</mat-error>
   </mat-form-field>
 
-  <mat-form-field appearance="fill" class="w-full">
+    <mat-form-field appearance="fill" class="w-full">
     <mat-label>Fecha de visita</mat-label>
     <input
       matInput
       [matDatepicker]="picker2"
       [min]="fechaMinima"
+      [matDatepickerFilter]="filtroFechaDisponible"
       formControlName="fechaVisita"
     />
     <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-    <mat-datepicker #picker2></mat-datepicker>
+    <mat-datepicker #picker2 [dateClass]="marcarFechasCompletas"></mat-datepicker>
     <mat-error *ngIf="form.get('fechaVisita')?.invalid && form.get('fechaVisita')?.touched">
       Campo obligatorio
     </mat-error>
@@ -73,6 +74,11 @@
   <!-- Total -->
   <div class="text-right font-bold text-lg mt-4">
     Total: {{ getPrecioTotal() | currency:'EUR' }}
+  </div>
+  
+  <!--  Aforo completo -->
+  <div *ngIf="aforoError" class="text-red-600 text-sm mt-2 text-right">
+    {{ aforoError }}
   </div>
 
   <!-- Botones -->

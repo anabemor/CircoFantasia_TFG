@@ -1,3 +1,5 @@
+//Componente padre: hace la llamada al backend
+
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Reserva } from '../../../shared/interfaces/reserva.interface';
@@ -8,6 +10,7 @@ import { NavbarAdminComponent } from '../../../shared/components/navbar-admin.co
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog.component';
+import { AdminAforoComponent } from './aforo/aforo.component';
 
 @Component({
   selector: 'app-reservas',
@@ -16,7 +19,8 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
     CommonModule,
     ReservaFormComponent,
     ReservaCreateFormComponent,
-    NavbarAdminComponent
+    NavbarAdminComponent,
+    AdminAforoComponent
 ],
   templateUrl: './reservas.component.html',
   styleUrls: ['./reservas.component.css']
@@ -24,16 +28,20 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
 export class ReservasComponent implements OnInit {
   reservas: Reserva[] = [];
 
+  // NUEVO: mensaje de aforo para el hijo
+  aforoError: string | null = null;
+
   // Controladores
   mostrarFormularioEdicion = false;
   mostrarFormularioCreacion = false;
   reservaEnEdicion: Reserva | null = null;
+  mostrarAforo = false;
 
-  constructor(private reservaService: ReservaAdminService,
-  private snackBar: MatSnackBar,  
-  private dialog: MatDialog
+  constructor(
+    private reservaService: ReservaAdminService,
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {}
-  
 
   ngOnInit(): void {
     this.cargarReservas();
@@ -41,27 +49,36 @@ export class ReservasComponent implements OnInit {
 
   cargarReservas(): void {
     this.reservaService.getReservas().subscribe({
-      next: (data) => {
-        this.reservas = data;
-      },
+      next: (data) => this.reservas = data,
       error: () => alert('Error al cargar las reservas')
     });
   }
 
-  // CREACIÓN
   abrirFormularioCrear(): void {
     this.mostrarFormularioCreacion = true;
     this.mostrarFormularioEdicion = false;
     this.reservaEnEdicion = null;
+    this.aforoError = null; // Limpiar errores al abrir
   }
 
   crearReserva(reserva: Reserva): void {
-    this.reservaService.createReserva(reserva).subscribe(() => {
-      this.cargarReservas();
-      this.mostrarFormularioCreacion = false;
+    this.reservaService.createReserva(reserva).subscribe({
+      next: () => {
+        this.cargarReservas();
+        this.mostrarFormularioCreacion = false;
+        this.aforoError = null;
+        this.snackBar.open('Reserva creada correctamente', 'Cerrar', {
+          duration: 3000,
+          verticalPosition: 'top',
+        });
+      },
+      error: (err) => {
+        console.error('Error al crear reserva:', err); // 🐞 debería verse aquí
+        const mensaje = err?.error?.error || 'Error al crear la reserva';
+        this.aforoError = mensaje;
+      }
     });
   }
-
   // EDICIÓN
   editarReserva(reserva: Reserva): void {
     this.reservaEnEdicion = reserva;
@@ -165,4 +182,8 @@ export class ReservasComponent implements OnInit {
       default: return estado;
     }
   }
+
+  toggleAforo(): void {
+    this.mostrarAforo = !this.mostrarAforo;
+  } 
 }

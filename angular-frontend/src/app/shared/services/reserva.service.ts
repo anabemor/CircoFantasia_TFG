@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ReservaEnvio } from '../interfaces/reserva-envio.interface';
-import { Observable } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ReservaService {
@@ -19,4 +19,16 @@ export class ReservaService {
     `${this.baseUrl}/reservas/aforo/${fecha}`
   );
 }
+
+getAforoProximos30Dias(): Observable<{ fecha: string; ocupado: number; disponible: number }[]> {
+  const fechas = Array.from({ length: 30 }, (_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() + i);
+    return d.toISOString().split('T')[0];
+  });
+
+  return forkJoin(fechas.map(f => this.getAforoPorFecha(f)));
+}
+
+
 }

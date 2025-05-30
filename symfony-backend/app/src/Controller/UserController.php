@@ -62,8 +62,8 @@ final class UserController extends AbstractController
             $passwordHasher->hashPassword($user, $data['password'])
         );
 
-        $em->persist($user);
-        $em->flush();
+            $em->persist($user);
+            $em->flush();
 
         return $this->json(['message' => 'Usuario creado']);
     }
@@ -93,9 +93,9 @@ final class UserController extends AbstractController
             );
         }
 
-        $em->flush();
+            $em->flush();
 
-        return $this->json(['message' => 'Usuario actualizado']);
+            return $this->json(['message' => 'Usuario actualizado']);
     }
 
     #[Route('/users/{id}', name: 'user_delete', methods: ['DELETE'])]

@@ -18,7 +18,7 @@ export class UsuariosComponent {
   usuarios: Usuario[] = [];
   usuarioSeleccionado: Usuario | null = null;
   mostrarModal: boolean = false;
-
+  
   constructor(
     private usuariosService: UsuariosService,  
     private snackBar: MatSnackBar,
