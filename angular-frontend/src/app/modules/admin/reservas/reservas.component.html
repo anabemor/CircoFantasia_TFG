@@ -26,20 +26,35 @@
     <table class="min-w-full bg-white border border-gray-200 rounded-lg overflow-hidden shadow">
       <thead class="bg-indigo-600 text-white">
         <tr>
-          <th class="px-4 py-2">Nombre</th>
-          <th class="px-4 py-2">Email</th>
+          <th class="px-4 py-2 cursor-pointer" (click)="ordenarPor('nombre')">
+            Nombre
+            <span *ngIf="ordenActual === 'nombre'">{{ ordenAscendente ? '▲' : '▼' }}</span>
+          </th>
+          <th class="px-4 py-2 cursor-pointer" (click)="ordenarPor('email')">
+            Email
+            <span *ngIf="ordenActual === 'email'">{{ ordenAscendente ? '▲' : '▼' }}</span>
+          </th>
           <th class="px-4 py-2">Teléfono</th>
-          <th class="px-4 py-2">Fecha Visita</th>
-          <th class="px-4 py-2">Fecha Reserva</th>
+          <th class="px-4 py-2 cursor-pointer" (click)="ordenarPor('fechaVisita')">
+            Fecha Visita
+            <span *ngIf="ordenActual === 'fechaVisita'">{{ ordenAscendente ? '▲' : '▼' }}</span>
+          </th>
+          <th class="px-4 py-2 cursor-pointer" (click)="ordenarPor('fechaReserva')">
+            Fecha Reserva
+            <span *ngIf="ordenActual === 'fechaReserva'">{{ ordenAscendente ? '▲' : '▼' }}</span>
+          </th>
           <th class="px-4 py-2">Adultos</th>
           <th class="px-4 py-2">Niños</th>
           <th class="px-4 py-2">Total</th>
-          <th class="px-4 py-2">Estado</th>
+          <th class="px-4 py-2 cursor-pointer" (click)="ordenarPor('estado')">
+            Estado
+            <span *ngIf="ordenActual === 'estado'">{{ ordenAscendente ? '▲' : '▼' }}</span>
+          </th>
           <th class="px-4 py-2">Acciones</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let reserva of reservas" class="border-t border-gray-200">
+        <tr *ngFor="let reserva of reservasPaginaActual" class="border-t border-gray-200">
           <td class="px-4 py-2">{{ reserva.nombre }} {{ reserva.apellidos }}</td>
           <td class="px-4 py-2">{{ reserva.email }}</td>
           <td class="px-4 py-2">{{ reserva.telefono }}</td>
@@ -65,6 +80,17 @@
         </tr>
       </tbody>
     </table>
+
+    <!-- Navegación paginación -->
+    <div class="mt-4 flex justify-center gap-2 text-sm">
+      <button class="px-3 py-1 border rounded" [disabled]="currentPage === 1" (click)="cambiarPagina(currentPage - 1)">
+        ← Anterior
+      </button>
+      <span>Página {{ currentPage }} de {{ totalPages }}</span>
+      <button class="px-3 py-1 border rounded" [disabled]="currentPage === totalPages" (click)="cambiarPagina(currentPage + 1)">
+        Siguiente →
+      </button>
+    </div>
   </ng-container>
 
   <!-- Formularios -->

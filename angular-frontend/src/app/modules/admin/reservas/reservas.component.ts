@@ -186,4 +186,53 @@ export class ReservasComponent implements OnInit {
   toggleAforo(): void {
     this.mostrarAforo = !this.mostrarAforo;
   } 
+
+      // Paginación
+    currentPage = 1;
+    itemsPerPage = 10;
+
+  get totalPages(): number {
+    return Math.ceil(this.reservas.length / this.itemsPerPage);
+  }
+
+  get reservasPaginaActual(): Reserva[] {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+     return this.reservas.slice(start, start + this.itemsPerPage);
+  }
+
+  cambiarPagina(pagina: number): void {
+    if (pagina >= 1 && pagina <= this.totalPages) {
+    this.currentPage = pagina;
+    }
+  }
+
+  // ordernar tabla por campo
+  ordenActual: keyof Reserva | '' = '';
+  ordenAscendente = true;
+
+  ordenarPor(campo: keyof Reserva): void {
+    if (this.ordenActual === campo) {
+      this.ordenAscendente = !this.ordenAscendente;
+    } else {
+      this.ordenActual = campo;
+      this.ordenAscendente = true;
+    }
+
+    this.reservas.sort((a, b) => {
+      const valorA = a[campo] ?? '';
+      const valorB = b[campo] ?? '';
+
+      if (typeof valorA === 'string' && typeof valorB === 'string') {
+        return this.ordenAscendente
+          ? valorA.localeCompare(valorB)
+          : valorB.localeCompare(valorA);
+      }
+
+      if (typeof valorA === 'number' && typeof valorB === 'number') {
+        return this.ordenAscendente ? valorA - valorB : valorB - valorA;
+      }
+
+      return 0;
+    });
+  }
 }
