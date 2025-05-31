@@ -38,6 +38,7 @@ export class ReservaCreateFormComponent implements OnInit {
   ticketTypes: TicketType[] = [];
   fechaMinima: Date = new Date();
   fechasCompletas: string[] = [];
+  fechasCargadas: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -57,10 +58,15 @@ export class ReservaCreateFormComponent implements OnInit {
       nombre: ['', Validators.required],
       apellidos: ['', Validators.required],
       fechaNacimiento: ['', Validators.required],
-      email: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],
-      telefono: ['', [Validators.required, Validators.pattern(/^[0-9]{9}$/)]],
+      email: ['', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
+      ]],
+      telefono: ['', [
+        Validators.required,
+        Validators.pattern(/^[0-9]{9}$/)
+      ]],
       fechaVisita: ['', Validators.required],
-      //estado: ['pendiente', Validators.required],
       tickets: this.fb.array([])
     });
   }
@@ -92,6 +98,8 @@ export class ReservaCreateFormComponent implements OnInit {
         this.fechasCompletas = result
           .filter(r => r.ocupado >= 60)
           .map(r => r.fecha);
+
+        this.fechasCargadas = true;
       });
   }
 
@@ -157,11 +165,19 @@ export class ReservaCreateFormComponent implements OnInit {
   }
 
   formatFecha(date: any): string {
-  if (typeof date === 'string') return date;
-  return formatDate(date, 'yyyy-MM-dd', 'es'); 
+    if (typeof date === 'string') return date;
+    return formatDate(date, 'yyyy-MM-dd', 'es');
   }
 
   volver(): void {
     window.location.href = '/admin/reservas';
   }
+
+  // 🟩 GETTERS para evitar errores en el HTML
+  get nombreControl() { return this.form.get('nombre')!; }
+  get apellidosControl() { return this.form.get('apellidos')!; }
+  get fechaNacimientoControl() { return this.form.get('fechaNacimiento')!; }
+  get emailControl() { return this.form.get('email')!; }
+  get telefonoControl() { return this.form.get('telefono')!; }
+  get fechaVisitaControl() { return this.form.get('fechaVisita')!; }
 }

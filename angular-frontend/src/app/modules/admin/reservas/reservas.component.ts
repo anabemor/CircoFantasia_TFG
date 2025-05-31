@@ -10,12 +10,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog.component';
 import { AdminAforoComponent } from './aforo/aforo.component';
+import { RouterModule } from '@angular/router'; 
 
 @Component({
   selector: 'app-reservas',
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
     FormsModule,
     ReservaFormComponent,
     ReservaCreateFormComponent,
