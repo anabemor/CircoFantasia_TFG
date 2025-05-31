@@ -12,6 +12,7 @@ import { SeleccionFechaComponent } from './modules/cliente/compra/seleccion-fech
 import { DatosVisitanteComponent } from './modules/cliente/compra/datos-visitante/datos-visitante.component';
 import { ResumenPagoComponent } from './modules/cliente/compra/resumen-pago/resumen-pago.component';
 import { ConfirmacionComponent } from './modules/cliente/compra/confirmacion/confirmacion.component';
+import { AdminAuthGuard } from './shared/guards/admin-auth.guard';
 
 export const routes: Routes = [
     {path: "", component: LandingComponent},
@@ -21,10 +22,10 @@ export const routes: Routes = [
     loadComponent: () => import('./modules/login/recuperar-password.component').then(m => m.RecuperarPasswordComponent)
     },
     {path: 'register', component: RegisterComponent},
-    {path: 'admin', component: AdminDashboardComponent}, 
-    {path: 'admin/usuarios', component: UsuariosComponent},
-    {path: 'admin/actividades', component: ActividadesComponent},
-    {path: 'admin/reservas', component: ReservasComponent},
+    {path: 'admin', component: AdminDashboardComponent, canActivate: [AdminAuthGuard] },  
+    {path: 'admin/usuarios', component: UsuariosComponent, canActivate: [AdminAuthGuard] },
+    {path: 'admin/actividades', component: ActividadesComponent, canActivate: [AdminAuthGuard] },
+    {path: 'admin/reservas', component: ReservasComponent, canActivate: [AdminAuthGuard] }, 
     {path: 'compra',
         component: CompraComponent,
         children: [
