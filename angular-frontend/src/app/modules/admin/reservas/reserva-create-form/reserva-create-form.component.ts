@@ -84,7 +84,7 @@ export class ReservaCreateFormComponent implements OnInit {
     const fechas = Array.from({ length: 30 }, (_, i) => {
       const d = new Date();
       d.setDate(d.getDate() + i);
-      return d.toISOString().split('T')[0];
+      return formatDate(d, 'yyyy-MM-dd', 'es');
     });
 
     forkJoin(fechas.map(f => this.reservaService.getAforoPorFecha(f)))
@@ -96,13 +96,13 @@ export class ReservaCreateFormComponent implements OnInit {
   }
 
   marcarFechasCompletas = (date: Date): string => {
-    const fechaStr = date.toISOString().split('T')[0];
+    const fechaStr = formatDate(date, 'yyyy-MM-dd', 'es');
     return this.fechasCompletas.includes(fechaStr) ? 'fecha-completa' : '';
   };
 
   filtroFechaDisponible = (date: Date | null): boolean => {
     if (!date) return false;
-    const fechaStr = date.toISOString().split('T')[0];
+    const fechaStr = formatDate(date, 'yyyy-MM-dd', 'es');
     return !this.fechasCompletas.includes(fechaStr);
   };
 
@@ -139,7 +139,7 @@ export class ReservaCreateFormComponent implements OnInit {
       ...raw,
       fechaNacimiento: this.formatFecha(raw.fechaNacimiento),
       fechaVisita: this.formatFecha(raw.fechaVisita),
-      fechaReserva: new Date().toISOString(),
+      fechaReserva: formatDate(new Date(), 'yyyy-MM-dd HH:mm:ss', 'es'),
       tickets: raw.tickets
         .filter((t: any) => t.cantidad > 0)
         .map((t: any) => ({
@@ -158,7 +158,7 @@ export class ReservaCreateFormComponent implements OnInit {
 
   formatFecha(date: any): string {
   if (typeof date === 'string') return date;
-  return formatDate(date, 'yyyy-MM-dd', 'en'); // usa 'en' para evitar errores si 'es-ES' no está registrado
+  return formatDate(date, 'yyyy-MM-dd', 'es'); 
   }
 
   volver(): void {

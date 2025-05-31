@@ -72,8 +72,8 @@ crearReserva(): ReservaEnvio | null {
     fechaNacimiento: this.datosCliente.fechaNacimiento,
     email: this.datosCliente.email,
     telefono: this.datosCliente.telefono,
-    fechaVisita: formatDate(this.fechaSeleccionada, 'yyyy-MM-dd', 'en'),
-    fechaReserva: new Date().toISOString().split('T')[0],
+    fechaVisita: formatDate(this.fechaSeleccionada, 'yyyy-MM-dd', 'es'),
+    fechaReserva: formatDate(new Date(), 'yyyy-MM-dd', 'es'),
     aceptoCondiciones: this.datosCliente.aceptoCondiciones,
     estado: 'pagado',
     tickets: this.getTickets().map(ticket => ({

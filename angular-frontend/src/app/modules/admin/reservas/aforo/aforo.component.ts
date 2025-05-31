@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { ReservaService } from '../../../../shared/services/reserva.service';
 import { forkJoin, Observable } from 'rxjs';
 
@@ -22,7 +22,7 @@ export class AdminAforoComponent implements OnInit {
     const fechas = Array.from({ length: 30 }, (_, i) => {
       const d = new Date();
       d.setDate(d.getDate() + i);
-      return d.toISOString().split('T')[0];
+      return formatDate(d, 'yyyy-MM-dd', 'es');
     });
 
     const observables: Observable<{ fecha: string; ocupado: number; disponible: number }>[] =

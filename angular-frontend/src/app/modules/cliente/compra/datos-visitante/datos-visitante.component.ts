@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CompraService } from '../../../../shared/services/compra.service';
 import { ToastService } from '../../../../shared/services/toast.service';
@@ -11,7 +11,7 @@ import { ToastService } from '../../../../shared/services/toast.service';
   imports: [CommonModule, FormsModule],
   templateUrl: './datos-visitante.component.html'
 })
-export class DatosVisitanteComponent {
+export class DatosVisitanteComponent implements OnInit {
   nombre = '';
   apellidos = '';
   fechaNacimiento = '';
@@ -20,13 +20,20 @@ export class DatosVisitanteComponent {
   telefono = '';
   aceptoCondiciones = false;
 
-  hoy = new Date().toISOString().split('T')[0];
+  hoy = formatDate(new Date(), 'yyyy-MM-dd', 'es');
   
   constructor(
     private compraService: CompraService,
     private router: Router,
     private toast: ToastService
   ) {}
+
+  ngOnInit(): void {
+    // Prevenir acceso si no hay tickets seleccionados
+    if (this.compraService.getTickets().length === 0) {
+      this.router.navigate(['/compra/tickets']);
+    }
+  }
 
   continuar() {
     const edad = this.calcularEdad(this.fechaNacimiento);
@@ -100,5 +107,9 @@ export class DatosVisitanteComponent {
       edad--;
     }
     return edad;
+  }
+
+  volver(): void {
+    this.router.navigate(['/compra/fecha']);
   }
 }

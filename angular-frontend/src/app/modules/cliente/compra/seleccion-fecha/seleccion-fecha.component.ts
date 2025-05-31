@@ -61,7 +61,7 @@ import { MY_DATE_FORMATS } from '../../../../shared/utils/date-formats';
     for (let i = 0; i < dias; i++) {
       const fecha = new Date(hoy);
       fecha.setDate(hoy.getDate() + i);
-      const fechaISO = fecha.toISOString().split('T')[0];
+      const fechaISO = formatDate(fecha, 'yyyy-MM-dd', 'es');
 
       this.reservaService.getAforoPorFecha(fechaISO).subscribe({
         next: (res) => {
@@ -78,12 +78,12 @@ import { MY_DATE_FORMATS } from '../../../../shared/utils/date-formats';
 
   filtroFecha = (d: Date | null): boolean => {
     if (!d) return false;
-    const iso = d.toISOString().split('T')[0];
+    const iso = formatDate(d, 'yyyy-MM-dd', 'es');
     return !this.fechasBloqueadas.has(iso);
   };
 
   marcarFechasCompletas = (d: Date): string => {
-    const iso = d.toISOString().split('T')[0];
+    const iso = formatDate(d, 'yyyy-MM-dd', 'es');
     return this.fechasBloqueadas.has(iso) ? 'fecha-completa' : '';
   };
 
@@ -93,7 +93,7 @@ import { MY_DATE_FORMATS } from '../../../../shared/utils/date-formats';
       return;
     }
 
-    const iso = formatDate(fecha, 'yyyy-MM-dd', 'en');
+    const iso = formatDate(fecha, 'yyyy-MM-dd', 'es');
     this.reservaService.getAforoPorFecha(iso).subscribe({
       next: (res) => {
         this.aforoDisponible = res.disponible;
