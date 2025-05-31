@@ -1,36 +1,72 @@
-<h2 class="text-2xl font-bold mb-4 text-center">Contáctanos</h2>
+<div class="min-h-screen bg-[#725AC1] flex items-center justify-center">
+  <div class="bg-white rounded-3xl shadow-xl p-8 w-full max-w-md relative">
 
-<form [formGroup]="contactoForm" (ngSubmit)="enviar()" class="space-y-4 max-w-md mx-auto">
-  <mat-form-field appearance="fill" class="w-full">
-    <mat-label>Nombre</mat-label>
-    <input matInput formControlName="nombre" />
-    <mat-error *ngIf="contactoForm.get('nombre')?.invalid && contactoForm.get('nombre')?.touched">
-      El nombre es obligatorio
-    </mat-error>
-  </mat-form-field>
+    <h2 class="text-2xl font-bold text-center text-gray-900 mb-6">Contacta</h2>
 
-  <mat-form-field appearance="fill" class="w-full">
-    <mat-label>Email</mat-label>
-    <input matInput formControlName="email" />
-    <mat-error *ngIf="contactoForm.get('email')?.invalid && contactoForm.get('email')?.touched">
-      Introduce un email válido
-    </mat-error>
-  </mat-form-field>
+    <form [formGroup]="contactoForm" (ngSubmit)="enviar()" class="space-y-4">
+      <!-- Nombre -->
+      <input
+        type="text"
+        formControlName="nombre"
+        placeholder="Nombre"
+        class="w-full px-4 py-3 rounded-full border bg-gray-100 placeholder-gray-500"
+      />
+      <div *ngIf="contactoForm.get('nombre')?.invalid && contactoForm.get('nombre')?.touched" class="text-red-600 text-sm ml-2">
+        El nombre es obligatorio.
+      </div>
 
-  <mat-form-field appearance="fill" class="w-full">
-    <mat-label>Mensaje</mat-label>
-    <textarea matInput formControlName="mensaje" rows="4"></textarea>
-    <mat-error *ngIf="contactoForm.get('mensaje')?.invalid && contactoForm.get('mensaje')?.touched">
-      El mensaje es obligatorio (mínimo 10 caracteres)
-    </mat-error>
-  </mat-form-field>
+      <!-- Email -->
+      <input
+        type="email"
+        formControlName="email"
+        placeholder="Email"
+        class="w-full px-4 py-3 rounded-full border bg-gray-100 placeholder-gray-500"
+      />
+      <div *ngIf="contactoForm.get('email')?.hasError('required') && contactoForm.get('email')?.touched" class="text-red-600 text-sm ml-2">
+        El email es obligatorio.
+      </div>
+      <div *ngIf="contactoForm.get('email')?.hasError('email') && contactoForm.get('email')?.touched" class="text-red-600 text-sm ml-2">
+        Email no válido.
+      </div>
 
-  <div class="text-center">
-    <button mat-raised-button color="primary" type="submit" [disabled]="enviando || contactoForm.invalid">
-      <ng-container *ngIf="!enviando; else cargando">Enviar</ng-container>
-      <ng-template #cargando>
-        <mat-spinner diameter="20"></mat-spinner>
-      </ng-template>
-    </button>
+      <!-- Teléfono (opcional, sin validación) -->
+      <input
+        type="tel"
+        placeholder="Teléfono"
+        class="w-full px-4 py-3 rounded-full border bg-gray-100 placeholder-gray-500"
+      />
+
+      <!-- Mensaje -->
+      <textarea
+        formControlName="mensaje"
+        rows="4"
+        placeholder="Mensaje"
+        class="w-full px-4 py-3 rounded-xl border bg-gray-100 placeholder-gray-500 resize-none"
+      ></textarea>
+      <div *ngIf="contactoForm.get('mensaje')?.invalid && contactoForm.get('mensaje')?.touched" class="text-red-600 text-sm ml-2">
+        El mensaje debe tener al menos 10 caracteres.
+      </div>
+
+      <!-- Botón Enviar -->
+      <button
+        type="submit"
+        [disabled]="enviando"
+        class="w-full py-3 rounded-full bg-indigo-600 text-white font-semibold tracking-wide hover:bg-indigo-700 transition flex justify-center items-center gap-2"
+      >
+        <mat-spinner *ngIf="enviando" diameter="20"></mat-spinner>
+        <span *ngIf="!enviando">ENVIAR →</span>
+        <span *ngIf="enviando">Enviando...</span>
+      </button>
+
+      <!-- Botón Volver sin enviar -->
+<button
+  type="button"
+  (click)="volver()"
+  class="w-full py-3 rounded-full  bg-green-600 border border-green-300 text-white font-semibold hover:bg-green-800 transition mt-2"
+>
+  Volver sin enviar
+</button>
+
+    </form>
   </div>
-</form>
+</div>

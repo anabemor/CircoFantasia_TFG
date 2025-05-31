@@ -61,7 +61,7 @@ export class AuthService {
    */
   logout(): void {
     this.clearToken();
-    this.router.navigate(['/login']);
+    this.router.navigate(['/login'], { replaceUrl: true }); //evita que si se da para atrás en el navegador pueda volver a una ruta protegida. 
   }
 
   /**

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-navbar-admin',
@@ -10,14 +11,13 @@ import { RouterModule, Router } from '@angular/router';
   styleUrls: ['./navbar-admin.component.css']
 })
 export class NavbarAdminComponent {
-  constructor(private router: Router) {}
+   constructor(private authService: AuthService) {}
 
   irAlPanel(): void {
-    this.router.navigate(['/admin']);
+    this.authService.logout(); // <-- usa el centralizado
   }
 
   logout(): void {
-    localStorage.clear();
-    this.router.navigate(['/login']);
+    this.authService.logout(); // <-- usa el centralizado
   }
 }

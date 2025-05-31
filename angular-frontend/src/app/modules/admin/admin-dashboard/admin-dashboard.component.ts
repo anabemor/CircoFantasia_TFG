@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router'; // ✅ AÑADIDO
+import { AuthService } from '../../../shared/services/auth.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -11,10 +12,9 @@ import { RouterModule } from '@angular/router'; // ✅ AÑADIDO
   styleUrls: ['./admin-dashboard.component.css']
 })
 export class AdminDashboardComponent {
-  constructor(private router: Router) {}
+    constructor(private authService: AuthService) {}
 
-  logout(): void {
-    localStorage.removeItem('authToken');
-    this.router.navigate(['/landing']);
+    logout(): void {
+      this.authService.logout();
+    }
   }
-}
