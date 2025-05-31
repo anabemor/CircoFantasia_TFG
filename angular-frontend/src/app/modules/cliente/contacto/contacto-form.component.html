@@ -1,0 +1,36 @@
+<h2 class="text-2xl font-bold mb-4 text-center">Contáctanos</h2>
+
+<form [formGroup]="contactoForm" (ngSubmit)="enviar()" class="space-y-4 max-w-md mx-auto">
+  <mat-form-field appearance="fill" class="w-full">
+    <mat-label>Nombre</mat-label>
+    <input matInput formControlName="nombre" />
+    <mat-error *ngIf="contactoForm.get('nombre')?.invalid && contactoForm.get('nombre')?.touched">
+      El nombre es obligatorio
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="w-full">
+    <mat-label>Email</mat-label>
+    <input matInput formControlName="email" />
+    <mat-error *ngIf="contactoForm.get('email')?.invalid && contactoForm.get('email')?.touched">
+      Introduce un email válido
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="w-full">
+    <mat-label>Mensaje</mat-label>
+    <textarea matInput formControlName="mensaje" rows="4"></textarea>
+    <mat-error *ngIf="contactoForm.get('mensaje')?.invalid && contactoForm.get('mensaje')?.touched">
+      El mensaje es obligatorio (mínimo 10 caracteres)
+    </mat-error>
+  </mat-form-field>
+
+  <div class="text-center">
+    <button mat-raised-button color="primary" type="submit" [disabled]="enviando || contactoForm.invalid">
+      <ng-container *ngIf="!enviando; else cargando">Enviar</ng-container>
+      <ng-template #cargando>
+        <mat-spinner diameter="20"></mat-spinner>
+      </ng-template>
+    </button>
+  </div>
+</form>

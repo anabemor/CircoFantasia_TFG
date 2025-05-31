@@ -109,4 +109,9 @@ import { MY_DATE_FORMATS } from '../../../../shared/utils/date-formats';
 
     this.router.navigate(['/compra/datos']);
   }
+
+  volver(): void {
+    this.router.navigate(['/compra/tickets']); //  la ruta anterior correspondiente
+  }
+
 }

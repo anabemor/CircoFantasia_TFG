@@ -1,0 +1,38 @@
+<!-- NAVBAR (puedes meter aquí un logo si quieres) -->
+<header class="bg-white shadow p-4 text-center font-bold text-lg">
+  TickFantasia
+</header>
+
+<!-- CONTENIDO DEL FLUJO -->
+<main class="min-h-[70vh]">
+  <router-outlet></router-outlet>
+</main>
+
+<!-- FOOTER -->
+<footer class="bg-gray-100 text-sm text-gray-600 p-4 mt-8 border-t">
+  <div class="max-w-6xl mx-auto space-y-2 text-center">
+    <div class="space-x-4">
+      <a routerLink="/aviso-legal" class="hover:underline">Aviso legal</a>
+      <a routerLink="/privacidad" class="hover:underline">Política de privacidad</a>
+      <a routerLink="/normas" class="hover:underline">Normas de funcionamiento</a>
+      <a routerLink="/terminos" class="hover:underline">Términos y Condiciones</a>
+      <a routerLink="/contacto" class="text-indigo-600 hover:underline">Contáctanos</a>
+    </div>
+
+    <p class="text-xs mt-2">
+      © Circo Escuela Fantasía
+    </p>
+
+    <!-- REDES SOCIALES -->
+    <div class="flex justify-center gap-4 mt-2 text-xl">
+      <a href="https://instagram.com" target="_blank" aria-label="Instagram">
+        <i class="fab fa-instagram"></i>
+      </a>
+      <a href="https://facebook.com" target="_blank" aria-label="Facebook">
+        <i class="fab fa-facebook"></i>
+      </a>
+    </div>
+
+    
+  </div>
+</footer>
