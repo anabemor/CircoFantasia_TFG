@@ -16,6 +16,8 @@ import { ActividadService } from '../../../../shared/services/actividad.service'
 export class SeleccionTicketsComponent implements OnInit {
   tiposTicket: TicketType[] = [];
   cantidades: { [id: number]: number } = {};
+  actividadNombre: string = '';
+  
 
   constructor(
     private ticketTypeService: TicketTypeService,
@@ -28,6 +30,7 @@ export class SeleccionTicketsComponent implements OnInit {
       this.actividadService.getActividadActiva().subscribe({
       next: (actividad) => {
         console.log('Actividad activa recibida:', actividad);
+        this.actividadNombre = actividad.nombre;
         this.compraService.setActividad(actividad);
       },
       error: (err) => {

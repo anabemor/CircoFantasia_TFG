@@ -37,8 +37,8 @@ security:
         - { path: ^/api/reservas, roles: PUBLIC_ACCESS } 
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
         - { path: ^/api/register, roles: PUBLIC_ACCESS }
-        - { path: ^/api/actividades/activa, roles: PUBLIC_ACCESS }  
-        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/actividades/activa, roles: PUBLIC_ACCESS }  # 👈 pública
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }  # 👈 autenticado
         
 
 
