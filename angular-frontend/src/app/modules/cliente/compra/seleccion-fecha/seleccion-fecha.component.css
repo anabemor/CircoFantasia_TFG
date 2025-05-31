@@ -1,0 +1,5 @@
+.fecha-completa .mat-calendar-body-cell-content {
+  background-color: #f44336 !important; /* rojo */
+  color: white !important;
+  border-radius: 50%;
+}

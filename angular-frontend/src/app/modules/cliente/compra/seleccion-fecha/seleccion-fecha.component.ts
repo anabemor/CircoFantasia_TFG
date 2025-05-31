@@ -82,6 +82,11 @@ import { MY_DATE_FORMATS } from '../../../../shared/utils/date-formats';
     return !this.fechasBloqueadas.has(iso);
   };
 
+  marcarFechasCompletas = (d: Date): string => {
+    const iso = d.toISOString().split('T')[0];
+    return this.fechasBloqueadas.has(iso) ? 'fecha-completa' : '';
+  };
+
   onFechaCambiada(fecha: Date | null): void {
     if (!fecha) {
       this.aforoDisponible = null;

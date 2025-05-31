@@ -13,7 +13,7 @@
       name="fecha"
     />
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
+    <mat-datepicker  mat-datepicker #picker [dateClass]="marcarFechasCompletas"></mat-datepicker>
   </mat-form-field>
 
   <div *ngIf="fechaSeleccionada" class="mt-4 text-sm">
