@@ -60,7 +60,7 @@ export class ReservaCreateFormComponent implements OnInit {
       email: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],
       telefono: ['', [Validators.required, Validators.pattern(/^[0-9]{9}$/)]],
       fechaVisita: ['', Validators.required],
-      estado: ['pendiente', Validators.required],
+      //estado: ['pendiente', Validators.required],
       tickets: this.fb.array([])
     });
   }
