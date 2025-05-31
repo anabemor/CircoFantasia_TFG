@@ -1,7 +1,7 @@
 <div class="max-w-xl mx-auto p-4 bg-white rounded shadow">
   <h2 class="text-2xl font-bold mb-6 text-center">Datos del Visitante</h2>
 
-  <form (ngSubmit)="continuar()" class="space-y-4">
+  <form (ngSubmit)="continuar()" class="space-y-4" #form="ngForm">
 
     <!-- Nombre -->
     <div>
@@ -11,8 +11,15 @@
         [(ngModel)]="nombre"
         name="nombre"
         required
+        minlength="3"
+        autocomplete="off"
+        #nombreRef="ngModel"
         class="w-full p-2 border rounded"
       />
+      <div *ngIf="nombreRef.invalid && nombreRef.touched" class="text-red-600 text-sm mt-1">
+        <span *ngIf="nombreRef.errors?.['required']">Este campo es obligatorio.</span>
+        <span *ngIf="nombreRef.errors?.['minlength']">Debe tener al menos 3 letras.</span>
+      </div>
     </div>
 
     <!-- Apellidos -->
@@ -23,8 +30,15 @@
         [(ngModel)]="apellidos"
         name="apellidos"
         required
+        minlength="3"
+        autocomplete="off"
+        #apellidosRef="ngModel"
         class="w-full p-2 border rounded"
       />
+      <div *ngIf="apellidosRef.invalid && apellidosRef.touched" class="text-red-600 text-sm mt-1">
+        <span *ngIf="apellidosRef.errors?.['required']">Este campo es obligatorio.</span>
+        <span *ngIf="apellidosRef.errors?.['minlength']">Debe tener al menos 3 letras.</span>
+      </div>
     </div>
 
     <!-- Fecha de nacimiento -->
@@ -35,9 +49,13 @@
         [(ngModel)]="fechaNacimiento"
         name="fechaNacimiento"
         required
-        class="w-full p-2 border rounded"
         max="{{ hoy }}"
+        #fechaNacimientoRef="ngModel"
+        class="w-full p-2 border rounded"
       />
+      <div *ngIf="fechaNacimientoRef.invalid && fechaNacimientoRef.touched" class="text-red-600 text-sm mt-1">
+        <span *ngIf="fechaNacimientoRef.errors?.['required']">Este campo es obligatorio.</span>
+      </div>
     </div>
 
     <!-- Email -->
@@ -48,8 +66,14 @@
         [(ngModel)]="email"
         name="email"
         required
+        autocomplete="off"
+        #emailRef="ngModel"
         class="w-full p-2 border rounded"
       />
+      <div *ngIf="emailRef.invalid && emailRef.touched" class="text-red-600 text-sm mt-1">
+        <span *ngIf="emailRef.errors?.['required']">Este campo es obligatorio.</span>
+        <span *ngIf="emailRef.errors?.['email']">Formato de email no válido.</span>
+      </div>
     </div>
 
     <!-- Confirmar Email -->
@@ -60,8 +84,13 @@
         [(ngModel)]="confirmarEmail"
         name="confirmarEmail"
         required
+        autocomplete="off"
+        #confirmarEmailRef="ngModel"
         class="w-full p-2 border rounded"
       />
+      <div *ngIf="confirmarEmailRef.invalid && confirmarEmailRef.touched" class="text-red-600 text-sm mt-1">
+        <span *ngIf="confirmarEmailRef.errors?.['required']">Este campo es obligatorio.</span>
+      </div>
     </div>
 
     <!-- Teléfono -->
@@ -72,8 +101,15 @@
         [(ngModel)]="telefono"
         name="telefono"
         required
+        pattern="[0-9]{9}"
+        autocomplete="off"
+        #telefonoRef="ngModel"
         class="w-full p-2 border rounded"
       />
+      <div *ngIf="telefonoRef.invalid && telefonoRef.touched" class="text-red-600 text-sm mt-1">
+        <span *ngIf="telefonoRef.errors?.['required']">Este campo es obligatorio.</span>
+        <span *ngIf="telefonoRef.errors?.['pattern']">Debe contener exactamente 9 números.</span>
+      </div>
     </div>
 
     <!-- Aceptar condiciones -->
@@ -83,10 +119,14 @@
         [(ngModel)]="aceptoCondiciones"
         name="aceptoCondiciones"
         required
+        #condicionesRef="ngModel"
       />
       <label class="text-sm">
         He leído y acepto los términos y condiciones de compra y las normas de funcionamiento del parque *
       </label>
+    </div>
+    <div *ngIf="condicionesRef.invalid && condicionesRef.touched" class="text-red-600 text-sm mt-1">
+      Debes aceptar las condiciones.
     </div>
 
     <!-- Botón -->

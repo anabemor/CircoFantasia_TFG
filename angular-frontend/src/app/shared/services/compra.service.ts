@@ -61,6 +61,9 @@ getDatosCliente() {
 }
 
 crearReserva(): ReservaEnvio | null {
+  console.log('🧾 crearReserva() ejecutado');
+  console.trace(); // <--- VER QUIÉN LO LLAMA
+  
   if (!this.fechaSeleccionada || !this.datosCliente) return null;
 
   return {

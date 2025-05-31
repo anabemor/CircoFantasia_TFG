@@ -28,6 +28,7 @@ export class ResumenPagoComponent {
 
   pagar(): void {
     console.log('💥 pagar() ejecutado');
+    console.trace(); // <--- VER QUIÉN LO LLAMA
     if (this.isLoading) return; // bloquea si ya está enviando
 
     const reserva = this.compraService.crearReserva();

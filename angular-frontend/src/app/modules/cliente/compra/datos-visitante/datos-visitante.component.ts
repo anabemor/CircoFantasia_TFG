@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CompraService } from '../../../../shared/services/compra.service';
-import { ReservaService } from '../../../../shared/services/reserva.service';
 import { ToastService } from '../../../../shared/services/toast.service';
 
 @Component({
@@ -15,68 +14,81 @@ import { ToastService } from '../../../../shared/services/toast.service';
 export class DatosVisitanteComponent {
   nombre = '';
   apellidos = '';
-  fechaNacimiento = ''; // formato string
+  fechaNacimiento = '';
   email = '';
-  telefono = '';
   confirmarEmail = '';
+  telefono = '';
   aceptoCondiciones = false;
 
   hoy = new Date().toISOString().split('T')[0];
   
   constructor(
     private compraService: CompraService,
-    private reservaService: ReservaService,
     private router: Router,
-    private toast: ToastService // 
+    private toast: ToastService
   ) {}
 
   continuar() {
-    if (!this.todosLosDatosSonValidos()) {
-      this.toast.error('Por favor, completa todos los campos correctamente.');
-      return;
-    }
-
     const edad = this.calcularEdad(this.fechaNacimiento);
-    if (edad < 18) {
-      this.toast.error('Ups! Eres menor de edad, no puedes comprar!');
+
+    if (!this.todosLosDatosSonValidos(edad)) {
       return;
     }
 
     this.compraService.setDatosCliente({
-      nombre: this.nombre,
-      apellidos: this.apellidos,
+      nombre: this.nombre.trim(),
+      apellidos: this.apellidos.trim(),
       fechaNacimiento: this.fechaNacimiento,
-      email: this.email,
-      telefono: this.telefono,
+      email: this.email.trim(),
+      telefono: this.telefono.trim(),
       aceptoCondiciones: this.aceptoCondiciones
     });
 
-    const reserva = this.compraService.crearReserva();
-
-    if (!reserva) {
-      this.toast.error('Error al preparar la reserva. Asegúrate de haber completado todos los pasos.');
-      return;
-    }
-
-    this.reservaService.enviarReserva(reserva).subscribe({
-      next: () => this.router.navigate(['/compra/pago']),
-      error: (err) => {
-        console.error('Error al guardar la reserva:', err);
-        this.toast.error('Hubo un problema al guardar la reserva.');
-      }
-    });
+    this.router.navigate(['/compra/pago']);
   }
 
-  todosLosDatosSonValidos(): boolean {
-    return (
-      this.nombre.trim() !== '' &&
-      this.apellidos.trim() !== '' &&
-      this.fechaNacimiento !== '' &&
-      this.email.trim() !== '' &&
-      this.email === this.confirmarEmail &&
-      this.telefono.trim() !== '' &&
-      this.aceptoCondiciones
-    );
+  todosLosDatosSonValidos(edad: number): boolean {
+    if (this.nombre.trim().length < 3) {
+      this.toast.error('Ups! El nombre debe tener al menos 3 letras.');
+      return false;
+    }
+
+    if (this.apellidos.trim().length < 3) {
+      this.toast.error('Ups! El apellido debe tener al menos 3 letras.');
+      return false;
+    }
+
+    if (!this.fechaNacimiento) {
+      this.toast.error('Ups! La fecha de nacimiento es obligatoria.');
+      return false;
+    }
+
+    if (edad < 18) {
+      this.toast.error('Ups! Debes ser mayor de edad para continuar.');
+      return false;
+    }
+
+    if (!this.email.includes('@') || !this.email.endsWith('.com')) {
+      this.toast.error('Ups! El email debe contener "@" y terminar en ".com".');
+      return false;
+    }
+
+    if (this.email !== this.confirmarEmail) {
+      this.toast.error('Ups! Los emails no coinciden.');
+      return false;
+    }
+
+    if (!/^\d{9}$/.test(this.telefono)) {
+      this.toast.error('Ups! El teléfono debe contener exactamente 9 dígitos.');
+      return false;
+    }
+
+    if (!this.aceptoCondiciones) {
+      this.toast.error('Ups! Debes aceptar las condiciones para continuar.');
+      return false;
+    }
+
+    return true;
   }
 
   calcularEdad(fechaString: string): number {
