@@ -27,9 +27,11 @@ export class SeleccionTicketsComponent implements OnInit {
   ngOnInit(): void {
       this.actividadService.getActividadActiva().subscribe({
       next: (actividad) => {
+        console.log('Actividad activa recibida:', actividad);
         this.compraService.setActividad(actividad);
       },
-      error: () => {
+      error: (err) => {
+       console.error('Error al obtener actividad activa:', err);
         alert('No hay una actividad activa en este momento.');
       }
     });

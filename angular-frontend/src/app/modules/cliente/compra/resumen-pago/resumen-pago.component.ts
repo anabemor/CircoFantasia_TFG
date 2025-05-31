@@ -27,9 +27,11 @@ export class ResumenPagoComponent {
   isLoading = false;
 
   pagar(): void {
+    console.log('💥 pagar() ejecutado');
     if (this.isLoading) return; // bloquea si ya está enviando
 
     const reserva = this.compraService.crearReserva();
+    console.log('🧾 Reserva generada:', reserva);
     if (!reserva) {
       alert('No se puede generar la reserva. Faltan datos.');
       return;
