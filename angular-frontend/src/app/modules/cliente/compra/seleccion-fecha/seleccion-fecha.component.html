@@ -1,6 +1,8 @@
 <div class="max-w-xl mx-auto p-4 bg-white shadow rounded">
   <h2 class="text-2xl font-bold mb-6 text-center">Selecciona la fecha de tu visita</h2>
 
+  <p *ngIf="!fechasCargadas" class="text-sm text-gray-500 mb-2">Cargando disponibilidad…</p>
+
   <mat-form-field appearance="fill" class="w-full">
     <mat-label>Fecha de visita</mat-label>
     <input
@@ -11,9 +13,10 @@
       [min]="fechaMinima"
       (dateChange)="onFechaCambiada($event.value)"
       name="fecha"
+      [disabled]="!fechasCargadas"
     />
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker  mat-datepicker #picker [dateClass]="marcarFechasCompletas"></mat-datepicker>
+    <mat-datepicker #picker [dateClass]="marcarFechasCompletas"></mat-datepicker>
   </mat-form-field>
 
   <div *ngIf="fechaSeleccionada" class="mt-4 text-sm">
@@ -25,7 +28,9 @@
 
   <button
     class="w-full mt-6 bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 transition"
-    (click)="continuar()">
+    (click)="continuar()"
+    [disabled]="!fechasCargadas"
+  >
     Continuar
   </button>
 </div>
@@ -39,5 +44,3 @@
     ← Volver
   </button>
 </div>
-
-

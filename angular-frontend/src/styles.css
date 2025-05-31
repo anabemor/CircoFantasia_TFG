@@ -47,3 +47,9 @@ form {
 mat-form-field {
   display: block;
 }
+
+::ng-deep .mat-calendar-body-cell.fecha-completa > .mat-calendar-body-cell-content {
+  background-color: #dc2626 !important;
+  color: white !important;
+  border-radius: 50%;
+}
