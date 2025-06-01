@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { Reserva } from '../../../../shared/interfaces/reserva.interface';
 import { ReservaAdminService } from '../../../../shared/services/reserva-admin.service';
+import { RouterModule } from '@angular/router';
 
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -19,6 +20,7 @@ import * as FileSaver from 'file-saver';
   imports: [
     CommonModule,
     FormsModule,
+    RouterModule,
     MatDatepickerModule,
     MatFormFieldModule,
     MatInputModule,

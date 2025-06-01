@@ -1,70 +1,69 @@
-<div class="max-w-6xl mx-auto p-6 bg-white rounded shadow">
-  <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Historial de Reservas</h2>
+<div class="max-w-7xl mx-auto p-6 bg-white rounded shadow">
+  <h2 class="text-3xl font-bold mb-8 text-center text-gray-800">Historial de Reservas</h2>
 
-  <!-- Filtros -->
-  <form (ngSubmit)="filtrarReservas()" class="flex flex-wrap gap-4 mb-6">
-    <mat-form-field appearance="fill" class="flex-1 min-w-[200px]">
+  <!-- Filtros y acciones -->
+  <form (ngSubmit)="filtrarReservas()" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6 items-end">
+    <mat-form-field appearance="fill" class="w-full">
       <mat-label>Desde</mat-label>
       <input matInput [matDatepicker]="picker1" [(ngModel)]="fechaInicio" name="fechaInicio">
       <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
       <mat-datepicker #picker1></mat-datepicker>
     </mat-form-field>
 
-    <mat-form-field appearance="fill" class="flex-1 min-w-[200px]">
+    <mat-form-field appearance="fill" class="w-full">
       <mat-label>Hasta</mat-label>
       <input matInput [matDatepicker]="picker2" [(ngModel)]="fechaFin" name="fechaFin">
       <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
       <mat-datepicker #picker2></mat-datepicker>
     </mat-form-field>
 
-    <button mat-raised-button color="primary" type="submit">Filtrar</button>
-    <button mat-raised-button color="accent" type="button" (click)="exportarPDF()">Exportar PDF</button>
-    <button mat-raised-button color="warn" type="button" (click)="exportarExcel()">Exportar Excel</button>
-
+    <div class="col-span-full flex justify-end gap-2">
+      <button type="submit" class="flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm">
+        <i class="material-icons text-sm">filter_alt</i> Filtrar
+      </button>
+      <button type="button" (click)="exportarPDF()" class="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded text-sm">
+        <i class="material-icons text-sm">picture_as_pdf</i> PDF
+      </button>
+      <button type="button" (click)="exportarExcel()" class="flex items-center gap-1 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded text-sm">
+        <i class="material-icons text-sm">table_view</i> Excel
+      </button>
+      <button type="button" [routerLink]="['/admin/reservas']" class="flex items-center gap-1 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded text-sm">
+        <i class="material-icons text-sm">arrow_back</i> Volver
+      </button>
+    </div>
   </form>
 
-
   <!-- Tabla -->
- <table class="w-full table-auto border-collapse">
-  <thead>
-    <tr class="bg-gray-100 text-left">
-      <th class="p-2 border">Nombre</th>
-      <th class="p-2 border">Email</th>
-      <th class="p-2 border">Fecha Visita</th>
-      <th class="p-2 border">Adultos</th>
-      <th class="p-2 border">Niños</th>
-      <th class="p-2 border">Total</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let r of reservas" class="hover:bg-gray-50">
-      <td class="p-2 border">{{ r.nombre }} {{ r.apellidos }}</td>
-      <td class="p-2 border">{{ r.email }}</td>
-      <td class="p-2 border">{{ r.fechaVisita | date:'dd/MM/yyyy' }}</td>
-      <td class="p-2 border">{{ getCantidadPorTipo(r, 'Adulto') }}</td>
-      <td class="p-2 border">{{ getCantidadPorTipo(r, 'Niño') }}</td>
-      <td class="p-2 border">{{ getTotalReserva(r) | currency:'EUR' }}</td>
-    </tr>
+  <div class="overflow-auto">
+    <table class="min-w-full bg-white border border-gray-200 rounded-lg overflow-hidden shadow">
+      <thead class="bg-indigo-600 text-white">
+        <tr>
+          <th class="px-4 py-2">Nombre</th>
+          <th class="px-4 py-2">Email</th>
+          <th class="px-4 py-2">Fecha Visita</th>
+          <th class="px-4 py-2 text-center">Adultos</th>
+          <th class="px-4 py-2 text-center">Niños</th>
+          <th class="px-4 py-2 text-center">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of reservas" class="border-t border-gray-200 hover:bg-gray-50">
+          <td class="px-4 py-2">{{ r.nombre }} {{ r.apellidos }}</td>
+          <td class="px-4 py-2">{{ r.email }}</td>
+          <td class="px-4 py-2">{{ r.fechaVisita | date:'dd/MM/yyyy' }}</td>
+          <td class="px-4 py-2 text-center">{{ getCantidadPorTipo(r, 'Adulto') }}</td>
+          <td class="px-4 py-2 text-center">{{ getCantidadPorTipo(r, 'Niño') }}</td>
+          <td class="px-4 py-2 text-center">{{ getTotalReserva(r) | currency:'EUR' }}</td>
+        </tr>
 
-    <!-- Fila de totales -->
-    <tr class="font-bold bg-gray-100">
-      <td colspan="3" class="p-2 border text-right">Totales:</td>
-      <td class="p-2 border">{{ getTotalAdultos() }}</td>
-      <td class="p-2 border">{{ getTotalNinos() }}</td>
-      <td class="p-2 border">{{ getTotalPrecio() | currency:'EUR' }}</td>
-    </tr>
-  </tbody>
-</table>
+        <!-- Fila de totales -->
+        <tr class="font-bold bg-gray-100 border-t">
+          <td colspan="3" class="px-4 py-2 text-right">Totales:</td>
+          <td class="px-4 py-2 text-center">{{ getTotalAdultos() }}</td>
+          <td class="px-4 py-2 text-center">{{ getTotalNinos() }}</td>
+          <td class="px-4 py-2 text-center">{{ getTotalPrecio() | currency:'EUR' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
-
-
-
-<button mat-raised-button color="primary" type="submit">Filtrar</button>
-
-<button mat-raised-button color="accent" type="button" (click)="exportarPDF()">
-  Exportar PDF
-</button>
-
-<button mat-raised-button color="warn" type="button" (click)="exportarExcel()">
-  Exportar Excel
-</button>
