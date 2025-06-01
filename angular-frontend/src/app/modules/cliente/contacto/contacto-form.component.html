@@ -36,6 +36,17 @@
         class="w-full px-4 py-3 rounded-full border bg-gray-100 placeholder-gray-500"
       />
 
+      <select
+        formControlName="asunto"
+        class="w-full px-4 py-3 rounded-full border bg-gray-100 text-gray-700"
+      >
+        <option value="" disabled selected>Selecciona un asunto</option>
+        <option value="solicitud de información">Solicitud de información</option>
+        <option value="reclamación">Reclamación</option>
+        <option value="problemas con la compra">Problemas con la compra</option>
+        <option value="otros">Otros</option>
+      </select>
+
       <!-- Mensaje -->
       <textarea
         formControlName="mensaje"

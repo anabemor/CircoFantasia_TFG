@@ -8,7 +8,7 @@
       <li *ngFor="let mensaje of mensajes" (click)="seleccionarMensaje(mensaje)"
           [class.bg-gray-100]="mensaje === mensajeSeleccionado"
           class="p-3 border rounded cursor-pointer hover:bg-gray-50">
-        <strong>{{ mensaje.remitente }}</strong><br />
+        <strong>{{ mensaje.email }}</strong><br />
         <span class="text-sm text-gray-600">{{ mensaje.asunto }}</span>
         <span *ngIf="mensaje.respondido" class="text-green-600 text-sm"> (Respondido)</span>
       </li>

@@ -1,15 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { NavbarAdminComponent } from "../../../shared/components/navbar-admin.component";
-
-interface Mensaje {
-  id: number;
-  remitente: string;
-  asunto: string;
-  contenido: string;
-  respondido: boolean;
-}
+import { NavbarAdminComponent } from '../../../shared/components/navbar-admin.component';
+import { BuzonService, Mensaje } from '../../../shared/services/buzon.service';
 
 @Component({
   selector: 'app-buzon',
@@ -17,38 +10,35 @@ interface Mensaje {
   imports: [CommonModule, FormsModule, NavbarAdminComponent],
   templateUrl: './buzon.component.html',
 })
-export class BuzonComponent {
-  mensajes: Mensaje[] = [
-    {
-      id: 1,
-      remitente: 'cliente1@example.com',
-      asunto: 'Consulta horarios',
-      contenido: '¿Qué horarios tienen disponibles?',
-      respondido: false
-    },
-    {
-      id: 2,
-      remitente: 'cliente2@example.com',
-      asunto: 'Problema con reserva',
-      contenido: 'No he recibido confirmación.',
-      respondido: false
-    }
-  ];
-
+export class BuzonComponent implements OnInit {
+  mensajes: Mensaje[] = [];
   mensajeSeleccionado: Mensaje | null = null;
   respuesta: string = '';
+
+  constructor(private buzonService: BuzonService) {}
+
+  ngOnInit(): void {
+    this.buzonService.obtenerMensajes().subscribe((data) => {
+      this.mensajes = data;
+    });
+  }
 
   seleccionarMensaje(mensaje: Mensaje) {
     this.mensajeSeleccionado = mensaje;
     this.respuesta = '';
   }
 
-  enviarRespuesta() {
+ enviarRespuesta() {
     if (this.mensajeSeleccionado) {
-      this.mensajeSeleccionado.respondido = true;
-      alert(`Respuesta enviada a ${this.mensajeSeleccionado.remitente}:\n\n${this.respuesta}`);
-      this.mensajeSeleccionado = null;
-      this.respuesta = '';
+      const mensaje = this.mensajeSeleccionado; // copia segura
+
+      this.buzonService.marcarComoRespondido(mensaje.id).subscribe(() => {
+        mensaje.respondido = true;
+        alert(`Respuesta enviada a ${mensaje.email}:\n\n${this.respuesta}`);
+        this.mensajeSeleccionado = null;
+        this.respuesta = '';
+      });
     }
   }
+
 }
