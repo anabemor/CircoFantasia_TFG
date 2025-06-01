@@ -55,6 +55,9 @@ export class HistorialReservasComponent {
   }
 
   exportarPDF(): void {
+    const confirmar = confirm('¿Deseas generar el PDF del historial de reservas?');
+    if (!confirmar) return;
+
     const doc = new jsPDF();
     autoTable(doc, {
       head: [['Nombre', 'Email', 'Fecha Visita', 'Adultos', 'Niños', 'Total']],
@@ -71,6 +74,9 @@ export class HistorialReservasComponent {
   }
 
   exportarExcel(): void {
+    const confirmar = confirm('¿Deseas generar el Excel del historial de reservas?');
+    if (!confirmar) return;
+
     const datos = this.reservas.map(r => ({
       Nombre: `${r.nombre} ${r.apellidos}`,
       Email: r.email,
