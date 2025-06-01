@@ -53,14 +53,14 @@ export class BuzonComponent implements OnInit {
     if (this.mensajeSeleccionado) {
       const mensaje = this.mensajeSeleccionado;
 
-      // Simulación visual
+      // Simulación visual sin llamada al backend
       setTimeout(() => {
-        this.buzonService.marcarComoRespondido(mensaje.id).subscribe(() => {
-          mensaje.respondido = true;
-          alert(`Respuesta enviada a ${mensaje.email}:\n\n${this.respuesta}`);
-          this.mensajeSeleccionado = null;
-          this.respuesta = '';
-        });
+        mensaje.respondido = true;
+        alert(`Simulación de respuesta enviada a ${mensaje.email}:\n\n${this.respuesta}`);
+
+        // Reiniciar
+        this.mensajeSeleccionado = null;
+        this.respuesta = '';
       }, 1000);
     }
   }
