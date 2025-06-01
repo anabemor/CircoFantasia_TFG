@@ -50,6 +50,7 @@ export class ActividadesComponent implements OnInit {
   crearNueva() {
     this.mostrarFormulario = true;
     this.modoEdicion = false;
+    this.fechasInvalidas = false;
     this.formActividad = {
       nombre: '',
       descripcion: '',
@@ -62,6 +63,7 @@ export class ActividadesComponent implements OnInit {
   editarActividad(actividad: Actividad) {
     this.mostrarFormulario = true;
     this.modoEdicion = true;
+    this.fechasInvalidas = false;
     this.formActividad = { ...actividad };
     this.actividadEnEdicion = actividad;
   }
@@ -128,5 +130,10 @@ export class ActividadesComponent implements OnInit {
       fechaFin: '',
       activa: true
     };
+    this.fechasInvalidas = false; //resetea el error de fechas
+  }
+
+  validarFechas(): void {
+    this.fechasInvalidas = new Date(this.formActividad.fechaFin) < new Date(this.formActividad.fechaInicio);
   }
 }

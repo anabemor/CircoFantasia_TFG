@@ -49,6 +49,7 @@
           name="fechaInicio"
           required
           #fechaInicio="ngModel"
+          (change)="validarFechas()"
         />
         <div *ngIf="fechaInicio.invalid && fechaInicio.touched" class="text-red-600 text-sm">Este campo es obligatorio.</div>
       </div>
@@ -63,6 +64,7 @@
           name="fechaFin"
           required
           #fechaFin="ngModel"
+          (change)="validarFechas()"
         />
         <div *ngIf="fechaFin.invalid && fechaFin.touched" class="text-red-600 text-sm">Este campo es obligatorio.</div>
         <div *ngIf="fechasInvalidas" class="text-red-600 text-sm">La fecha de fin debe ser posterior a la de inicio.</div>
@@ -111,10 +113,26 @@
         <td class="px-4 py-2">{{ actividad.fechaInicio }} → {{ actividad.fechaFin }}</td>
         <td class="px-4 py-2">{{ actividad.activa ? 'Sí' : 'No' }}</td>
         <td class="px-4 py-2">{{ actividad.vigente ? 'Sí' : 'No' }}</td>
-        <td class="px-4 py-2 space-x-2">
-          <button class="text-blue-600 hover:underline" (click)="editarActividad(actividad)">Editar</button>
-          <button class="text-red-600 hover:underline" (click)="eliminarActividad(actividad.id!)">Eliminar</button>
-        </td>
+        <td class="px-4 py-2">
+      <div class="flex justify-end gap-2">
+        <button
+          (click)="editarActividad(actividad)"
+          class="flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm"
+        >
+          <i class="material-icons text-base leading-none">edit</i>
+          Editar
+        </button>
+
+        <button
+          (click)="eliminarActividad(actividad.id!)"
+          class="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
+        >
+          <i class="material-icons text-base leading-none">delete</i>
+          Eliminar
+        </button>
+      </div>
+      </td>
+
       </tr>
     </tbody>
   </table>

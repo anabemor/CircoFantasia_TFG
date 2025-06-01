@@ -280,4 +280,11 @@ export class ReservasComponent implements OnInit {
   this.aplicarFiltros();
   }
 
+  mostrarBuscador: boolean = false;
+
+  toggleBuscador(): void {
+    this.mostrarBuscador = !this.mostrarBuscador;
+  }
+
+
 }

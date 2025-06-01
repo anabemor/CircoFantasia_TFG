@@ -1,76 +1,81 @@
 <app-navbar-admin></app-navbar-admin>
 
 <div class="p-6 max-w-7xl mx-auto">
-  <h2 class="text-2xl font-bold mb-4 text-gray-800">Gestión de Reservas</h2>
+  <h2 class="text-3xl font-bold mb-6 text-gray-800">Gestión de Reservas</h2>
 
   <!-- Botones de acción -->
-<div class="flex justify-between items-center mb-6">
-  <button
-    *ngIf="!mostrarFormularioCreacion && !mostrarFormularioEdicion"
-    class="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600"
-    (click)="abrirFormularioCrear()"
-  >
-    Crear nueva reserva
-  </button>
+  <div *ngIf="!mostrarFormularioCreacion && !mostrarFormularioEdicion" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+    <button
+      class="flex items-center justify-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-3 rounded text-base font-semibold"
+      (click)="toggleBuscador()"
+    >
+      <i class="material-icons text-sm">search</i>
+      {{ mostrarBuscador ? 'Ocultar búsqueda' : 'Buscar reservas' }}
+    </button>
+    
+    <button
+      class="flex items-center justify-center gap-2 bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-3 rounded text-base font-semibold"
+      (click)="abrirFormularioCrear()"
+    >
+      <i class="material-icons text-sm">add</i>
+      Crear reserva
+    </button>
 
-  <button
-    *ngIf="!mostrarFormularioCreacion && !mostrarFormularioEdicion"
-      class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+    <button
+      class="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded text-base font-semibold"
       (click)="toggleAforo()"
     >
+      <i class="material-icons text-sm">event</i>
       {{ mostrarAforo ? 'Ocultar aforo' : 'Ver aforo' }}
-  </button>
+    </button>
 
-    <a
+    <button
+      class="flex items-center justify-center gap-2 bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded text-base font-semibold"
       [routerLink]="['historial']"
-      class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700"
     >
+      <i class="material-icons text-sm">history</i>
       Ver historial
-    </a>
-</div>
- 
+    </button>
+
+    
+  </div>
 
   <!-- Tabla de aforo -->
   <app-aforo *ngIf="mostrarAforo" class="mb-10"></app-aforo>
 
   <!-- Buscador -->
-  <div
-    *ngIf="!mostrarFormularioCreacion && !mostrarFormularioEdicion"
-    class="flex flex-wrap md:flex-nowrap gap-4 mb-6 items-end"
-  >
-    <!-- Buscar por nombre/email -->
-    <input
-      type="text"
-      [(ngModel)]="filtroTexto"
-      (ngModelChange)="aplicarFiltros()"
-      placeholder="Buscar por nombre o email"
-      class="border p-2 rounded w-full md:w-1/4"
-    />
+  <div *ngIf="mostrarBuscador && !mostrarFormularioCreacion && !mostrarFormularioEdicion" class="bg-gray-50 border rounded p-4 mb-6">
+    <div class="flex flex-wrap md:flex-nowrap gap-4 items-end">
+      <input
+        type="text"
+        [(ngModel)]="filtroTexto"
+        placeholder="Buscar por nombre o email"
+        class="border p-2 rounded w-full md:w-1/4"
+      />
 
-    <!-- Fecha -->
-    <input
-      type="date"
-      [(ngModel)]="filtroFecha"
-      (change)="aplicarFiltros()"
-      class="border p-2 rounded w-full md:w-1/4"
-    />
+      <input
+        type="date"
+        [(ngModel)]="filtroFecha"
+        class="border p-2 rounded w-full md:w-1/4"
+      />
 
-    <!-- Estado -->
-    <div class="w-full md:w-1/4">
       <select
         [(ngModel)]="filtroEstado"
-        (change)="aplicarFiltros()"
-        class="border p-2 rounded w-full"
+        class="border p-2 rounded w-full md:w-1/4"
       >
         <option value="">Todos los estados</option>
         <option value="pagado">Pagado</option>
         <option value="pendiente">Pendiente</option>
         <option value="cancelado">Cancelado</option>
       </select>
-    </div>
 
-    <!-- Botón borrar -->
-    <div class="w-full md:w-auto">
+      <button
+        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded w-full md:w-auto"
+        (click)="aplicarFiltros()"
+      >
+        Buscar
+      </button>
+
       <button
         class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded w-full md:w-auto"
         (click)="limpiarFiltros()"
@@ -79,38 +84,22 @@
       </button>
     </div>
   </div>
-  
 
   <!-- Tabla de reservas -->
   <ng-container *ngIf="!mostrarFormularioCreacion && !mostrarFormularioEdicion; else formularioActivo">
     <table class="min-w-full bg-white border border-gray-200 rounded-lg overflow-hidden shadow">
       <thead class="bg-indigo-600 text-white">
         <tr>
-          <th class="px-4 py-2 cursor-pointer" (click)="ordenarPor('nombre')">
-            Nombre
-            <span *ngIf="ordenActual === 'nombre'">{{ ordenAscendente ? '▲' : '▼' }}</span>
-          </th>
-          <th class="px-4 py-2 cursor-pointer" (click)="ordenarPor('email')">
-            Email
-            <span *ngIf="ordenActual === 'email'">{{ ordenAscendente ? '▲' : '▼' }}</span>
-          </th>
+          <th class="px-4 py-2">Nombre</th>
+          <th class="px-4 py-2">Email</th>
           <th class="px-4 py-2 text-center">Teléfono</th>
-          <th class="px-4 py-2 cursor-pointer" (click)="ordenarPor('fechaVisita')">
-            Fecha Visita
-            <span *ngIf="ordenActual === 'fechaVisita'">{{ ordenAscendente ? '▲' : '▼' }}</span>
-          </th>
-          <th class="px-4 py-2 cursor-pointer" (click)="ordenarPor('fechaReserva')">
-            Fecha Reserva
-            <span *ngIf="ordenActual === 'fechaReserva'">{{ ordenAscendente ? '▲' : '▼' }}</span>
-          </th>
+          <th class="px-4 py-2">Fecha Visita</th>
+          <th class="px-4 py-2">Fecha Reserva</th>
           <th class="px-4 py-2 text-center">Adultos</th>
           <th class="px-4 py-2 text-center">Niños</th>
           <th class="px-4 py-2 text-center">Total</th>
-          <th class="px-4 py-2 text-center cursor-pointer" (click)="ordenarPor('estado')">
-            Estado
-            <span *ngIf="ordenActual === 'estado'">{{ ordenAscendente ? '▲' : '▼' }}</span>
-          </th>
-          <th class="px-4 py-2">Acciones</th>
+          <th class="px-4 py-2 text-center">Estado</th>
+          <th class="px-4 py-2 text-right">Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -123,7 +112,7 @@
           <td class="px-4 py-2 text-center">{{ contarEntradas(reserva, 'adulto') }}</td>
           <td class="px-4 py-2 text-center">{{ contarEntradas(reserva, 'niño') }}</td>
           <td class="px-4 py-2 text-center">{{ calcularPrecioTotal(reserva) | currency:'EUR' }}</td>
-          <td class="px-4 py-2">
+          <td class="px-4 py-2 text-center">
             <span [ngClass]="{
               'text-yellow-600 font-semibold': reserva.estado === 'pendiente',
               'text-green-600 font-semibold': reserva.estado === 'pagado',
@@ -132,16 +121,36 @@
               {{ getEstadoVisual(reserva.estado) }}
             </span>
           </td>
-          <td class="px-4 py-2 space-x-2">
-            <button class="text-blue-600 hover:underline" (click)="editarReserva(reserva)">Editar</button>
-            <button class="text-red-600 hover:underline" (click)="eliminarReserva(reserva.id!)">Eliminar</button>
-            <button class="text-yellow-600 hover:underline" *ngIf="reserva.estado !== 'cancelado'" (click)="cancelarReserva(reserva)">Cancelar</button>
+          <td class="px-4 py-2">
+            <div class="flex justify-end gap-2">
+              <button
+                class="flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm"
+                (click)="editarReserva(reserva)"
+              >
+                <i class="material-icons text-xs leading-none" title="Editar">edit</i>
+              </button>
+
+              <button
+                class="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
+                (click)="eliminarReserva(reserva.id!)"
+              >
+                <i class="material-icons text-xs leading-none" title="Eliminar">delete</i>
+              </button>
+
+              <button
+                *ngIf="reserva.estado !== 'cancelado'"
+                class="flex items-center gap-1 bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm"
+                (click)="cancelarReserva(reserva)"
+              >
+                <i class="material-icons text-xs leading-none" title="Cancelar">cancel</i>
+              </button>
+            </div>
           </td>
         </tr>
       </tbody>
     </table>
 
-    <!-- Navegación paginación -->
+    <!-- Paginación -->
     <div class="mt-4 flex justify-center gap-2 text-sm">
       <button class="px-3 py-1 border rounded" [disabled]="currentPage === 1" (click)="cambiarPagina(currentPage - 1)">
         ← Anterior
@@ -157,7 +166,7 @@
   <ng-template #formularioActivo>
     <app-reserva-create-form
       *ngIf="mostrarFormularioCreacion"
-      [aforoError]="aforoError" 
+      [aforoError]="aforoError"
       (formSubmit)="crearReserva($event)"
     ></app-reserva-create-form>
 
