@@ -17,6 +17,11 @@ export class ReservaAdminService {
     return this.http.get<Reserva>(`${this.baseUrl}/${id}`);
   }
 
+  // para el historial
+  getReservasFiltradas(params: any): Observable<Reserva[]> {
+  return this.http.get<Reserva[]>('http://localhost:8000/api/admin/reservas', { params });
+  }
+
   createReserva(reserva: Reserva): Observable<Reserva> {
   return this.http.post<Reserva>('http://localhost:8000/api/admin/reservas/crear', reserva);
 }
