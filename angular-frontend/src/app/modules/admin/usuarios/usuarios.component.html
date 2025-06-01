@@ -37,8 +37,23 @@
           {{ usuario.roles.includes('ROLE_ADMIN') ? 'Administrador' : 'Gestor' }}
         </td>
         <td class="px-4 py-2">
-          <button (click)="editarUsuario(usuario)" class="text-blue-600 hover:underline mr-2">Editar</button>
-          <button (click)="eliminarUsuario(usuario.id!)" class="text-red-600 hover:underline">Eliminar</button>
+          <div class="flex justify-end gap-2">
+            <button
+              (click)="editarUsuario(usuario)"
+              class="flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm"
+            >
+              <i class="material-icons text-base leading-none">edit</i>
+              Editar
+            </button>
+
+            <button
+              (click)="eliminarUsuario(usuario.id!)"
+              class="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
+            >
+              <i class="material-icons text-base leading-none">delete</i>
+              Eliminar
+            </button>
+          </div>
         </td>
       </tr>
     </tbody>
@@ -47,7 +62,7 @@
 
 
 <!-- Modal -->
-<div *ngIf="mostrarModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+<div *ngIf="mostrarModal" class="fixed inset-0 bg-gray-300 bg-opacity-50 flex items-center justify-center z-50">
   <div class="bg-white p-6 rounded-lg w-[90%] max-w-md shadow-lg">
     <h2 class="text-xl font-semibold mb-4">
       {{ usuarioSeleccionado?.id ? 'Editar Usuario' : 'Crear Usuario' }}

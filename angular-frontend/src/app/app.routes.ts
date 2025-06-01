@@ -50,6 +50,7 @@ export const routes: Routes = [
 
   { path: 'admin', component: AdminDashboardComponent, canActivate: [AdminAuthGuard] },
   { path: 'admin/usuarios', component: UsuariosComponent, canActivate: [AdminAuthGuard] },
+  { path: 'admin/actividades', component: ActividadesComponent, canActivate: [AdminAuthGuard]},
   { path: 'admin/buzon', component: BuzonComponent, canActivate: [AdminAuthGuard]},
   { path: 'admin/reservas', component: ReservasComponent, canActivate: [AdminAuthGuard] },
   { path: 'admin/reservas/historial', 

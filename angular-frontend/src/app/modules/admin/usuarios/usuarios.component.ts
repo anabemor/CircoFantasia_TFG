@@ -7,6 +7,7 @@ import { NavbarAdminComponent } from '../../../shared/components/navbar-admin.co
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog.component'; // ajusta la ruta si es distinta
 
+
 @Component({
   selector: 'app-usuarios',
   standalone: true,
@@ -18,6 +19,7 @@ export class UsuariosComponent {
   usuarios: Usuario[] = [];
   usuarioSeleccionado: Usuario | null = null;
   mostrarModal: boolean = false;
+
   
   constructor(
     private usuariosService: UsuariosService,  
@@ -60,7 +62,9 @@ export class UsuariosComponent {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '350px',
       data: {
-        mensaje: '¿Estás seguro de que deseas eliminar este usuario?'
+        titulo: 'Confirmar eliminación',
+        mensaje: '¿Estás seguro de que deseas eliminar este usuario?',
+        soloAceptar: false
       }
     });
 
