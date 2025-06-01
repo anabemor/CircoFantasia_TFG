@@ -36,18 +36,28 @@ final class AuthController extends AbstractController
         // Decodifica el JSON recibido en el cuerpo de la petición
         $data = json_decode($request->getContent(), true);
 
+        // Validación básica: verificar campos obligatorios
+        if (!$data || !isset($data['name'], $data['email'], $data['password'])) {
+            return $this->json(['error' => 'Faltan datos obligatorios.'], 400);
+        }
+
+        // Comprobar si ya existe algún usuario registrado
+        $userRepository = $em->getRepository(User::class);
+        if ($userRepository->count([]) > 0) {
+            return $this->json(['error' => 'Ya existe un usuario registrado. Por favor, intenta iniciar sesión.'], 403);
+        }
+
         // Crea un nuevo objeto User (entidad)
         $user = new User();
-
-        // Establece el email del nuevo usuario
+        $user->setName($data['name']);
         $user->setEmail($data['email']);
 
         // Encripta la contraseña recibida usando el servicio de hashing
         $hashedPassword = $passwordHasher->hashPassword($user, $data['password']);
         $user->setPassword($hashedPassword);
 
-        // Asigna el rol ROLE_USER por defecto
-        $user->setRoles(['ROLE_USER']);
+        // Asigna el rol ROLE_ADMIN al primer y único registro
+        $user->setRoles(['ROLE_ADMIN']);
 
         // Marca el nuevo usuario para guardarlo en la base de datos
         $em->persist($user);

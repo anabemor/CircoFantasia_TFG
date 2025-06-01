@@ -23,6 +23,6 @@ import { NgForm } from '@angular/forms';
     }
 
     this.enviado = true;
-    setTimeout(() => this.router.navigate(['/login/login']), 3000);
+    setTimeout(() => this.router.navigate(['/login']), 3000);
   }
 }

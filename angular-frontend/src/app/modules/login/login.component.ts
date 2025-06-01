@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { AuthService } from '../../shared/services/auth.service'// ✅ Ajusta según ruta real
-import { Router } from '@angular/router';
+import { AuthService } from '../../shared/services/auth.service';
+import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -12,19 +12,30 @@ import { HttpErrorResponse } from '@angular/common/http';
   styleUrls: ['./login.component.css'],
   imports: [ReactiveFormsModule, CommonModule],
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   errorMessage: string | null = null;
   successMessage: string | null = null;
+  mensajeSesionCaducada: string = '';
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
+    });
+  }
+
+  ngOnInit(): void {
+    // Detectar si la sesión ha caducado (viene desde el guard)
+    this.route.queryParams.subscribe(params => {
+      if (params['sessionExpired']) {
+        this.mensajeSesionCaducada = 'La sesión ha caducado. Por favor, vuelve a iniciar sesión.';
+      }
     });
   }
 
@@ -37,16 +48,17 @@ export class LoginComponent {
     const { email, password } = this.loginForm.value;
 
     this.authService.login({ email, password }).subscribe({
-     next: (response) => {
-      this.authService.saveToken(response.token); // ✅ guardar token
+      next: (response) => {
+        this.authService.saveToken(response.token); // ✅ guardar token
 
-      this.errorMessage = null;
-      this.successMessage = 'Inicio de sesión exitoso. Redirigiendo...';
+        this.errorMessage = null;
+        this.successMessage = 'Inicio de sesión exitoso. Redirigiendo...';
+        this.mensajeSesionCaducada = '';
 
-      setTimeout(() => {
-        this.router.navigate(['/admin']); // o la ruta correspondiente
-      }, 1500);
-    },
+        setTimeout(() => {
+          this.router.navigate(['/admin']); // o la ruta correspondiente
+        }, 1500);
+      },
       error: (err: HttpErrorResponse) => {
         console.error('Login fallido', err);
         this.successMessage = null;
@@ -55,10 +67,9 @@ export class LoginComponent {
     });
   }
 
-   onPasswordReset(): void {
+  onPasswordReset(): void {
     this.router.navigate(['/recuperar-password']);
   }
-
 
   switchToSignup(): void {
     // Lógica para mostrar el formulario de registro si quieres en esta vista

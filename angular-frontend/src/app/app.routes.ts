@@ -16,6 +16,7 @@ import { UsuariosComponent } from './modules/admin/usuarios/usuarios.component';
 import { ReservasComponent } from './modules/admin/reservas/reservas.component';
 import { AdminAuthGuard } from './shared/guards/admin-auth.guard';
 import { BuzonComponent } from './modules/admin/buzon/buzon.component';
+import { RecuperarPasswordComponent } from './modules/login/recuperar-password.component';
 
 export const routes: Routes = [
   // 🌐 Parte pública (CLIENTE)
@@ -45,6 +46,7 @@ export const routes: Routes = [
   // 🔐 Parte privada (ADMIN)
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'recuperar-password', component: RecuperarPasswordComponent },
 
   { path: 'admin', component: AdminDashboardComponent, canActivate: [AdminAuthGuard] },
   { path: 'admin/usuarios', component: UsuariosComponent, canActivate: [AdminAuthGuard] },
