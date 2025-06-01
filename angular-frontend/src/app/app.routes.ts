@@ -15,6 +15,7 @@ import { ActividadesComponent } from './modules/admin/actividades/actividades.co
 import { UsuariosComponent } from './modules/admin/usuarios/usuarios.component';
 import { ReservasComponent } from './modules/admin/reservas/reservas.component';
 import { AdminAuthGuard } from './shared/guards/admin-auth.guard';
+import { BuzonComponent } from './modules/admin/buzon/buzon.component';
 
 export const routes: Routes = [
   // 🌐 Parte pública (CLIENTE)
@@ -47,6 +48,7 @@ export const routes: Routes = [
 
   { path: 'admin', component: AdminDashboardComponent, canActivate: [AdminAuthGuard] },
   { path: 'admin/usuarios', component: UsuariosComponent, canActivate: [AdminAuthGuard] },
+  { path: 'admin/buzon', component: BuzonComponent, canActivate: [AdminAuthGuard]},
   { path: 'admin/reservas', component: ReservasComponent, canActivate: [AdminAuthGuard] },
   { path: 'admin/reservas/historial', 
     loadComponent: () => import('./modules/admin/reservas/historial-reservas/historial-reservas.component').then(m => m.HistorialReservasComponent),
