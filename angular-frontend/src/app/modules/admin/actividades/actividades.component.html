@@ -7,6 +7,11 @@
     Crear nueva actividad
   </button>
 
+  <button [routerLink]="['/admin']" class="flex items-center gap-1 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+        <i class="material-icons text-sm">arrow_back</i>
+        Volver
+  </button>
+
   <!-- Formulario -->
   <div *ngIf="mostrarFormulario" class="mb-6 bg-gray-100 p-4 rounded shadow">
     <h3 class="text-lg font-semibold mb-2">{{ modoEdicion ? 'Editar' : 'Nueva' }} Actividad</h3>

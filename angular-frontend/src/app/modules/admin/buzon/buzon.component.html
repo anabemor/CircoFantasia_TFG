@@ -2,27 +2,40 @@
 
 <div class="p-6 space-y-6">
   <!-- Filtros -->
-  <div class="flex items-center gap-4">
+  <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
     <input
       type="text"
       [(ngModel)]="filtro"
       placeholder="Buscar por nombre, asunto, mensaje o fecha..."
-      class="flex-grow p-2 border rounded"
+      class="flex-grow p-2 border rounded w-full sm:w-auto"
     />
-    <button (click)="filtro = ''" class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">Limpiar</button>
+    <button
+      (click)="filtro = ''"
+      class="flex items-center gap-1 bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+    >
+      <i class="material-icons text-sm">close</i>
+      Limpiar
+    </button>
+    
+    <button [routerLink]="['/admin']" class="flex items-center gap-1 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+        <i class="material-icons text-sm">arrow_back</i>
+        Volver
+      </button>
+
   </div>
 
-  <div class="grid grid-cols-3 gap-6">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <!-- Lista de mensajes -->
-    <div class="col-span-1">
+    <div class="lg:col-span-1">
       <div class="flex justify-between items-center mb-2">
         <h2 class="text-xl font-bold">Mensajes</h2>
         <button
-          class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+          class="flex items-center gap-1 bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm"
           [disabled]="mensajesSeleccionados.length === 0"
           (click)="eliminarSeleccionados()"
         >
-          Eliminar seleccionados
+          <i class="material-icons text-sm">delete</i>
+          Eliminar
         </button>
       </div>
 
@@ -31,38 +44,46 @@
             class="p-3 border rounded cursor-pointer hover:bg-gray-50 flex items-start gap-2"
             [class.bg-gray-100]="mensaje === mensajeSeleccionado"
             (click)="seleccionarMensaje(mensaje)">
-          
+
           <input
             type="checkbox"
             [(ngModel)]="mensaje.seleccionado"
             (click)="$event.stopPropagation()"
           />
 
-          <div>
+          <div class="text-sm">
             <strong>{{ mensaje.nombre }}</strong><br />
-            <span class="text-sm text-gray-600">{{ mensaje.asunto }}</span><br />
-            <span class="text-xs text-gray-500">{{ mensaje.fecha | date:'shortDate' }}</span><br />
-            <span *ngIf="mensaje.respondido" class="text-green-600 text-sm">✔ Respondido</span>
+            <span class="text-gray-600">{{ mensaje.asunto }}</span><br />
+            <span class="text-gray-500 text-xs">{{ mensaje.fecha | date:'shortDate' }}</span><br />
+            <span *ngIf="mensaje.respondido" class="text-green-600">✔ Respondido</span>
           </div>
         </li>
       </ul>
     </div>
 
     <!-- Detalle del mensaje -->
-    <div class="col-span-2" *ngIf="mensajeSeleccionado">
-      <h3 class="text-lg font-semibold mb-2">Asunto: {{ mensajeSeleccionado.asunto }}</h3>
-      <p><strong>Nombre:</strong> {{ mensajeSeleccionado.nombre }}</p>
-      <p><strong>Email:</strong> {{ mensajeSeleccionado.email }}</p>
-      <p><strong>Teléfono:</strong> {{ mensajeSeleccionado.telefono || '-' }}</p>
-      <p><strong>Fecha:</strong> {{ mensajeSeleccionado.fecha | date:'fullDate' }}</p>
-      <p class="my-4">{{ mensajeSeleccionado.contenido }}</p>
+    <div class="lg:col-span-2" *ngIf="mensajeSeleccionado">
+      <div class="space-y-2 text-sm">
+        <h3 class="text-lg font-semibold">Asunto: {{ mensajeSeleccionado.asunto }}</h3>
+        <p><strong>Nombre:</strong> {{ mensajeSeleccionado.nombre }}</p>
+        <p><strong>Email:</strong> {{ mensajeSeleccionado.email }}</p>
+        <p><strong>Teléfono:</strong> {{ mensajeSeleccionado.telefono || '-' }}</p>
+        <p><strong>Fecha:</strong> {{ mensajeSeleccionado.fecha | date:'fullDate' }}</p>
+        <p class="my-4">{{ mensajeSeleccionado.contenido }}</p>
+      </div>
 
-      <textarea [(ngModel)]="respuesta" rows="4" class="w-full p-2 border rounded mb-2" placeholder="Escribe tu respuesta..."></textarea>
+      <textarea
+        [(ngModel)]="respuesta"
+        rows="4"
+        class="w-full p-2 border rounded mb-2"
+        placeholder="Escribe tu respuesta..."
+      ></textarea>
 
       <button
-        class="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600"
+        class="flex items-center gap-1 bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600 text-sm"
         (click)="enviarRespuesta()"
       >
+        <i class="material-icons text-sm">send</i>
         Enviar Respuesta
       </button>
     </div>

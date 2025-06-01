@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NavbarAdminComponent } from '../../../shared/components/navbar-admin.component';
 import { BuzonService, Mensaje } from '../../../shared/services/buzon.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-buzon',
   standalone: true,
-  imports: [CommonModule, FormsModule, NavbarAdminComponent],
+  imports: [CommonModule, FormsModule, RouterModule, NavbarAdminComponent],
   templateUrl: './buzon.component.html',
 })
 export class BuzonComponent implements OnInit {

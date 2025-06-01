@@ -6,12 +6,12 @@ import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { NavbarAdminComponent } from '../../../shared/components/navbar-admin.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog.component'; // ajusta la ruta si es distinta
-
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-usuarios',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatSnackBarModule, NavbarAdminComponent],
+  imports: [CommonModule, FormsModule, RouterModule, MatSnackBarModule, NavbarAdminComponent],
   templateUrl: './usuarios.component.html',
   styleUrls: ['./usuarios.component.css']
 })
