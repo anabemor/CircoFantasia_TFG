@@ -76,4 +76,20 @@ class MensajeController extends AbstractController
 
         return $this->json(['success' => true]);
     }
+
+    #[Route('/{id}', name: 'eliminar_mensaje', methods: ['DELETE'])]
+    public function eliminar(int $id, MensajeRepository $repo, EntityManagerInterface $em): JsonResponse
+    {
+        $mensaje = $repo->find($id);
+
+        if (!$mensaje) {
+            return $this->json(['error' => 'Mensaje no encontrado.'], 404);
+        }
+
+        $em->remove($mensaje);
+        $em->flush();
+
+        return $this->json(['success' => true]);
+    }
+
 }

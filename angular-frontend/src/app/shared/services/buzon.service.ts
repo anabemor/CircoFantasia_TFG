@@ -26,4 +26,10 @@ export class BuzonService {
   marcarComoRespondido(id: number): Observable<any> {
     return this.http.patch(`${this.apiUrl}/${id}/responder`, {});
   }
+
+  eliminarMensaje(id: number) {
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
+
+
 }
