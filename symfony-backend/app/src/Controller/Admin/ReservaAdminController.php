@@ -16,9 +16,30 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class ReservaAdminController extends AbstractController
 {
     #[Route('', name: 'admin_reservas_list', methods: ['GET'])]
-    public function index(ReservaRepository $reservaRepository): JsonResponse
+    public function index(Request $request, EntityManagerInterface $em): JsonResponse
     {
-        $reservas = $reservaRepository->findAll();
+        $fechaInicio = $request->query->get('fechaInicio');
+        $fechaFin = $request->query->get('fechaFin');
+
+        $qb = $em->getRepository(Reserva::class)->createQueryBuilder('r');
+
+        if ($fechaInicio) {
+            $inicio = \DateTime::createFromFormat('d-m-Y', $fechaInicio);
+            if ($inicio) {
+                $qb->andWhere('r.fechaVisita >= :inicio')
+                   ->setParameter('inicio', $inicio->format('Y-m-d'));
+            }
+        }
+
+        if ($fechaFin) {
+            $fin = \DateTime::createFromFormat('d-m-Y', $fechaFin);
+            if ($fin) {
+                $qb->andWhere('r.fechaVisita <= :fin')
+                   ->setParameter('fin', $fin->format('Y-m-d'));
+            }
+        }
+
+        $reservas = $qb->getQuery()->getResult();
 
         $data = array_map(function ($reserva) {
             return [
@@ -154,8 +175,8 @@ class ReservaAdminController extends AbstractController
         $reserva->setTelefono($data['telefono']);
         $reserva->setFechaVisita(new \DateTime($data['fechaVisita']));
         if (array_key_exists('aceptoCondiciones', $data)) {
-        $reserva->setAceptoCondiciones($data['aceptoCondiciones']);
-        }   
+            $reserva->setAceptoCondiciones($data['aceptoCondiciones']);
+        }
         $reserva->setEstado($data['estado'] ?? $reserva->getEstado());
 
         foreach ($reserva->getReservaTickets() as $rt) {

@@ -25,28 +25,36 @@
 
 
   <!-- Tabla -->
-  <table class="w-full table-auto border-collapse">
-    <thead>
-      <tr class="bg-gray-100 text-left">
-        <th class="p-2 border">Nombre</th>
-        <th class="p-2 border">Email</th>
-        <th class="p-2 border">Fecha Visita</th>
-        <th class="p-2 border">Adultos</th>
-        <th class="p-2 border">Niños</th>
-        <th class="p-2 border">Total</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let r of reservas" class="hover:bg-gray-50">
-        <td class="p-2 border">{{ r.nombre }} {{ r.apellidos }}</td>
-        <td class="p-2 border">{{ r.email }}</td>
-        <td class="p-2 border">{{ r.fechaVisita | date:'dd/MM/yyyy' }}</td>
-        <td class="p-2 border">{{ getCantidadPorTipo(r, 'Adulto') }}</td>
-        <td class="p-2 border">{{ getCantidadPorTipo(r, 'Niño') }}</td>
-        <td class="p-2 border">{{ getTotalReserva(r) | currency:'EUR' }}</td>
-      </tr>
-    </tbody>
-  </table>
+ <table class="w-full table-auto border-collapse">
+  <thead>
+    <tr class="bg-gray-100 text-left">
+      <th class="p-2 border">Nombre</th>
+      <th class="p-2 border">Email</th>
+      <th class="p-2 border">Fecha Visita</th>
+      <th class="p-2 border">Adultos</th>
+      <th class="p-2 border">Niños</th>
+      <th class="p-2 border">Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let r of reservas" class="hover:bg-gray-50">
+      <td class="p-2 border">{{ r.nombre }} {{ r.apellidos }}</td>
+      <td class="p-2 border">{{ r.email }}</td>
+      <td class="p-2 border">{{ r.fechaVisita | date:'dd/MM/yyyy' }}</td>
+      <td class="p-2 border">{{ getCantidadPorTipo(r, 'Adulto') }}</td>
+      <td class="p-2 border">{{ getCantidadPorTipo(r, 'Niño') }}</td>
+      <td class="p-2 border">{{ getTotalReserva(r) | currency:'EUR' }}</td>
+    </tr>
+
+    <!-- Fila de totales -->
+    <tr class="font-bold bg-gray-100">
+      <td colspan="3" class="p-2 border text-right">Totales:</td>
+      <td class="p-2 border">{{ getTotalAdultos() }}</td>
+      <td class="p-2 border">{{ getTotalNinos() }}</td>
+      <td class="p-2 border">{{ getTotalPrecio() | currency:'EUR' }}</td>
+    </tr>
+  </tbody>
+</table>
 </div>
 
 

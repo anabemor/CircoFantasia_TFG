@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -37,21 +37,55 @@ export class HistorialReservasComponent {
 
   filtrarReservas(): void {
     const params: any = {};
-    if (this.fechaInicio) params.fechaInicio = this.fechaInicio.toISOString().split('T')[0];
-    if (this.fechaFin) params.fechaFin = this.fechaFin.toISOString().split('T')[0];
+    if (this.fechaInicio) {
+      params.fechaInicio = formatDate(this.fechaInicio, 'dd-MM-yyyy', 'es-ES');
+    }
+    if (this.fechaFin) {
+      params.fechaFin = formatDate(this.fechaFin, 'dd-MM-yyyy', 'es-ES');
+    }
 
-    this.reservaService.getReservasFiltradas(params).subscribe(data => {
-      this.reservas = data;
+    console.log('🔍 Parámetros enviados al backend:', params);
+
+    this.reservaService.getReservasFiltradas(params).subscribe({
+      next: data => {
+        this.reservas = data;
+        console.log('✅ Reservas filtradas recibidas:', data);
+      },
+      error: err => {
+        console.error('❌ Error al obtener reservas filtradas:', err);
+      }
     });
   }
 
   getCantidadPorTipo(reserva: Reserva, tipoNombre: string): number {
-    const ticket = reserva.tickets.find(t => t.ticketType.nombre.toLowerCase() === tipoNombre.toLowerCase());
-    return ticket ? ticket.cantidad : 0;
+    if (!reserva.tickets || !Array.isArray(reserva.tickets)) return 0;
+
+    const ticket = reserva.tickets.find(
+      t => t.ticketType?.nombre?.toLowerCase() === tipoNombre.toLowerCase()
+    );
+    return ticket?.cantidad ?? 0;
   }
 
   getTotalReserva(reserva: Reserva): number {
-    return reserva.tickets.reduce((suma, t) => suma + (t.ticketType.precio * t.cantidad), 0);
+    if (!reserva.tickets || !Array.isArray(reserva.tickets)) return 0;
+
+    return reserva.tickets.reduce((suma, t) => {
+      const precio = t.ticketType?.precio ?? 0;
+      const cantidad = t.cantidad ?? 0;
+      return suma + (precio * cantidad);
+    }, 0);
+  }
+
+  getTotalAdultos(): number {
+    return this.reservas.reduce((suma, r) => suma + this.getCantidadPorTipo(r, 'Adulto'), 0);
+  }
+
+  getTotalNinos(): number {
+    return this.reservas.reduce((suma, r) => suma + this.getCantidadPorTipo(r, 'Niño'), 0);
+  }
+
+  getTotalPrecio(): number {
+    return this.reservas.reduce((suma, r) => suma + this.getTotalReserva(r), 0);
   }
 
   exportarPDF(): void {
