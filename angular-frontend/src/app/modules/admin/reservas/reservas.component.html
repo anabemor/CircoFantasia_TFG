@@ -37,10 +37,7 @@
       Ver historial
     </button>
 
-    <button [routerLink]="['/admin']" class="flex items-center gap-1 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
-        <i class="material-icons text-sm">arrow_back</i>
-        Volver
-    </button>
+    
     
   </div>
 
@@ -94,16 +91,28 @@
     <table class="min-w-full bg-white border border-gray-200 rounded-lg overflow-hidden shadow">
       <thead class="bg-indigo-600 text-white">
         <tr>
-          <th class="px-4 py-2">Nombre</th>
-          <th class="px-4 py-2">Email</th>
-          <th class="px-4 py-2 text-center">Teléfono</th>
-          <th class="px-4 py-2">Fecha Visita</th>
-          <th class="px-4 py-2">Fecha Reserva</th>
+          <th class="px-4 py-2 cursor-pointer" (click)="ordenarPor('nombre')">
+            Nombre <span *ngIf="ordenActual === 'nombre'">{{ ordenAscendente ? '▲' : '▼' }}</span>
+          </th>
+          <th class="px-4 py-2 cursor-pointer" (click)="ordenarPor('email')">
+            Email <span *ngIf="ordenActual === 'email'">{{ ordenAscendente ? '▲' : '▼' }}</span>
+          </th>
+          <th class="px-4 py-2 text-center cursor-pointer" (click)="ordenarPor('telefono')">
+            Teléfono <span *ngIf="ordenActual === 'telefono'">{{ ordenAscendente ? '▲' : '▼' }}</span>
+          </th>
+          <th class="px-4 py-2 cursor-pointer" (click)="ordenarPor('fechaVisita')">
+            Fecha Visita <span *ngIf="ordenActual === 'fechaVisita'">{{ ordenAscendente ? '▲' : '▼' }}</span>
+          </th>
+          <th class="px-4 py-2 cursor-pointer" (click)="ordenarPor('fechaReserva')">
+            Fecha Reserva <span *ngIf="ordenActual === 'fechaReserva'">{{ ordenAscendente ? '▲' : '▼' }}</span>
+          </th>
           <th class="px-4 py-2 text-center">Adultos</th>
           <th class="px-4 py-2 text-center">Niños</th>
           <th class="px-4 py-2 text-center">Total</th>
-          <th class="px-4 py-2 text-center">Estado</th>
-          <th class="px-4 py-2 text-right">Acciones</th>
+          <th class="px-4 py-2 text-center cursor-pointer" (click)="ordenarPor('estado')">
+            Estado <span *ngIf="ordenActual === 'estado'">{{ ordenAscendente ? '▲' : '▼' }}</span>
+          </th>
+<th class="px-4 py-2 text-right">Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -166,6 +175,13 @@
     </div>
   </ng-container>
 
+  <div class="mt-6 flex justify-end"> 
+  <button [routerLink]="['/admin']" class="flex items-center gap-1 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+        <i class="material-icons text-sm">arrow_back</i>
+        Volver
+    </button>
+  </div> 
+  
   <!-- Formularios -->
   <ng-template #formularioActivo>
     <app-reserva-create-form

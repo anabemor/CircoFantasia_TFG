@@ -14,10 +14,10 @@ export class ToastService {
   ): void {
     this.snackBar.openFromComponent(ToastComponent, {
       data: { message, type, actionLabel, actionCallback },
-      duration: 5000,
+      duration: 2000,
       horizontalPosition: 'center',
       verticalPosition: 'top',
-      panelClass: ['custom-snackbar-containter']
+      panelClass: ['no-backdrop-snackbar'] // nombre simple y claro
     });
   }
 

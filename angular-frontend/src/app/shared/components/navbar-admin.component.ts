@@ -11,12 +11,19 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./navbar-admin.component.css']
 })
 export class NavbarAdminComponent {
-   constructor(private authService: AuthService) {}
+    constructor(
+      private authService: AuthService, 
+      private router: Router) {}
 
-  irAlPanel(): void {
-    this.authService.logout(); // <-- usa el centralizado
-  }
-
+   irAlPanel(): void {
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        this.router.navigate(['/admin']); // o la ruta principal de admin que prefieras
+      } else {
+        this.router.navigate(['/login']);
+      }
+    }
+    
   logout(): void {
     this.authService.logout(); // <-- usa el centralizado
   }

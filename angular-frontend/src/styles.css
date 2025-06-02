@@ -19,11 +19,12 @@
   text-align: center;
 }
 
-/* Elimina fondo por defecto de Angular Material */
-.mat-mdc-snack-bar-container {
+.custom-snackbar-container .mat-mdc-snack-bar-container {
   background: transparent !important;
   box-shadow: none !important;
   padding: 0 !important;
+  display: flex !important;
+  justify-content: center;
 }
 
 /* Toast contenedor */
@@ -53,3 +54,41 @@ mat-form-field {
   color: white !important;
   border-radius: 50%;
 }
+
+/* 🔧 Fondo oscuro de Angular Material: el culpable típico */
+.cdk-overlay-backdrop {
+  background-color: transparent !important;
+}
+
+/* 🔧 Contenedor general del overlay (centro del viewport) */
+.cdk-overlay-container {
+  background-color: transparent !important;
+  pointer-events: none; /* Opcional: para evitar bloquear clics detrás */
+}
+
+/* 🔧 Panel flotante que aloja el snackbar */
+.cdk-overlay-pane {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Elimina completamente fondo, sombra y espaciado del contenedor Material */
+.no-backdrop-snackbar .mat-mdc-snack-bar-container {
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* Elimina fondo negro del overlay de Angular Material */
+.cdk-overlay-container,
+.cdk-overlay-backdrop,
+.cdk-overlay-pane {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Quita margen/espaciado del snackbar en la vista */
+.no-backdrop-snackbar .mat-mdc-snack-bar-label {
+  margin: 0 !important;
+}
+

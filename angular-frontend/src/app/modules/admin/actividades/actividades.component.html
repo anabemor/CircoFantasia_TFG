@@ -7,10 +7,7 @@
     Crear nueva actividad
   </button>
 
-  <button [routerLink]="['/admin']" class="flex items-center gap-1 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
-        <i class="material-icons text-sm">arrow_back</i>
-        Volver
-  </button>
+  
 
   <!-- Formulario -->
   <div *ngIf="mostrarFormulario" class="mb-6 bg-gray-100 p-4 rounded shadow">
@@ -137,8 +134,15 @@
         </button>
       </div>
       </td>
-
       </tr>
     </tbody>
   </table>
+
+  <div class="mt-6 flex justify-end">
+    <button [routerLink]="['/admin']" class="flex items-center gap-1 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+          <i class="material-icons text-sm">arrow_back</i>
+          Volver
+    </button>
+  </div>
+    
 </div>

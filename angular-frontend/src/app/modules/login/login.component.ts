@@ -1,9 +1,11 @@
+import { ToastService } from './../../shared/services/toast.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../shared/services/auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
+
 
 @Component({
   selector: 'app-login',
@@ -22,7 +24,8 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private toast: ToastService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -46,6 +49,7 @@ export class LoginComponent implements OnInit {
   onSubmit(): void {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
+      this.toast.warning('Por favor, revise sus datos e intente nuevamente');
       return;
     }
 
@@ -53,21 +57,23 @@ export class LoginComponent implements OnInit {
 
     this.authService.login({ email, password }).subscribe({
       next: (response) => {
-        localStorage.setItem('huboSesion', 'true'); //  Marcamos que hubo una sesión
+        localStorage.setItem('huboSesion', 'true'); // Marcamos que hubo sesión
         this.authService.saveToken(response.token); // Guardar token
 
         this.errorMessage = null;
-        this.successMessage = 'Inicio de sesión exitoso. Redirigiendo...';
         this.mensajeSesionCaducada = '';
 
+        this.toast.success('Inicio de sesión exitoso. Redirigiendo...');
+
         setTimeout(() => {
-          this.router.navigate(['/admin']); 
+          this.router.navigate(['/admin']);
         }, 1500);
       },
       error: (err: HttpErrorResponse) => {
         console.error('Login fallido', err);
         this.successMessage = null;
-        this.errorMessage = 'Correo o contraseña incorrectos.';
+
+        this.toast.error('Correo electrónico o contraseña inválida, por favor, revise sus datos');
       }
     });
   }

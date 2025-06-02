@@ -6,11 +6,12 @@ import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog.component';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'] // ← CORREGIDO aquí
 })
