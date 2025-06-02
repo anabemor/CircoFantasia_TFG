@@ -33,11 +33,15 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     // Detectar si la sesión ha caducado (viene desde el guard)
     this.route.queryParams.subscribe(params => {
-      if (params['sessionExpired']) {
-        this.mensajeSesionCaducada = 'La sesión ha caducado. Por favor, vuelve a iniciar sesión.';
-      }
-    });
-  }
+    const logoutManual = localStorage.getItem('logoutManual') === 'true';
+
+    if (params['sessionExpired'] && !logoutManual) {
+      this.mensajeSesionCaducada = 'La sesión ha caducado. Por favor, vuelve a iniciar sesión.';
+    }
+
+    localStorage.removeItem('logoutManual'); // Limpia la marca
+  });
+} 
 
   onSubmit(): void {
     if (this.loginForm.invalid) {
@@ -49,14 +53,15 @@ export class LoginComponent implements OnInit {
 
     this.authService.login({ email, password }).subscribe({
       next: (response) => {
-        this.authService.saveToken(response.token); // ✅ guardar token
+        localStorage.setItem('huboSesion', 'true'); //  Marcamos que hubo una sesión
+        this.authService.saveToken(response.token); // Guardar token
 
         this.errorMessage = null;
         this.successMessage = 'Inicio de sesión exitoso. Redirigiendo...';
         this.mensajeSesionCaducada = '';
 
         setTimeout(() => {
-          this.router.navigate(['/admin']); // o la ruta correspondiente
+          this.router.navigate(['/admin']); 
         }, 1500);
       },
       error: (err: HttpErrorResponse) => {

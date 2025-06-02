@@ -12,33 +12,34 @@ export class AdminAuthGuard implements CanActivate {
 
   canActivate(): boolean {
     const token = localStorage.getItem('authToken');
+    const huboSesion = localStorage.getItem('huboSesion') === 'true';
 
-    // ⛔ No hay token → redirigir a login con aviso
+    // ⛔ No hay token → redirigir a login SIN mensaje si nunca hubo sesión
     if (!token) {
-      this.mostrarMensaje('Debes iniciar sesión como administrador.');
       this.router.navigate(['/login'], {
-        queryParams: { sessionExpired: true },
+        queryParams: { sessionExpired: huboSesion ? 'true' : null },
         replaceUrl: true
       });
       return false;
     }
 
     try {
-      // 🔐 Decodificar payload del JWT
       const payload = JSON.parse(atob(token.split('.')[1]));
-      const ahora = Math.floor(Date.now() / 1000); // Timestamp actual
+      const ahora = Math.floor(Date.now() / 1000);
 
-      // ⏳ Verificar si el token ha caducado
+      // ⏳ Token expirado
       if (payload.exp && payload.exp < ahora) {
-        this.mostrarMensaje('Tu sesión ha caducado.');
+        if (huboSesion) {
+          this.mostrarMensaje('Tu sesión ha caducado.');
+        }
         this.router.navigate(['/login'], {
-          queryParams: { sessionExpired: true },
+          queryParams: { sessionExpired: huboSesion ? 'true' : null },
           replaceUrl: true
         });
         return false;
       }
 
-      // ✅ Verificar si tiene el rol de administrador
+      // ✅ Verificar rol de administrador
       if (payload.roles && payload.roles.includes('ROLE_ADMIN')) {
         return true;
       } else {
@@ -48,7 +49,6 @@ export class AdminAuthGuard implements CanActivate {
       }
 
     } catch (e) {
-      // ⚠️ Token mal formado o inválido
       this.mostrarMensaje('Token inválido. Vuelve a iniciar sesión.');
       this.router.navigate(['/login'], { replaceUrl: true });
       return false;
@@ -59,7 +59,7 @@ export class AdminAuthGuard implements CanActivate {
     this.snackBar.openFromComponent(ToastComponent, {
       data: {
         message: mensaje,
-        type: 'error' // Puedes cambiar a 'info', 'success', etc. según tu ToastComponent
+        type: 'error'
       },
       duration: 4000,
       panelClass: ['custom-snackbar-overlay']

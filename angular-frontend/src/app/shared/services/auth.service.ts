@@ -60,10 +60,11 @@ export class AuthService {
    * Cierra sesión y redirige a /login
    */
   logout(): void {
+    localStorage.setItem('logoutManual', 'true'); //Para marcar Logout voluntario
+   localStorage.removeItem('huboSesion'); //Limpiar la marca
     this.clearToken();
     this.router.navigate(['/login'], { replaceUrl: true }); //evita que si se da para atrás en el navegador pueda volver a una ruta protegida. 
-    window.location.reload();
-  }
+    }
 
   /**
    * Elimina el token del almacenamiento
