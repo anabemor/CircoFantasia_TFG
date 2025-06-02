@@ -92,3 +92,41 @@ mat-form-field {
   margin: 0 !important;
 }
 
+:root {
+  --fantasia-rosa: #ED135C;
+  --fantasia-rosa-alt: #ED125A;
+  --fantasia-azul-oscuro: #092191;
+  --fantasia-azul-claro: #A9D0E9;
+  --fantasia-azul-intermedio: #7FA1CD;
+}
+
+.bg-fantasia-rosa { background-color: var(--fantasia-rosa); }
+.bg-fantasia-rosa-alt { background-color: var(--fantasia-rosa-alt); }
+.bg-fantasia-azul-oscuro { background-color: var(--fantasia-azul-oscuro); }
+.bg-fantasia-azul-claro { background-color: var(--fantasia-azul-claro); }
+.bg-fantasia-azul-intermedio { background-color: var(--fantasia-azul-intermedio); }
+
+.text-fantasia-rosa { color: var(--fantasia-rosa); }
+.text-fantasia-azul-oscuro { color: var(--fantasia-azul-oscuro); }
+.text-fantasia-azul-intermedio { color: var(--fantasia-azul-intermedio); }
+
+.border-fantasia-azul-intermedio { border-color: var(--fantasia-azul-intermedio); }
+
+
+/* Fuente para todo el layout cliente */
+body.cliente-app {
+  font-family: 'Bubbler One', sans-serif;
+  font-size: 1em;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  background-color: #fefefe;
+  color: #333;
+   /* Aumenta grosor simulado */
+  text-shadow: 0.25px 0.25px 0 currentColor;
+}
+
+.fantasia-title {
+  font-family: 'Bubbler One', sans-serif;
+  font-weight: 400;
+  text-shadow: 0.25px 0.25px 0 currentColor;
+}

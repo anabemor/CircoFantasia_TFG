@@ -26,6 +26,21 @@ export class SeleccionTicketsComponent implements OnInit {
     private router: Router
   ) {}
 
+  getIconoActividad(): string {
+    const nombre = this.compraService.getActividad()?.nombre?.toLowerCase() || '';
+
+    if (nombre.includes('halloween')) {
+      return '/img/pumpkin_fantasia.png';
+    }
+
+    if (nombre.includes('navidad') || nombre.includes('papá noel')) {
+      return '/img/navidad_fantasia.png';
+    }
+
+    return ''; // si no hay icono aplicable
+  }
+
+
   ngOnInit(): void {
       this.actividadService.getActividadActiva().subscribe({
       next: (actividad) => {
@@ -80,4 +95,6 @@ export class SeleccionTicketsComponent implements OnInit {
 
     this.router.navigate(['/compra/fecha']);
   }
+
+  
 }
