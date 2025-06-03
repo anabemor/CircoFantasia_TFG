@@ -92,6 +92,38 @@ mat-form-field {
   margin: 0 !important;
 }
 
+/* 🔧 Estilo para eliminar fondo y sombra del contenedor del snackbar */
+.no-backdrop-snackbar .mat-mdc-snack-bar-container {
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* 🔧 Elimina overlay oscuro que aparece detrás */
+.cdk-overlay-backdrop {
+  background-color: transparent !important;
+}
+
+/* 🔧 Limpia contenedor del overlay */
+.cdk-overlay-container,
+.cdk-overlay-pane {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* 🔧 Elimina fondo y sombra del contenedor de Angular Material */
+.mat-mdc-snackbar-surface {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Extra: elimina bordes o efectos innecesarios */
+.mdc-snackbar__surface {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
 :root {
   --fantasia-rosa: #ED135C;
   --fantasia-rosa-alt: #ED125A;

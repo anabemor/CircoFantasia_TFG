@@ -6,14 +6,14 @@
   </h2>
 
   <!-- Actividad -->
-  <div *ngIf="compraService.getActividad()" class="text-base text-fantasia-rosa mb-2 text-center">
-    <span class="font-semibold">Actividad:</span>
+  <div *ngIf="compraService.getActividad()" class="text-lg text-fantasia-rosa mb-2 text-center">
+    <span class="font-semibold"> Actividad: </span>
     <span>{{ compraService.getActividad()?.nombre }}</span>
   </div>
 
   <!-- Fecha de visita -->
-  <div *ngIf="compraService.getFecha()" class="text-sm text-gray-600 mb-6 text-center">
-    <span class="font-medium">Fecha de visita:</span>
+  <div *ngIf="compraService.getFecha()" class="text-lg text-gray-600 mb-6 text-center">
+    <span class="font-medium"> Fecha de visita:  </span>
     <span>{{ compraService.getFecha() | date:'fullDate' }}</span>
   </div>
 

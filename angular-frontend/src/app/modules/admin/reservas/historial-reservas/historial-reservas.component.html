@@ -77,7 +77,7 @@
         </thead>
       <tbody>
         <tr
-          *ngFor="let r of reservas"
+         *ngFor="let r of reservasPaginaActual"
           class="border-t border-gray-200 hover:bg-gray-50 text-sm"
         >
           <td class="px-4 py-2">{{ r.nombre }} {{ r.apellidos }}</td>
@@ -97,5 +97,28 @@
         </tr>
       </tbody>
     </table>
+  </div>
+  
+  <!-- Paginación -->
+  <div class="mt-4 flex justify-center items-center gap-4">
+    <button
+      class="px-4 py-2 rounded bg-indigo-500 text-white hover:bg-indigo-600 disabled:opacity-50"
+      (click)="anteriorPagina()"
+      [disabled]="paginaActual === 1"
+    >
+      ← Anterior
+    </button>
+
+    <span class="text-gray-700 font-medium">
+      Página {{ paginaActual }} de {{ totalPaginas }}
+    </span>
+
+    <button
+      class="px-4 py-2 rounded bg-indigo-500 text-white hover:bg-indigo-600 disabled:opacity-50"
+      (click)="siguientePagina()"
+      [disabled]="paginaActual === totalPaginas"
+    >
+      Siguiente →
+    </button>
   </div>
 </div>

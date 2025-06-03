@@ -9,12 +9,6 @@
     </span>
   </h2>
 
-  <!-- Texto descriptivo -->
-  <p class="text-lg text-gray-700 mb-6 leading-relaxed">
-    A continuación, podrás seleccionar el día de tu visita.<br />
-    Los menores de 2 años tienen entrada gratis y no deben añadirse a la compra.
-  </p>
-
   <div *ngFor="let tipo of tiposTicket" class="mb-4 p-4 border rounded shadow-sm bg-white">
     <div class="flex justify-between items-center">
       <div>
@@ -44,6 +38,12 @@
       </div>
     </div>
   </div>
+
+  <p class="text-sm text-gray-700 mb-6 leading-relaxed">
+    Se consideran niños de 3 a 16 años. <br/>
+    Los menores de 2 años tienen entrada gratis y no deben añadirse a la compra.<br/>
+    A continuación, podrás seleccionar el día de tu visita.
+  </p>
   
 <div class="flex justify-end mt-7">
   <button

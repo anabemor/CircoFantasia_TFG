@@ -29,6 +29,23 @@
     <mat-datepicker #picker [dateClass]="marcarFechasCompletas"></mat-datepicker>
   </mat-form-field>
 
+  <!-- Leyenda explicativa -->
+  <div class="mt-2 text-sm text-gray-700 flex items-center gap-6">
+    <span class="flex items-center gap-2">
+      <span class="inline-block w-3 h-3 rounded-full bg-gray-500"></span>
+      Disponible
+    </span>
+    <span class="flex items-center gap-2">
+      <span class="inline-block w-3 h-3 rounded-full bg-red-500"></span>
+      Aforo completo
+    </span>
+    <span class="flex items-center gap-2">
+      <span class="inline-block w-3 h-3 rounded-full bg-gray-300"></span>
+      Parque cerrado
+    </span>
+  </div>
+
+
   <!-- Info aforo -->
   <div *ngIf="fechaSeleccionada" class="mt-4 text-base text-gray-700 leading-relaxed">
     <p>Aforo máximo: <strong>60 personas</strong></p>

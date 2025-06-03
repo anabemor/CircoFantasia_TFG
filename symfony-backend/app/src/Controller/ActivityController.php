@@ -114,3 +114,4 @@ class ActivityController extends AbstractController
         ]);
     }
 }
+

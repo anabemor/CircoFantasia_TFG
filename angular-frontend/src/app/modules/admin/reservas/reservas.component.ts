@@ -10,7 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog.component';
 import { AdminAforoComponent } from './aforo/aforo.component';
-import { RouterModule } from '@angular/router'; 
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-reservas',
@@ -30,18 +30,23 @@ import { RouterModule } from '@angular/router';
 export class ReservasComponent implements OnInit {
   reservas: Reserva[] = [];
   reservasFiltradas: Reserva[] = [];
-  
-  filtroTexto: string = '';
-  filtroFecha: string = '';
 
-  // NUEVO: mensaje de aforo para el hijo
-  aforoError: string | null = null;
+  filtroTexto = '';
+  filtroFecha = '';
+  filtroEstado = '';
+  mostrarBuscador = false;
 
-  // Controladores
   mostrarFormularioEdicion = false;
   mostrarFormularioCreacion = false;
   reservaEnEdicion: Reserva | null = null;
   mostrarAforo = false;
+  aforoError: string | null = null;
+
+  paginaActual = 1;
+  tamañoPagina = 10;
+
+  ordenActual: keyof Reserva | '' = '';
+  ordenAscendente = true;
 
   constructor(
     private reservaService: ReservaAdminService,
@@ -57,13 +62,11 @@ export class ReservasComponent implements OnInit {
     this.reservaService.getReservas().subscribe({
       next: (data) => {
         this.reservas = data;
-        this.aplicarFiltros(); // Aplica filtros automáticamente
+        this.aplicarFiltros();
       },
       error: () => alert('Error al cargar las reservas')
     });
   }
-
-  filtroEstado: string = '';
 
   aplicarFiltros(): void {
     const texto = this.filtroTexto.toLowerCase();
@@ -76,18 +79,71 @@ export class ReservasComponent implements OnInit {
         reserva.apellidos.toLowerCase().includes(texto) ||
         reserva.email.toLowerCase().includes(texto);
 
-      const coincideFecha = fecha
-        ? reserva.fechaVisita.startsWith(fecha)
-        : true;
-
-      const coincideEstado = estado
-        ? reserva.estado === estado
-        : true;
+      const coincideFecha = fecha ? reserva.fechaVisita.startsWith(fecha) : true;
+      const coincideEstado = estado ? reserva.estado === estado : true;
 
       return coincideTexto && coincideFecha && coincideEstado;
     });
 
-    this.currentPage = 1;
+    this.paginaActual = 1;
+  }
+
+  limpiarFiltros(): void {
+    this.filtroTexto = '';
+    this.filtroFecha = '';
+    this.filtroEstado = '';
+    this.aplicarFiltros();
+  }
+
+  get reservasFiltradasPaginaActual(): Reserva[] {
+    const inicio = (this.paginaActual - 1) * this.tamañoPagina;
+    return this.reservasFiltradas.slice(inicio, inicio + this.tamañoPagina);
+  }
+
+  get totalPaginas(): number {
+    return Math.ceil(this.reservasFiltradas.length / this.tamañoPagina);
+  }
+
+  anteriorPagina(): void {
+    if (this.paginaActual > 1) {
+      this.paginaActual--;
+    }
+  }
+
+  siguientePagina(): void {
+    if (this.paginaActual < this.totalPaginas) {
+      this.paginaActual++;
+    }
+  }
+
+  ordenarPor(campo: keyof Reserva): void {
+    if (this.ordenActual === campo) {
+      this.ordenAscendente = !this.ordenAscendente;
+    } else {
+      this.ordenActual = campo;
+      this.ordenAscendente = true;
+    }
+
+    this.reservasFiltradas.sort((a, b) => {
+      const valorA = a[campo] ?? '';
+      const valorB = b[campo] ?? '';
+
+      if (typeof valorA === 'string' && typeof valorB === 'string') {
+        return this.ordenAscendente
+          ? valorA.localeCompare(valorB)
+          : valorB.localeCompare(valorA);
+      }
+
+      if (typeof valorA === 'number' && typeof valorB === 'number') {
+        return this.ordenAscendente ? valorA - valorB : valorB - valorA;
+      }
+
+      return 0;
+    });
+  }
+
+  toggleBuscador(): void {
+    this.mostrarBuscador = !this.mostrarBuscador;
   }
 
   abrirFormularioCrear(): void {
@@ -110,8 +166,7 @@ export class ReservasComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al crear reserva:', err);
-        const mensaje = err?.error?.error || 'Error al crear la reserva';
-        this.aforoError = mensaje;
+        this.aforoError = err?.error?.error || 'Error al crear la reserva';
       }
     });
   }
@@ -222,69 +277,4 @@ export class ReservasComponent implements OnInit {
   toggleAforo(): void {
     this.mostrarAforo = !this.mostrarAforo;
   }
-
-  // Paginación
-  currentPage = 1;
-  itemsPerPage = 10;
-
-  get totalPages(): number {
-    return Math.ceil(this.reservasFiltradas.length / this.itemsPerPage);
-  }
-
-  get reservasFiltradasPaginaActual(): Reserva[] {
-    const inicio = (this.currentPage - 1) * this.itemsPerPage;
-    return this.reservasFiltradas.slice(inicio, inicio + this.itemsPerPage);
-  }
-
-  cambiarPagina(pagina: number): void {
-    if (pagina >= 1 && pagina <= this.totalPages) {
-      this.currentPage = pagina;
-    }
-  }
-
-  // Ordenar tabla
-  ordenActual: keyof Reserva | '' = '';
-  ordenAscendente = true;
-
-  ordenarPor(campo: keyof Reserva): void {
-    if (this.ordenActual === campo) {
-      this.ordenAscendente = !this.ordenAscendente;
-    } else {
-      this.ordenActual = campo;
-      this.ordenAscendente = true;
-    }
-
-    this.reservasFiltradas.sort((a, b) => {
-      const valorA = a[campo] ?? '';
-      const valorB = b[campo] ?? '';
-
-      if (typeof valorA === 'string' && typeof valorB === 'string') {
-        return this.ordenAscendente
-          ? valorA.localeCompare(valorB)
-          : valorB.localeCompare(valorA);
-      }
-
-      if (typeof valorA === 'number' && typeof valorB === 'number') {
-        return this.ordenAscendente ? valorA - valorB : valorB - valorA;
-      }
-
-      return 0;
-    });
-  }
-  
-
-  limpiarFiltros(): void {
-  this.filtroTexto = '';
-  this.filtroFecha = '';
-  this.filtroEstado= '';
-  this.aplicarFiltros();
-  }
-
-  mostrarBuscador: boolean = false;
-
-  toggleBuscador(): void {
-    this.mostrarBuscador = !this.mostrarBuscador;
-  }
-
-
 }

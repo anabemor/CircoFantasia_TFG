@@ -13,7 +13,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
-import { NavbarAdminComponent } from "../../../../shared/components/navbar-admin.component";
+import { NavbarAdminComponent } from '../../../../shared/components/navbar-admin.component';
 
 @Component({
   selector: 'app-historial-reservas',
@@ -27,15 +27,19 @@ import { NavbarAdminComponent } from "../../../../shared/components/navbar-admin
     MatInputModule,
     MatButtonModule,
     NavbarAdminComponent
-],
+  ],
   templateUrl: './historial-reservas.component.html'
 })
 export class HistorialReservasComponent {
   reservas: Reserva[] = [];
   fechaInicio: Date | null = null;
   fechaFin: Date | null = null;
-  ordenAscendente: any;
-  ordenCampo!: string;
+  ordenAscendente = true;
+  ordenCampo = '';
+
+  // Paginación
+  paginaActual = 1;
+  tamañoPagina = 15;
 
   constructor(private reservaService: ReservaAdminService) {
     this.filtrarReservas();
@@ -55,12 +59,30 @@ export class HistorialReservasComponent {
     this.reservaService.getReservasFiltradas(params).subscribe({
       next: data => {
         this.reservas = data;
+        this.paginaActual = 1;
         console.log('✅ Reservas filtradas recibidas:', data);
       },
       error: err => {
         console.error('❌ Error al obtener reservas filtradas:', err);
       }
     });
+  }
+
+  get reservasPaginaActual(): Reserva[] {
+    const inicio = (this.paginaActual - 1) * this.tamañoPagina;
+    return this.reservas.slice(inicio, inicio + this.tamañoPagina);
+  }
+
+  get totalPaginas(): number {
+    return Math.ceil(this.reservas.length / this.tamañoPagina);
+  }
+
+  anteriorPagina(): void {
+    if (this.paginaActual > 1) this.paginaActual--;
+  }
+
+  siguientePagina(): void {
+    if (this.paginaActual < this.totalPaginas) this.paginaActual++;
   }
 
   getCantidadPorTipo(reserva: Reserva, tipoNombre: string): number {
@@ -99,19 +121,35 @@ export class HistorialReservasComponent {
     if (!confirmar) return;
 
     const doc = new jsPDF();
+
+    const body = this.reservas.map(r => [
+      `${r.nombre} ${r.apellidos}`,
+      r.email,
+      new Date(r.fechaVisita).toLocaleDateString(),
+      this.getCantidadPorTipo(r, 'Adulto'),
+      this.getCantidadPorTipo(r, 'Niño'),
+      `${this.getTotalReserva(r)} €`
+    ]);
+
+    // Añadir fila de totales manualmente
+    body.push([
+      'Totales',
+      '',
+      '',
+      this.getTotalAdultos().toString(),
+      this.getTotalNinos().toString(),
+      `${this.getTotalPrecio().toFixed(2)} €`
+    ]);
+
     autoTable(doc, {
       head: [['Nombre', 'Email', 'Fecha Visita', 'Adultos', 'Niños', 'Total']],
-      body: this.reservas.map(r => [
-        `${r.nombre} ${r.apellidos}`,
-        r.email,
-        new Date(r.fechaVisita).toLocaleDateString(),
-        this.getCantidadPorTipo(r, 'Adulto'),
-        this.getCantidadPorTipo(r, 'Niño'),
-        `${this.getTotalReserva(r)} €`
-      ])
+      body: body,
+      theme: 'striped'
     });
+
     doc.save('historial_reservas.pdf');
   }
+
 
   exportarExcel(): void {
     const confirmar = confirm('¿Deseas generar el Excel del historial de reservas?');
@@ -125,6 +163,16 @@ export class HistorialReservasComponent {
       Niños: this.getCantidadPorTipo(r, 'Niño'),
       Total: this.getTotalReserva(r)
     }));
+
+    // Agregar fila de totales
+    datos.push({
+      Nombre: 'Totales',
+      Email: '',
+      'Fecha Visita': '',
+      Adultos: this.getTotalAdultos(),
+      Niños: this.getTotalNinos(),
+      Total: this.getTotalPrecio()
+    });
 
     const worksheet = XLSX.utils.json_to_sheet(datos);
     const workbook = { Sheets: { 'Reservas': worksheet }, SheetNames: ['Reservas'] };
@@ -150,9 +198,11 @@ export class HistorialReservasComponent {
       if (valorA > valorB) return this.ordenAscendente ? 1 : -1;
       return 0;
     });
+
+    this.paginaActual = 1;
   }
 
-  obtenerValorParaOrden(reserva: any, campo: string): any {
+  obtenerValorParaOrden(reserva: Reserva, campo: string): any {
     switch (campo) {
       case 'nombre': return reserva.nombre?.toLowerCase();
       case 'email': return reserva.email?.toLowerCase();
@@ -160,5 +210,6 @@ export class HistorialReservasComponent {
       default: return '';
     }
   }
+
 
 }

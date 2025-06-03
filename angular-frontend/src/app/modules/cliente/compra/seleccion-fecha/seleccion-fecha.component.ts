@@ -33,8 +33,10 @@ export class SeleccionFechaComponent implements OnInit {
   fechaSeleccionada: Date | null = null;
   aforoDisponible: number | null = null;
   fechasBloqueadas = new Set<string>();
-  fechaMinima: Date = new Date();
   fechasCargadas = false;
+
+  fechaMinima: Date = new Date();
+  fechaMaxima: Date = new Date();
 
   constructor(
     private reservaService: ReservaService,
@@ -43,6 +45,16 @@ export class SeleccionFechaComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    const actividad = this.compraService.getActividad();
+    if (!actividad) {
+      alert('No hay actividad activa disponible. Inténtalo más tarde.');
+      this.router.navigate(['/']);
+      return;
+    }
+
+    this.fechaMinima = new Date(actividad.fechaInicio);
+    this.fechaMaxima = new Date(actividad.fechaFin);
+
     this.cargarFechasBloqueadas();
 
     const fechaGuardada = this.compraService.getFecha();
@@ -53,13 +65,14 @@ export class SeleccionFechaComponent implements OnInit {
   }
 
   cargarFechasBloqueadas(): void {
-    const hoy = new Date();
-    const dias = 30;
+    const dias = 60; // puede ajustar según el rango real
     const peticiones = [];
 
     for (let i = 0; i < dias; i++) {
-      const fecha = new Date(hoy);
-      fecha.setDate(hoy.getDate() + i);
+      const fecha = new Date(this.fechaMinima);
+      fecha.setDate(this.fechaMinima.getDate() + i);
+      if (fecha > this.fechaMaxima) break;
+
       const fechaISO = formatDate(fecha, 'yyyy-MM-dd', 'es');
       peticiones.push(this.reservaService.getAforoPorFecha(fechaISO));
     }
@@ -82,6 +95,8 @@ export class SeleccionFechaComponent implements OnInit {
   filtroFecha = (d: Date | null): boolean => {
     if (!d) return false;
     const iso = formatDate(d, 'yyyy-MM-dd', 'es');
+
+    if (d < this.fechaMinima || d > this.fechaMaxima) return false;
     return !this.fechasBloqueadas.has(iso);
   };
 
@@ -115,7 +130,14 @@ export class SeleccionFechaComponent implements OnInit {
       return;
     }
 
-    const iso = formatDate(this.fechaSeleccionada, 'yyyy-MM-dd', 'es');
+    const fecha = this.fechaSeleccionada;
+    const iso = formatDate(fecha, 'yyyy-MM-dd', 'es');
+
+    if (fecha < this.fechaMinima || fecha > this.fechaMaxima) {
+      alert('La fecha seleccionada está fuera del rango de la actividad.');
+      return;
+    }
+
     if (this.fechasBloqueadas.has(iso)) {
       alert('La fecha seleccionada está completa. Elige otra.');
       return;

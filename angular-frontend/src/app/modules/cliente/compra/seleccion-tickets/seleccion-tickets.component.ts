@@ -5,6 +5,7 @@ import { TicketTypeService} from '../../../../shared/services/ticket-type.servic
 import { CompraService, TicketSeleccionado } from '../../../../shared/services/compra.service';
 import { TicketType } from '../../../../shared/interfaces/ticket-type.interface';
 import { ActividadService } from '../../../../shared/services/actividad.service';
+import { ToastService } from '../../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-seleccion-tickets',
@@ -23,7 +24,8 @@ export class SeleccionTicketsComponent implements OnInit {
     private ticketTypeService: TicketTypeService,
     private compraService: CompraService,
     private actividadService: ActividadService,
-    private router: Router
+    private router: Router,
+    private toast: ToastService
   ) {}
 
   getIconoActividad(): string {
@@ -85,11 +87,12 @@ export class SeleccionTicketsComponent implements OnInit {
     this.compraService.setTickets(seleccionados);
   }
 
+  
   continuar(): void {
-    // Ya no hace falta volver a llamar a setTickets aquí,
-    // si ya se actualiza en tiempo real en los botones.
-    if (this.compraService.getTickets().length === 0) {
-      alert('Debes seleccionar al menos una entrada.');
+    const totalEntradas = Object.values(this.cantidades).reduce((sum, n) => sum + n, 0);
+
+     if (totalEntradas === 0) {
+      this.toast.warning('Debes seleccionar al menos una entrada');
       return;
     }
 

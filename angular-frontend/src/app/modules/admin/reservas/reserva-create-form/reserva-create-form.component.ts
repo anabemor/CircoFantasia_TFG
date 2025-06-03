@@ -14,6 +14,8 @@ import { TicketTypeService } from '../../../../shared/services/ticket-type.servi
 import { TicketType } from '../../../../shared/interfaces/ticket-type.interface';
 import { Reserva } from '../../../../shared/interfaces/reserva.interface';
 import { ReservaService } from '../../../../shared/services/reserva.service';
+import { ActividadService } from '../../../../shared/services/actividad.service';
+import { Actividad } from '../../../../shared/interfaces/actividad.interface';
 
 @Component({
   selector: 'app-reserva-create-form',
@@ -36,7 +38,9 @@ export class ReservaCreateFormComponent implements OnInit {
 
   form!: FormGroup;
   ticketTypes: TicketType[] = [];
+
   fechaMinima: Date = new Date();
+  fechaMaxima: Date = new Date(); // NUEVO
   fechasCompletas: string[] = [];
   fechasCargadas: boolean = false;
 
@@ -44,13 +48,24 @@ export class ReservaCreateFormComponent implements OnInit {
     private fb: FormBuilder,
     private ticketService: TicketTypeService,
     private reservaService: ReservaService,
+    private actividadService: ActividadService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
     this.inicializarFormulario();
     this.cargarTiposTicket();
-    this.cargarFechasConAforoCompleto();
+
+    this.actividadService.getActividadActiva().subscribe({
+      next: (actividad: Actividad) => {
+        this.fechaMinima = new Date(actividad.fechaInicio);
+        this.fechaMaxima = new Date(actividad.fechaFin);
+        this.cargarFechasConAforoCompleto(); // solo tras conocer el rango
+      },
+      error: () => {
+        alert('No se pudo cargar la actividad activa.');
+      }
+    });
   }
 
   private inicializarFormulario(): void {
@@ -87,18 +102,22 @@ export class ReservaCreateFormComponent implements OnInit {
   }
 
   private cargarFechasConAforoCompleto(): void {
-    const fechas = Array.from({ length: 30 }, (_, i) => {
-      const d = new Date();
-      d.setDate(d.getDate() + i);
-      return formatDate(d, 'yyyy-MM-dd', 'es');
-    });
+    const fechas: string[] = [];
+    const rangoDias = 60;
+    const hoy = new Date();
+
+    for (let i = 0; i < rangoDias; i++) {
+      const fecha = new Date(hoy);
+      fecha.setDate(hoy.getDate() + i);
+      if (fecha > this.fechaMaxima) break;
+      fechas.push(formatDate(fecha, 'yyyy-MM-dd', 'es'));
+    }
 
     forkJoin(fechas.map(f => this.reservaService.getAforoPorFecha(f)))
       .subscribe(result => {
         this.fechasCompletas = result
           .filter(r => r.ocupado >= 60)
           .map(r => r.fecha);
-
         this.fechasCargadas = true;
       });
   }
@@ -110,7 +129,10 @@ export class ReservaCreateFormComponent implements OnInit {
 
   filtroFechaDisponible = (date: Date | null): boolean => {
     if (!date) return false;
+
     const fechaStr = formatDate(date, 'yyyy-MM-dd', 'es');
+    if (date < this.fechaMinima || date > this.fechaMaxima) return false;
+
     return !this.fechasCompletas.includes(fechaStr);
   };
 
@@ -173,7 +195,6 @@ export class ReservaCreateFormComponent implements OnInit {
     window.location.href = '/admin/reservas';
   }
 
-  // 🟩 GETTERS para evitar errores en el HTML
   get nombreControl() { return this.form.get('nombre')!; }
   get apellidosControl() { return this.form.get('apellidos')!; }
   get fechaNacimientoControl() { return this.form.get('fechaNacimiento')!; }

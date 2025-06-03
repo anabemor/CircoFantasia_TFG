@@ -1,12 +1,12 @@
 import { Component, Inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common'; // ✅ Necesario para ngIf y ngClass
 import { MAT_SNACK_BAR_DATA, MatSnackBarRef } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-toast',
   standalone: true,
-  imports: [CommonModule],
-  templateUrl: './toast.component.html'
+  imports: [CommonModule], // ✅ Agrega esto
+  templateUrl: './toast.component.html',
 })
 export class ToastComponent {
   constructor(
