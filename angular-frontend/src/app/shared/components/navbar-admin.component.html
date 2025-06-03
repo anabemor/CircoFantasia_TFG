@@ -1,17 +1,17 @@
-<nav class="w-full bg-gradient-to-r from-indigo-700 to-purple-600 text-white px-6 py-4 flex justify-between items-center shadow-lg">
+<nav class="w-full bg-gradient-to-r from-[#092191] to-[#7FA1CD] text-white px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4 shadow-lg">
   <!-- IZQUIERDA -->
   <div class="flex items-center gap-4">
-    <img src="/img/logotickfantasia.png" alt="Logotipo TickFantasía" class="h-12 w-auto" />
-    <button
-      (click)="irAlPanel()"
-      class="text-xl font-bold hover:underline transition"
+    <img src="/img/logotickfantasia.png" alt="Logotipo TickFantasía" class="h-10 sm:h-12 w-auto" />
+    <a
+      routerLink="/admin"
+      class="text-xl font-bold hover:underline hover:text-white transition"
     >
       Panel de Administración
-    </button>
+    </a>
   </div>
 
   <!-- DERECHA: enlaces + logout -->
-  <div class="flex items-center gap-6 text-lg font-semibold">
+  <div class="flex flex-wrap items-center justify-center gap-4 text-sm sm:text-base font-medium">
     <a routerLink="/admin/usuarios" routerLinkActive="underline text-white" class="hover:underline">Usuarios</a>
     <a routerLink="/admin/actividades" routerLinkActive="underline text-white" class="hover:underline">Actividades</a>
     <a routerLink="/admin/reservas" routerLinkActive="underline text-white" class="hover:underline">Reservas</a>
@@ -19,7 +19,7 @@
 
     <button
       (click)="logout()"
-      class="bg-white text-indigo-600 font-semibold px-4 py-2 rounded-lg hover:bg-gray-100 transition text-sm"
+      class="ml-2 bg-white text-[#092191] font-semibold px-4 py-2 rounded-full hover:bg-gray-100 transition text-sm"
     >
       Cerrar sesión
     </button>

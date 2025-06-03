@@ -30,7 +30,7 @@ import { RouterModule } from '@angular/router';
 export class ReservasComponent implements OnInit {
   reservas: Reserva[] = [];
   reservasFiltradas: Reserva[] = [];
-
+  
   filtroTexto: string = '';
   filtroFecha: string = '';
 

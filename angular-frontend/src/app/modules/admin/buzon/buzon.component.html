@@ -1,96 +1,102 @@
 <app-navbar-admin></app-navbar-admin>
 
-<div class="p-6 space-y-6">
+<div class="p-6 max-w-7xl mx-auto space-y-6 bg-white rounded-xl shadow-md">
   <!-- Filtros -->
   <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
     <input
       type="text"
       [(ngModel)]="filtro"
       placeholder="Buscar por nombre, asunto, mensaje o fecha..."
-      class="flex-grow p-2 border rounded w-full sm:w-auto"
+      class="w-full sm:w-auto flex-grow px-4 py-2 rounded-lg bg-white text-black placeholder-purple-400 border border-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-400"
     />
     <button
       (click)="filtro = ''"
-      class="flex items-center gap-1 bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+      class="flex items-center gap-1 bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400 transition"
+      title="Limpiar búsqueda"
     >
       <i class="material-icons text-sm">close</i>
       Limpiar
     </button>
-    
-   
-
   </div>
 
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <!-- Lista de mensajes -->
     <div class="lg:col-span-1">
-      <div class="flex justify-between items-center mb-2">
-        <h2 class="text-xl font-bold">Mensajes</h2>
+      <div class="flex justify-between items-center mb-3">
+        <h2 class="text-xl font-bold text-gray-800">Mensajes</h2>
         <button
-          class="flex items-center gap-1 bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm"
+          class="flex items-center gap-1 bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600 text-sm transition"
           [disabled]="mensajesSeleccionados.length === 0"
           (click)="eliminarSeleccionados()"
+          title="Eliminar mensajes seleccionados"
         >
           <i class="material-icons text-sm">delete</i>
           Eliminar
         </button>
       </div>
 
-      
-
       <ul class="space-y-2">
-        <li *ngFor="let mensaje of mensajesFiltrados"
-            class="p-3 border rounded cursor-pointer hover:bg-gray-50 flex items-start gap-2"
-            [class.bg-gray-100]="mensaje === mensajeSeleccionado"
-            (click)="seleccionarMensaje(mensaje)">
-
+        <li
+          *ngFor="let mensaje of mensajesFiltrados"
+          class="p-3 border rounded-lg cursor-pointer hover:bg-purple-50 flex items-start gap-3"
+          [class.bg-indigo-50]="mensaje === mensajeSeleccionado"
+          (click)="seleccionarMensaje(mensaje)"
+        >
           <input
             type="checkbox"
             [(ngModel)]="mensaje.seleccionado"
             (click)="$event.stopPropagation()"
+            title="Seleccionar mensaje"
           />
 
-          <div class="text-sm">
+          <div class="text-sm text-gray-700">
             <strong>{{ mensaje.nombre }}</strong><br />
             <span class="text-gray-600">{{ mensaje.asunto }}</span><br />
             <span class="text-gray-500 text-xs">{{ mensaje.fecha | date:'shortDate' }}</span><br />
-            <span *ngIf="mensaje.respondido" class="text-green-600">✔ Respondido</span>
+            <span *ngIf="mensaje.respondido" class="text-green-600 font-semibold">✔ Respondido</span>
           </div>
         </li>
       </ul>
     </div>
 
     <!-- Detalle del mensaje -->
-    <div class="lg:col-span-2" *ngIf="mensajeSeleccionado">
-      <div class="space-y-2 text-sm">
-        <h3 class="text-lg font-semibold">Asunto: {{ mensajeSeleccionado.asunto }}</h3>
+    <div class="lg:col-span-2 bg-gray-50 rounded-lg p-4 shadow-inner" *ngIf="mensajeSeleccionado">
+      <div class="space-y-1 text-sm text-gray-800">
+        <h3 class="text-lg font-semibold text-indigo-700">Asunto: {{ mensajeSeleccionado.asunto }}</h3>
         <p><strong>Nombre:</strong> {{ mensajeSeleccionado.nombre }}</p>
         <p><strong>Email:</strong> {{ mensajeSeleccionado.email }}</p>
         <p><strong>Teléfono:</strong> {{ mensajeSeleccionado.telefono || '-' }}</p>
         <p><strong>Fecha:</strong> {{ mensajeSeleccionado.fecha | date:'fullDate' }}</p>
-        <p class="my-4">{{ mensajeSeleccionado.contenido }}</p>
+        <p class="my-4 text-gray-700 italic">{{ mensajeSeleccionado.contenido }}</p>
       </div>
 
       <textarea
         [(ngModel)]="respuesta"
         rows="4"
-        class="w-full p-2 border rounded mb-2"
+        class="w-full px-4 py-2 mt-4 rounded-lg bg-white text-black placeholder-purple-400 border border-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-400"
         placeholder="Escribe tu respuesta..."
       ></textarea>
 
       <button
-        class="flex items-center gap-1 bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600 text-sm"
+        class="flex items-center gap-1 bg-indigo-500 text-white px-4 py-2 mt-3 rounded-lg hover:bg-indigo-600 text-sm transition"
         (click)="enviarRespuesta()"
+        title="Enviar respuesta"
       >
         <i class="material-icons text-sm">send</i>
         Enviar Respuesta
       </button>
     </div>
   </div>
+
+  <!-- Botón volver -->
   <div class="mt-6 flex justify-end">
-      <button [routerLink]="['/admin']" class="flex items-center gap-1 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
-        <i class="material-icons text-sm">arrow_back</i>
-        Volver
-      </button>
+    <button
+      [routerLink]="['/admin']"
+      class="flex items-center gap-1 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition"
+      title="Volver al panel"
+    >
+      <i class="material-icons text-sm">arrow_back</i>
+      Volver
+    </button>
   </div>
 </div>

@@ -36,6 +36,8 @@ export class ReservaFormComponent implements OnInit {
   form!: FormGroup;
   ticketResumen: { nombre: string, precio: number, cantidad: number }[] = [];
   esEdicion: boolean = false;
+  ordenCampo: string = '';
+  ordenAscendente: boolean = true;
 
   constructor(
     private fb: FormBuilder,

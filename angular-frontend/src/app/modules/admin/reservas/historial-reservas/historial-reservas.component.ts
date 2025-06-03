@@ -13,6 +13,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
+import { NavbarAdminComponent } from "../../../../shared/components/navbar-admin.component";
 
 @Component({
   selector: 'app-historial-reservas',
@@ -24,14 +25,17 @@ import * as FileSaver from 'file-saver';
     MatDatepickerModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
-  ],
+    MatButtonModule,
+    NavbarAdminComponent
+],
   templateUrl: './historial-reservas.component.html'
 })
 export class HistorialReservasComponent {
   reservas: Reserva[] = [];
   fechaInicio: Date | null = null;
   fechaFin: Date | null = null;
+  ordenAscendente: any;
+  ordenCampo!: string;
 
   constructor(private reservaService: ReservaAdminService) {
     this.filtrarReservas();
@@ -129,4 +133,32 @@ export class HistorialReservasComponent {
     const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
     FileSaver.saveAs(blob, 'historial_reservas.xlsx');
   }
+
+  ordenarPor(campo: string): void {
+    if (this.ordenCampo === campo) {
+      this.ordenAscendente = !this.ordenAscendente;
+    } else {
+      this.ordenCampo = campo;
+      this.ordenAscendente = true;
+    }
+
+    this.reservas.sort((a, b) => {
+      const valorA = this.obtenerValorParaOrden(a, campo);
+      const valorB = this.obtenerValorParaOrden(b, campo);
+
+      if (valorA < valorB) return this.ordenAscendente ? -1 : 1;
+      if (valorA > valorB) return this.ordenAscendente ? 1 : -1;
+      return 0;
+    });
+  }
+
+  obtenerValorParaOrden(reserva: any, campo: string): any {
+    switch (campo) {
+      case 'nombre': return reserva.nombre?.toLowerCase();
+      case 'email': return reserva.email?.toLowerCase();
+      case 'fechaVisita': return new Date(reserva.fechaVisita);
+      default: return '';
+    }
+  }
+
 }

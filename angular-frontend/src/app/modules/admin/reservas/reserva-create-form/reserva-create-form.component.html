@@ -1,100 +1,102 @@
-<form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4">
+<!-- Formulario de creación de reservas -->
+<div class="mb-10 bg-white/80 backdrop-blur-md border border-gray-200 p-6 rounded-2xl shadow-xl">
+  <h3 class="text-2xl font-semibold mb-6 text-[#092191]">Crear reserva</h3>
 
-  <!-- Nombre -->
-  <mat-form-field appearance="fill" class="w-full">
-    <mat-label>Nombre</mat-label>
-    <input matInput formControlName="nombre" />
-    <mat-error *ngIf="nombreControl.invalid && nombreControl.touched">Campo obligatorio</mat-error>
-  </mat-form-field>
-
-  <!-- Apellidos -->
-  <mat-form-field appearance="fill" class="w-full">
-    <mat-label>Apellidos</mat-label>
-    <input matInput formControlName="apellidos" />
-    <mat-error *ngIf="apellidosControl.invalid && apellidosControl.touched">Campo obligatorio</mat-error>
-  </mat-form-field>
-
-  <!-- Fecha de nacimiento -->
-  <mat-form-field appearance="fill" class="w-full">
-    <mat-label>Fecha de nacimiento</mat-label>
-    <input matInput [matDatepicker]="picker1" formControlName="fechaNacimiento" />
-    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-    <mat-datepicker #picker1></mat-datepicker>
-    <mat-error *ngIf="fechaNacimientoControl.invalid && fechaNacimientoControl.touched">Campo obligatorio</mat-error>
-  </mat-form-field>
-
-  <!-- Email -->
-  <mat-form-field appearance="fill" class="w-full">
-    <mat-label>Email</mat-label>
-    <input matInput type="email" formControlName="email" />
-    <mat-error *ngIf="emailControl.invalid && emailControl.touched">Email inválido</mat-error>
-  </mat-form-field>
-
-  <!-- Teléfono -->
-  <mat-form-field appearance="fill" class="w-full">
-    <mat-label>Teléfono</mat-label>
-    <input matInput type="tel" formControlName="telefono" />
-    <mat-error *ngIf="telefonoControl.invalid && telefonoControl.touched">Debe tener 9 dígitos</mat-error>
-  </mat-form-field>
-
-  <!-- Fecha de visita -->
-  <ng-container *ngIf="fechasCargadas; else loadingCalendario">
+  <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4">
+    <!-- Nombre -->
     <mat-form-field appearance="fill" class="w-full">
-      <mat-label>Fecha de visita</mat-label>
-      <input
-        matInput
-        [matDatepicker]="picker2"
-        [min]="fechaMinima"
-        [matDatepickerFilter]="filtroFechaDisponible"
-        formControlName="fechaVisita"
-      />
-      <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-      <mat-datepicker #picker2 [dateClass]="marcarFechasCompletas"></mat-datepicker>
-      <mat-error *ngIf="fechaVisitaControl.invalid && fechaVisitaControl.touched">
-        Campo obligatorio
-      </mat-error>
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="nombre" />
+      <mat-error *ngIf="nombreControl.invalid && nombreControl.touched">Campo obligatorio</mat-error>
     </mat-form-field>
-  </ng-container>
 
-  <!-- Mensaje de carga -->
-  <ng-template #loadingCalendario>
-    <div class="p-3 bg-yellow-100 text-yellow-800 border border-yellow-300 rounded text-center">
-      ⏳ Cargando disponibilidad de fechas...
-    </div>
-  </ng-template>
+    <!-- Apellidos -->
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Apellidos</mat-label>
+      <input matInput formControlName="apellidos" />
+      <mat-error *ngIf="apellidosControl.invalid && apellidosControl.touched">Campo obligatorio</mat-error>
+    </mat-form-field>
 
-  <!-- Entradas -->
-  <div formArrayName="tickets">
-    <label class="block font-medium mb-2">Entradas</label>
-    <ng-container *ngFor="let control of tickets.controls; let i = index">
-      <ng-container [formGroupName]="i">
-        <div class="flex items-center gap-4 mb-2">
-          <div class="flex-1">
-            {{ control.get('ticketType')?.value?.nombre }} -
-            {{ control.get('ticketType')?.value?.precio | currency:'EUR' }}
-          </div>
-          <mat-form-field appearance="fill">
-            <mat-label>Cantidad</mat-label>
-            <input matInput type="number" formControlName="cantidad" min="0" />
-          </mat-form-field>
-        </div>
-      </ng-container>
+    <!-- Fecha de nacimiento -->
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Fecha de nacimiento</mat-label>
+      <input matInput [matDatepicker]="picker1" formControlName="fechaNacimiento" />
+      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+      <mat-datepicker #picker1></mat-datepicker>
+      <mat-error *ngIf="fechaNacimientoControl.invalid && fechaNacimientoControl.touched">Campo obligatorio</mat-error>
+    </mat-form-field>
+
+    <!-- Email -->
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" formControlName="email" />
+      <mat-error *ngIf="emailControl.invalid && emailControl.touched">Email inválido</mat-error>
+    </mat-form-field>
+
+    <!-- Teléfono -->
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Teléfono</mat-label>
+      <input matInput type="tel" formControlName="telefono" />
+      <mat-error *ngIf="telefonoControl.invalid && telefonoControl.touched">Debe tener 9 dígitos</mat-error>
+    </mat-form-field>
+
+    <!-- Fecha de visita -->
+    <ng-container *ngIf="fechasCargadas; else loadingCalendario">
+      <mat-form-field appearance="fill" class="w-full">
+        <mat-label>Fecha de visita</mat-label>
+        <input
+          matInput
+          [matDatepicker]="picker2"
+          [min]="fechaMinima"
+          [matDatepickerFilter]="filtroFechaDisponible"
+          formControlName="fechaVisita"
+        />
+        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+        <mat-datepicker #picker2 [dateClass]="marcarFechasCompletas"></mat-datepicker>
+        <mat-error *ngIf="fechaVisitaControl.invalid && fechaVisitaControl.touched">Campo obligatorio</mat-error>
+      </mat-form-field>
     </ng-container>
-  </div>
 
-  <!-- Total -->
-  <div class="text-right font-bold text-lg mt-4">
-    Total: {{ getPrecioTotal() | currency:'EUR' }}
-  </div>
+    <!-- Mensaje de carga -->
+    <ng-template #loadingCalendario>
+      <div class="p-3 bg-yellow-100 text-yellow-800 border border-yellow-300 rounded text-center">
+        ⏳ Cargando disponibilidad de fechas...
+      </div>
+    </ng-template>
 
-  <!-- Aforo completo -->
-  <div *ngIf="aforoError" class="text-red-600 text-sm mt-2 text-right">
-    {{ aforoError }}
-  </div>
+    <!-- Entradas -->
+    <div formArrayName="tickets">
+      <label class="block font-medium mb-2">Entradas</label>
+      <ng-container *ngFor="let control of tickets.controls; let i = index">
+        <ng-container [formGroupName]="i">
+          <div class="flex items-center gap-4 mb-2">
+            <div class="flex-1">
+              {{ control.get('ticketType')?.value?.nombre }} -
+              {{ control.get('ticketType')?.value?.precio | currency:'EUR' }}
+            </div>
+            <mat-form-field appearance="fill">
+              <mat-label>Cantidad</mat-label>
+              <input matInput type="number" formControlName="cantidad" min="0" />
+            </mat-form-field>
+          </div>
+        </ng-container>
+      </ng-container>
+    </div>
 
-  <!-- Botones -->
-  <div class="flex justify-end gap-4 mt-6">
-    <button mat-stroked-button color="warn" type="button" (click)="volver()">Cancelar</button>
-    <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">Crear reserva</button>
-  </div>
-</form>
+    <!-- Total -->
+    <div class="text-right font-bold text-lg mt-4">
+      Total: {{ getPrecioTotal() | currency:'EUR' }}
+    </div>
+
+    <!-- Aforo completo -->
+    <div *ngIf="aforoError" class="text-red-600 text-sm mt-2 text-right">
+      {{ aforoError }}
+    </div>
+
+    <!-- Botones -->
+    <div class="flex justify-end gap-4 mt-6">
+      <button mat-stroked-button color="warn" type="button" (click)="volver()">Cancelar</button>
+      <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">Crear reserva</button>
+    </div>
+  </form>
+</div>

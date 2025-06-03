@@ -1,85 +1,88 @@
-<form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4">
+<!-- Formulario de edición de reservas -->
+<div class="mb-10 bg-white/80 backdrop-blur-md border border-gray-200 p-6 rounded-2xl shadow-xl">
+  <h3 class="text-2xl font-semibold mb-6 text-[#092191]">Modificar reserva</h3>
 
-  <!-- Nombre -->
-  <mat-form-field appearance="fill" class="w-full">
-    <mat-label>Nombre</mat-label>
-    <input matInput formControlName="nombre" />
-  </mat-form-field>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4">
+    <!-- Nombre -->
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="nombre" />
+    </mat-form-field>
 
-  <!-- Apellidos -->
-  <mat-form-field appearance="fill" class="w-full">
-    <mat-label>Apellidos</mat-label>
-    <input matInput formControlName="apellidos" />
-  </mat-form-field>
+    <!-- Apellidos -->
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Apellidos</mat-label>
+      <input matInput formControlName="apellidos" />
+    </mat-form-field>
 
-  <!-- Fecha de nacimiento -->
-  <mat-form-field appearance="fill" class="w-full">
-    <mat-label>Fecha de nacimiento</mat-label>
-    <input matInput formControlName="fechaNacimiento" />
-  </mat-form-field>
+    <!-- Fecha de nacimiento -->
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Fecha de nacimiento</mat-label>
+      <input matInput formControlName="fechaNacimiento" />
+    </mat-form-field>
 
-  <!-- Email -->
-<mat-form-field appearance="fill" class="w-full" floatLabel="always">
-  <mat-label>Email</mat-label>
-  <input matInput type="email" formControlName="email" autocomplete="off" />
-  <mat-error *ngIf="form.get('email')?.invalid && form.get('email')?.touched">
-    Email inválido (debe tener formato usuario&#64;dominio.com)
-  </mat-error>
-</mat-form-field>
+    <!-- Email -->
+    <mat-form-field appearance="fill" class="w-full" floatLabel="always">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" formControlName="email" autocomplete="off" />
+      <mat-error *ngIf="form.get('email')?.invalid && form.get('email')?.touched">
+        Email inválido (debe tener formato usuario&#64;dominio.com)
+      </mat-error>
+    </mat-form-field>
 
-<!-- Teléfono -->
-<mat-form-field appearance="fill" class="w-full" floatLabel="always">
-  <mat-label>Teléfono</mat-label>
-  <input matInput type="tel" formControlName="telefono" autocomplete="off" />
-  <mat-error *ngIf="form.get('telefono')?.invalid && form.get('telefono')?.touched">
-    Teléfono inválido (solo 9 dígitos numéricos)
-  </mat-error>
-</mat-form-field>
+    <!-- Teléfono -->
+    <mat-form-field appearance="fill" class="w-full" floatLabel="always">
+      <mat-label>Teléfono</mat-label>
+      <input matInput type="tel" formControlName="telefono" autocomplete="off" />
+      <mat-error *ngIf="form.get('telefono')?.invalid && form.get('telefono')?.touched">
+        Teléfono inválido (solo 9 dígitos numéricos)
+      </mat-error>
+    </mat-form-field>
 
-  <!-- Fecha de visita -->
-  <mat-form-field appearance="fill" class="w-full">
-    <mat-label>Fecha de visita</mat-label>
-    <input matInput formControlName="fechaVisita" />
-  </mat-form-field>
+    <!-- Fecha de visita -->
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Fecha de visita</mat-label>
+      <input matInput formControlName="fechaVisita" />
+    </mat-form-field>
 
-  <!-- Estado (solo editable si está pendiente) -->
-  <div>
-    <ng-container *ngIf="form.get('estado')?.value === 'pendiente'; else estadoSoloLectura">
-      <mat-form-field appearance="fill" class="w-full">
-        <mat-label>Estado</mat-label>
-        <mat-select formControlName="estado">
-          <mat-option value="pendiente">Pendiente</mat-option>
-          <mat-option value="pagado">Pagado</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </ng-container>
+    <!-- Estado -->
+    <div>
+      <ng-container *ngIf="form.get('estado')?.value === 'pendiente'; else estadoSoloLectura">
+        <mat-form-field appearance="fill" class="w-full">
+          <mat-label>Estado</mat-label>
+          <mat-select formControlName="estado">
+            <mat-option value="pendiente">Pendiente</mat-option>
+            <mat-option value="pagado">Pagado</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </ng-container>
 
-    <ng-template #estadoSoloLectura>
-      <div class="mb-4">
-        <label class="block font-medium mb-1">Estado</label>
-        <p class="py-2 px-3 bg-gray-100 border rounded">{{ form.get('estado')?.value }}</p>
-      </div>
-    </ng-template>
-  </div>
-
-
-  <!-- Entradas -->
-  <div>
-    <label class="block font-medium mb-2">Entradas compradas</label>
-    <div *ngFor="let t of ticketResumen" class="flex justify-between items-center mb-1">
-      <span>{{ t.nombre }} x{{ t.cantidad }}</span>
-      <span>{{ t.precio * t.cantidad | currency:'EUR' }}</span>
+      <ng-template #estadoSoloLectura>
+        <div class="mb-4">
+          <label class="block font-medium mb-1">Estado</label>
+          <p class="py-2 px-3 bg-gray-100 border rounded">{{ form.get('estado')?.value }}</p>
+        </div>
+      </ng-template>
     </div>
-  </div>
 
-  <!-- Total -->
-  <div class="text-right font-bold text-lg mt-4">
-    Total: {{ getPrecioTotal() | currency:'EUR' }}
-  </div>
+    <!-- Entradas -->
+    <div>
+      <label class="block font-medium mb-2">Entradas compradas</label>
+      <div *ngFor="let t of ticketResumen" class="flex justify-between items-center mb-1">
+        <span>{{ t.nombre }} x{{ t.cantidad }}</span>
+        <span>{{ t.precio * t.cantidad | currency:'EUR' }}</span>
+      </div>
+    </div>
 
-  <!-- Botones -->
-  <div class="flex justify-end gap-4 mt-6">
-    <button mat-stroked-button color="warn" type="button" (click)="volver()">Cancelar</button>
-    <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">Guardar cambios</button>
-  </div>
-</form>
+    <!-- Total -->
+    <div class="text-right font-bold text-lg mt-4">
+      Total: {{ getPrecioTotal() | currency:'EUR' }}
+    </div>
+
+    <!-- Botones -->
+    <div class="flex justify-end gap-4 mt-6">
+      <button mat-stroked-button color="warn" type="button" (click)="volver()">Cancelar</button>
+      <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">Guardar cambios</button>
+    </div>
+  </form>
+</div>

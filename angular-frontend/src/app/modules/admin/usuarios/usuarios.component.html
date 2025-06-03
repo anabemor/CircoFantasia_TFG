@@ -2,16 +2,13 @@
 
 <!-- Contenido principal -->
 <div class="p-6 max-w-7xl mx-auto">
-  
+  <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Gestión de Usuarios</h1>
 
-  <h1 class="text-2xl font-semibold mb-4">Gestión de Usuarios</h1>
-
-  <button (click)="crearUsuario()" class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded mb-4"
->
-    Crear Usuario
-  </button>
-
-  
+  <div class="flex justify-end mb-4">
+    <button (click)="crearUsuario()" class="bg-indigo-500 hover:bg-indigo-600 text-white px-5 py-2 rounded-full shadow">
+      + Crear Usuario
+    </button>
+  </div>
 
   <table class="min-w-full bg-white border border-gray-200 rounded-lg overflow-hidden shadow">
     <thead class="bg-indigo-600 text-white">
@@ -28,7 +25,7 @@
           Rol
           <span *ngIf="ordenActual === 'rol'">{{ ordenAscendente ? '▲' : '▼' }}</span>
         </th>
-        <th class="px-4 py-2">Acciones</th>
+        <th class="px-4 py-2 text-right">Acciones</th>
       </tr>
     </thead>
     <tbody>
@@ -38,131 +35,87 @@
         <td class="px-4 py-2">
           {{ usuario.roles.includes('ROLE_ADMIN') ? 'Administrador' : 'Gestor' }}
         </td>
-        <td class="px-4 py-2">
-          <div class="flex justify-end gap-2">
+        <td class="px-4 py-2 text-right">
+          <div class="inline-flex gap-2">
             <button
               (click)="editarUsuario(usuario)"
               class="flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm"
-            >
-              <i class="material-icons text-base leading-none">edit</i>
-              Editar
+              title="Editar"
+              >
+              <i class="material-icons text-base leading-none">edit</i>Editar
             </button>
-
             <button
-              (click)="eliminarUsuario(usuario.id!)"
-              class="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
-            >
-              <i class="material-icons text-base leading-none">delete</i>
-              Eliminar
-            </button>
+            (click)="eliminarUsuario(usuario.id!)"
+            class="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
+            title="Eliminar"
+          >
+            <i class="material-icons text-base leading-none">delete</i>Eliminar
+          </button>
           </div>
         </td>
       </tr>
     </tbody>
   </table>
 
- <!-- Botón Volver debajo y alineado a la derecha -->
   <div class="mt-6 flex justify-end">
-    <button [routerLink]="['/admin']" class="flex items-center gap-1 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+    <button [routerLink]="['/admin']" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 flex items-center gap-1">
       <i class="material-icons text-sm">arrow_back</i>
       Volver
     </button>
   </div>
-
 </div>
 
-
 <!-- Modal -->
-<div *ngIf="mostrarModal" class="fixed inset-0 bg-gray-300 bg-opacity-50 flex items-center justify-center z-50">
-  <div class="bg-white p-6 rounded-lg w-[90%] max-w-md shadow-lg">
-    <h2 class="text-xl font-semibold mb-4">
+<div *ngIf="mostrarModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white p-6 rounded-2xl w-[90%] max-w-md shadow-xl">
+    <h2 class="text-xl font-bold text-gray-800 mb-4 text-center">
       {{ usuarioSeleccionado?.id ? 'Editar Usuario' : 'Crear Usuario' }}
     </h2>
 
-    <form #usuarioForm="ngForm" (ngSubmit)="guardarUsuario()" *ngIf="usuarioSeleccionado">
-    <!-- Nombre -->
-      <label class="block mb-2">
-        Nombre:
-         <input
-          [(ngModel)]="usuarioSeleccionado.name"
-          name="name"
-          class="border p-2 w-full"
-          required
-          minlength="3"
-          #name="ngModel"
-        />
-        <div *ngIf="name.invalid && name.touched" class="text-red-600 text-sm mt-1">
+    <form #usuarioForm="ngForm" (ngSubmit)="guardarUsuario()" *ngIf="usuarioSeleccionado" class="space-y-4">
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+        <input [(ngModel)]="usuarioSeleccionado.name" name="name" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-indigo-400" required minlength="3" #name="ngModel" />
+        <div *ngIf="name.invalid && name.touched" class="text-sm text-red-600 mt-1">
           <div *ngIf="name.errors?.['required']">El nombre es obligatorio.</div>
           <div *ngIf="name.errors?.['minlength']">Debe tener al menos 3 caracteres.</div>
         </div>
-      </label>
+      </div>
 
-  <!-- Email -->
-      <label class="block mb-2">
-        Email:
-        <input
-          [(ngModel)]="usuarioSeleccionado.email"
-          name="email"
-          class="border p-2 w-full"
-          required
-          email
-          #email="ngModel"
-          type="email"
-        />
-        <div *ngIf="email.invalid && email.touched" class="text-red-600 text-sm mt-1">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+        <input [(ngModel)]="usuarioSeleccionado.email" name="email" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-indigo-400" required email type="email" #email="ngModel" />
+        <div *ngIf="email.invalid && email.touched" class="text-sm text-red-600 mt-1">
           <div *ngIf="email.errors?.['required']">El email es obligatorio.</div>
           <div *ngIf="email.errors?.['email']">Debe ser un email válido.</div>
         </div>
-      </label>
+      </div>
 
-      <!-- Contraseña (solo si se está creando un nuevo usuario) -->
-      <label class="block mb-2" *ngIf="!usuarioSeleccionado?.id">
-        Contraseña:
-        <input
-          [(ngModel)]="usuarioSeleccionado.password"
-          name="password"
-          class="border p-2 w-full"
-          required
-          type="password"
-          minlength="6"
-          #password="ngModel"
-        />
-        <div *ngIf="password.invalid && password.touched" class="text-red-600 text-sm mt-1">
+      <div *ngIf="!usuarioSeleccionado?.id">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+        <input [(ngModel)]="usuarioSeleccionado.password" name="password" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-indigo-400" required type="password" minlength="6" #password="ngModel" />
+        <div *ngIf="password.invalid && password.touched" class="text-sm text-red-600 mt-1">
           <div *ngIf="password.errors?.['required']">La contraseña es obligatoria.</div>
           <div *ngIf="password.errors?.['minlength']">Debe tener al menos 6 caracteres.</div>
         </div>
-      </label>
+      </div>
 
-      <!-- Rol -->
-      <label class="block mb-2">
-        Rol:
-        <select
-          [(ngModel)]="usuarioSeleccionado.roles"
-          name="roles"
-          class="border p-2 w-full"
-          required
-          #roles="ngModel"
-        >
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Rol</label>
+        <select [(ngModel)]="usuarioSeleccionado.roles" name="roles" class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-indigo-400" required #roles="ngModel">
           <option [ngValue]="['ROLE_ADMIN']">Administrador</option>
           <option [ngValue]="['ROLE_USER']">Gestor</option>
         </select>
-        <div *ngIf="roles.invalid && roles.touched" class="text-red-600 text-sm mt-1">
-          Debes seleccionar un rol.
-        </div>
-      </label>
+        <div *ngIf="roles.invalid && roles.touched" class="text-sm text-red-600 mt-1">Debes seleccionar un rol.</div>
+      </div>
 
-      <!-- Botones -->
-      <div class="flex justify-end gap-2 mt-4">
-        <button type="button" (click)="cerrarModal()" class="bg-gray-300 px-4 py-2 rounded">Cancelar</button>
-        <button
-          type="submit"
-          class="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
-          [disabled]="usuarioForm.invalid"
-        >
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" (click)="cerrarModal()" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">Cancelar</button>
+        <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 disabled:opacity-50" [disabled]="usuarioForm.invalid">
           {{ usuarioSeleccionado.id ? 'Actualizar' : 'Crear' }}
         </button>
       </div>
     </form>
-
   </div>
 </div>
