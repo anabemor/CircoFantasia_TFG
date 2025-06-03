@@ -17,6 +17,7 @@ import { ReservasComponent } from './modules/admin/reservas/reservas.component';
 import { AdminAuthGuard } from './shared/guards/admin-auth.guard';
 import { BuzonComponent } from './modules/admin/buzon/buzon.component';
 import { RecuperarPasswordComponent } from './modules/login/recuperar-password.component';
+import { LegalidadComponent } from './modules/cliente/legalidad/legalidad.component';
 
 export const routes: Routes = [
   // 🌐 Parte pública (CLIENTE)
@@ -39,7 +40,8 @@ export const routes: Routes = [
         ]
       },
 
-      { path: 'contacto', component: ContactoFormComponent }
+      { path: 'contacto', component: ContactoFormComponent },
+      { path: 'legal', component: LegalidadComponent },
     ]
   },
 
@@ -53,9 +55,12 @@ export const routes: Routes = [
   { path: 'admin/actividades', component: ActividadesComponent, canActivate: [AdminAuthGuard]},
   { path: 'admin/buzon', component: BuzonComponent, canActivate: [AdminAuthGuard]},
   { path: 'admin/reservas', component: ReservasComponent, canActivate: [AdminAuthGuard] },
-  { path: 'admin/reservas/historial', 
-    loadComponent: () => import('./modules/admin/reservas/historial-reservas/historial-reservas.component').then(m => m.HistorialReservasComponent),
-     canActivate: [AdminAuthGuard]},
+  {
+    path: 'admin/reservas/historial',
+    loadComponent: () =>
+      import('./modules/admin/reservas/historial-reservas/historial-reservas.component').then(m => m.HistorialReservasComponent),
+    canActivate: [AdminAuthGuard]
+  },
 
   // Redirección por defecto
   { path: '**', redirectTo: '' }

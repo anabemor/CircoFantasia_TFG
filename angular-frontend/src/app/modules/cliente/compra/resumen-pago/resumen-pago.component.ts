@@ -40,6 +40,7 @@ export class ResumenPagoComponent {
 
     this.isLoading = true;
 
+    
     // Simulación de pago
     setTimeout(() => {
       this.reservaService.enviarReserva(reserva).subscribe({
@@ -54,5 +55,9 @@ export class ResumenPagoComponent {
         }
       });
     }, 2000);
+  }
+
+  volver(): void {
+    this.router.navigate(['/compra/datos']);
   }
 }

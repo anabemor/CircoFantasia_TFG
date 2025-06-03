@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ResumenPedidoComponent } from '../resumen-pedido/resumen-pedido.component';
@@ -10,14 +10,20 @@ import { filter } from 'rxjs/operators';
   imports: [CommonModule, RouterModule, ResumenPedidoComponent],
   templateUrl: './compra.component.html'
 })
-export class CompraComponent {
+export class CompraComponent implements OnInit {
   pasoActual = 1;
   totalPasos = 5;
   siguientePaso = '';
   mostrarSiguiente = true;
   currentYear = new Date().getFullYear();
 
-  constructor(private router: Router) {
+  constructor(private router: Router) {}
+
+  ngOnInit(): void {
+    // Llama al cargar la vista
+    this.actualizarPaso(this.router.url);
+
+    // Escucha cambios de ruta
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
@@ -30,7 +36,7 @@ export class CompraComponent {
   }
 
   private actualizarPaso(url: string): void {
-    if (url.includes('visitantes')) {
+    if (url.includes('visitantes') || url.includes('tickets')) {
       this.pasoActual = 1;
       this.siguientePaso = 'Elección de fecha';
       this.mostrarSiguiente = true;
@@ -56,4 +62,9 @@ export class CompraComponent {
       this.mostrarSiguiente = true;
     }
   }
+
+  get esPantallaPago(): boolean {
+    return this.router.url.startsWith('/compra/pago') || this.router.url.startsWith('/compra/confirmacion');
+  }
+
 }

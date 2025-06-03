@@ -5,31 +5,31 @@
   <router-outlet></router-outlet>
 </main>
 
-<!-- FOOTER -->
-<footer class="bg-gray-100 text-sm text-gray-600 p-4 mt-8 border-t">
-  <div class="max-w-6xl mx-auto space-y-2 text-center">
-    <div class="space-x-4">
-      <a routerLink="/aviso-legal" class="hover:underline">Aviso legal</a>
-      <a routerLink="/privacidad" class="hover:underline">Política de privacidad</a>
-      <a routerLink="/normas" class="hover:underline">Normas de funcionamiento</a>
-      <a routerLink="/terminos" class="hover:underline">Términos y Condiciones</a>
-      <a routerLink="/contacto" class="text-indigo-600 hover:underline">Contáctanos</a>
-    </div>
-
-    <p class="text-xs mt-2">
-      © 2025 Circo Escuela Fantasía. TickFantasía. Todos los derechos reservados.
-    </p>
-
-    <!-- REDES SOCIALES -->
-    <div class="flex justify-center gap-4 mt-2 text-xl">
-      <a href="https://instagram.com" target="_blank" aria-label="Instagram">
-        <i class="fab fa-instagram"></i>
-      </a>
-      <a href="https://facebook.com" target="_blank" aria-label="Facebook">
-        <i class="fab fa-facebook"></i>
-      </a>
-    </div>
-
+<footer class="bg-gray-100 text-sm text-gray-600 py-4 px-2 border-t">
+  <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center space-y-3 md:space-y-0 text-center md:text-left">
     
-  </div>
+    <!-- Enlaces legales -->
+    <div class="flex flex-wrap justify-center md:justify-start gap-4 text-sm">
+      <a routerLink="/legal" class="hover:underline">Aviso legal</a>
+      <a routerLink="/legal" class="hover:underline">Política de privacidad</a>
+      <a routerLink="/legal" class="hover:underline">Normas de funcionamiento</a>
+      <a routerLink="/legal" class="hover:underline">Términos y Condiciones</a>
+    </div>
+
+    <!-- Redes sociales -->
+    <div class="flex items-center gap-4 mt-2 md:mt-0">
+        <a routerLink="/contacto" class="text-indigo-600 hover:underline">Contáctanos</a>
+        <a href="https://instagram.com/circoescuelafantasia" target="_blank" aria-label="Instagram">
+          <img src="/img/instagram.svg" alt="Instagram" class="h-5 w-5 hover:opacity-80 transition" />
+        </a>
+        <a href="https://www.facebook.com/p/Circo-Escuela-Fantas%C3%ADa-100063160245426/?locale=es_ES" target="_blank" aria-label="Facebook">
+          <img src="/img/facebook.svg" alt="Facebook" class="h-5 w-5 hover:opacity-80 transition" />
+        </a>
+      </div>
+    </div>
+
+  <!-- Derechos -->
+  <p class="text-xs text-center mt-2">
+    © 2025 Circo Escuela Fantasía. Todos los derechos reservados.
+  </p>
 </footer>

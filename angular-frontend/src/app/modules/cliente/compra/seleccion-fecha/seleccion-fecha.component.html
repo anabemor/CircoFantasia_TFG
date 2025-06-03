@@ -1,8 +1,18 @@
-<div class="max-w-xl mx-auto p-4 bg-white shadow rounded">
-  <h2 class="text-2xl font-bold mb-6 text-center">Selecciona la fecha de tu visita</h2>
+<!-- Contenedor general -->
+<div class="max-w-2xl mx-auto p-6 bg-white shadow-lg rounded-2xl">
 
-  <p *ngIf="!fechasCargadas" class="text-sm text-gray-500 mb-2">Cargando disponibilidad…</p>
+  <!-- Título -->
+  <h2 class="text-2xl md:text-3xl font-bold text-fantasia-azul-oscuro mb-4 text-center">
+    Selecciona la fecha de tu visita
+  </h2>
 
+  <!-- Texto de carga -->
+  <div *ngIf="!fechasCargadas" class="flex justify-center items-center mb-4">
+    <div class="animate-spin rounded-full h-10 w-10 border-4 border-fantasia-azul-oscuro border-t-transparent"></div>
+    <span class="ml-3 text-gray-600 text-sm">Cargando disponibilidad…</span>
+  </div>
+
+  <!-- Selector de fecha -->
   <mat-form-field appearance="fill" class="w-full">
     <mat-label>Fecha de visita</mat-label>
     <input
@@ -19,27 +29,42 @@
     <mat-datepicker #picker [dateClass]="marcarFechasCompletas"></mat-datepicker>
   </mat-form-field>
 
-  <div *ngIf="fechaSeleccionada" class="mt-4 text-sm">
-    Aforo máximo: <strong>60 personas</strong><br>
-    Aforo disponible:
-    <span *ngIf="aforoDisponible !== null">{{ aforoDisponible }}</span>
-    <span *ngIf="aforoDisponible === null">[consultando o simulado]</span>
+  <!-- Info aforo -->
+  <div *ngIf="fechaSeleccionada" class="mt-4 text-base text-gray-700 leading-relaxed">
+    <p>Aforo máximo: <strong>60 personas</strong></p>
+    <p>
+      Aforo disponible:
+      <span *ngIf="aforoDisponible !== null" class="font-semibold text-fantasia-rosa">
+        {{ aforoDisponible }}
+      </span>
+      <span *ngIf="aforoDisponible === null">[consultando o simulado]</span>
+    </p>
   </div>
 
-  <button
-    class="w-full mt-6 bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 transition"
-    (click)="continuar()"
-    [disabled]="!fechasCargadas"
-  >
-    Continuar
-  </button>
+  <!-- Botón continuar -->
+  <div class="text-right mt-6">
+    <button
+      class="inline-block px-6 py-3 rounded-full text-white font-semibold transition duration-300"
+      style="background-color: #092191;"
+      [disabled]="!fechasCargadas"
+      (click)="continuar()"
+      onmouseover="this.style.backgroundColor='#7FA1CD';"
+      onmouseout="this.style.backgroundColor='#092191';"
+    >
+      Continuar
+    </button>
+  </div>
 </div>
 
-<div class="text-right mb-4">
+<!-- Botón volver -->
+<div class="text-left mt-6">
   <button
     type="button"
     (click)="volver()"
-    class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition"
+    class="inline-block px-5 py-2 rounded-full text-white font-semibold transition duration-300"
+    style="background-color: #ED125A;"
+    onmouseover="this.style.backgroundColor='#A9D0E9';"
+    onmouseout="this.style.backgroundColor='#ED125A';"
   >
     ← Volver
   </button>

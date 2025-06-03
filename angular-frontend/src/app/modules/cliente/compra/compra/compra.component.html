@@ -47,7 +47,7 @@
     </div>
 
     <!-- Resumen pedido al lateral -->
-    <aside class="w-full lg:w-80 shrink-0">
+    <aside class="w-full lg:w-80 shrink-0" *ngIf="!esPantallaPago">
       <app-resumen-pedido></app-resumen-pedido>
     </aside>
   </main>

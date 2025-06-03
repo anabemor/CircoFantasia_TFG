@@ -1,25 +1,59 @@
-<div class="max-w-2xl mx-auto p-6 bg-white rounded shadow mt-8">
-  <h2 class="text-2xl font-bold mb-4 text-center">Resumen de tu compra</h2>
+<div class="max-w-2xl mx-auto p-6 bg-white rounded-2xl shadow-md mt-10">
 
-  <ul class="mb-4">
-    <li *ngFor="let t of compraService.getTickets()" class="flex justify-between border-b py-2">
+  <!-- Título -->
+  <h2 class="text-2xl font-bold mb-4 text-center text-fantasia-azul-oscuro">
+    Resumen de tu compra
+  </h2>
+
+  <!-- Actividad -->
+  <div *ngIf="compraService.getActividad()" class="text-base text-fantasia-rosa mb-2 text-center">
+    <span class="font-semibold">Actividad:</span>
+    <span>{{ compraService.getActividad()?.nombre }}</span>
+  </div>
+
+  <!-- Fecha de visita -->
+  <div *ngIf="compraService.getFecha()" class="text-sm text-gray-600 mb-6 text-center">
+    <span class="font-medium">Fecha de visita:</span>
+    <span>{{ compraService.getFecha() | date:'fullDate' }}</span>
+  </div>
+
+  <!-- Lista de entradas -->
+  <ul class="mb-6 divide-y text-[1.05rem]">
+    <li *ngFor="let t of compraService.getTickets()" class="flex justify-between py-2">
       <span>{{ t.nombre }} x{{ t.cantidad }}</span>
       <span>{{ t.precio * t.cantidad | currency:'EUR' }}</span>
     </li>
   </ul>
 
-  <div class="text-right font-semibold text-lg mb-6">
+  <!-- Total -->
+  <div class="text-right font-semibold text-lg mb-6 text-fantasia-rosa">
     Total: {{ total() | currency:'EUR' }}
   </div>
 
+  <!-- Botón de pago -->
   <button
-    class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition disabled:opacity-50"
+    class="w-full py-3 px-6 rounded-full text-white text-base font-semibold transition duration-300 hover:bg-[#7FA1CD]"
+    style="background-color: #092191"
     [disabled]="isLoading"
-    (click)="pagar()">
+    (click)="pagar()"
+  >
     {{ isLoading ? 'Procesando pago…' : 'Realizar pago' }}
   </button>
-  
-   <div *ngIf="isLoading" class="mt-4 flex justify-center">
-    <span class="animate-spin h-8 w-8 border-4 border-green-600 border-t-transparent rounded-full"></span>
+
+  <!-- Spinner -->
+  <div *ngIf="isLoading" class="mt-4 flex justify-center">
+    <span class="animate-spin h-8 w-8 border-4 border-[#092191] border-t-transparent rounded-full"></span>
   </div>
+</div>
+
+
+<!-- Botón Volver -->
+<div class="text-right mt-4 max-w-2xl mx-auto">
+  <button
+    type="button"
+    (click)="volver()"
+    class="px-6 py-2 rounded-full bg-fantasia-rosa text-white font-semibold hover:bg-[#C81053] transition"
+  >
+    ← Volver
+  </button>
 </div>

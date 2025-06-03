@@ -21,4 +21,8 @@ export class ConfirmacionComponent implements OnInit {
     this.compraService.limpiar(); // opcional si ya limpiaste
     this.router.navigate(['/compra', 'tickets']);
   }
+  
+   irAContacto(): void {
+    this.router.navigate(['/contacto']);
+  }
 }

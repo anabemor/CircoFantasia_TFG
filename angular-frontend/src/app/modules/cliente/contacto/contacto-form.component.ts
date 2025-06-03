@@ -9,6 +9,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog.component';
 import { ContactoService, MensajeContacto } from '../../../shared/services/contacto.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-contacto-form',
@@ -16,6 +17,7 @@ import { ContactoService, MensajeContacto } from '../../../shared/services/conta
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    RouterModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
