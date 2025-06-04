@@ -1,31 +1,30 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn} from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { AuthService } from '../../shared/services/auth.service';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog.component';
 import { RouterModule } from '@angular/router';
+import { ToastService } from '../../shared/services/toast.service';
 
 @Component({
   selector: 'app-register',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css'] // ← CORREGIDO aquí
+  styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
   registerForm: FormGroup;
-  errorMessage: string | null = null;
-  successMessage: string | null = null;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private dialog: MatDialog
-
+    private dialog: MatDialog,
+    private toast: ToastService
   ) {
     this.registerForm = this.fb.group(
       {
@@ -38,7 +37,7 @@ export class RegisterComponent {
     );
   }
 
-  // Validador para confirmar que las contraseñas coinciden
+  // Validador personalizado para comprobar que las contraseñas coinciden
   passwordsMatchValidator: ValidatorFn = (
     group: AbstractControl
   ): ValidationErrors | null => {
@@ -49,14 +48,8 @@ export class RegisterComponent {
 
   onRegister(): void {
     if (this.registerForm.invalid) {
-      this.registerForm.markAllAsTouched(); // FORZAMOS mostrar errores
-
-      console.warn('Formulario inválido');
-      console.log('Errores del formulario:', this.registerForm.errors);
-      console.log('Valores actuales:', this.registerForm.value);
-
-      this.errorMessage = 'Por favor, revisa los campos del formulario.';
-      this.successMessage = null;
+      this.registerForm.markAllAsTouched();
+      this.toast.warning('Por favor, revisa los campos del formulario.');
       return;
     }
 
@@ -64,29 +57,43 @@ export class RegisterComponent {
 
     this.authService.register({ name: fullName, email, password }).subscribe({
       next: () => {
-        this.errorMessage = null;
-        this.successMessage = 'Usuario registrado correctamente. Redirigiendo al login...';
-
+        this.toast.success('Usuario registrado correctamente. Redirigiendo al login...');
         setTimeout(() => {
-          this.router.navigate(['']);
+          this.router.navigate(['/login']);
         }, 2000);
       },
       error: (err: HttpErrorResponse) => {
         console.error('Registro fallido', err);
-        this.successMessage = null;
 
-        if (err.status === 403 && err.error?.error) {
+        // Eliminar token inválido si está presente
+        if (err.status === 401 && err.error?.message?.includes('Invalid JWT Token')) {
+          localStorage.removeItem('token');
+        }
+
+        // Mostrar diálogo si ya hay un usuario o el token es inválido
+        if (
+          (err.status === 403 && err.error?.error) ||
+          (err.status === 401 && err.error?.message?.includes('Invalid JWT Token'))
+        ) {
           this.dialog.open(ConfirmDialogComponent, {
-            data: { mensaje: 'Ya existe un usuario registrado. Por favor, intenta iniciar sesión.' }
-          }).afterClosed().subscribe(() => {
-            this.router.navigate(['/login']); // ← Redirige al login
+            data: {
+              titulo: 'Ya existe un usuario registrado',
+              mensaje: '¿Quieres iniciar sesión ahora?',
+              soloAceptar: false
+            }
+          }).afterClosed().subscribe((result: boolean) => {
+            if (result) {
+              this.router.navigate(['/login']); // Aceptar → ir al login
+            }
+            // Cancelar → quedarse en el formulario
           });
         } else if (err.error?.error) {
-          this.errorMessage = err.error.error;
+          this.toast.error(err.error.error);
         } else {
-          this.errorMessage = 'El registro ha fallado. Intenta con otro correo.';
+          this.toast.error('El registro ha fallado. Intenta con otro correo.');
         }
       }
-          });
-        }
+    });
+  }
 }
+

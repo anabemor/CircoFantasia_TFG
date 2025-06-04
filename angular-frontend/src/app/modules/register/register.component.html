@@ -84,13 +84,9 @@
     <div class="mt-6 text-center">
       <p class="text-lg text-white/80">
         ¿Ya tienes cuenta?
-        <a routerLink="/login" class=" text-lg text-white :bg-wh hover:underline">Inicia sesión</a>
+        <a routerLink="/login" class="text-lg text-white hover:underline">Inicia sesión</a>
       </p>
     </div>
-
-    <!-- Mensajes -->
-    <div *ngIf="successMessage" class="text-sm text-green-400 mt-4 text-center">{{ successMessage }}</div>
-    <div *ngIf="errorMessage" class="text-sm text-red-400 mt-4 text-center">{{ errorMessage }}</div>
 
   </div>
 </div>
