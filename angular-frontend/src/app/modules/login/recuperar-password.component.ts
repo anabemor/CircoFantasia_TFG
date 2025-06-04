@@ -28,7 +28,7 @@ export class RecuperarPasswordComponent {
 
     this.enviado = true;
     this.toast.success('Enlace de recuperación enviado. Redirigiendo al login...');
-    setTimeout(() => this.router.navigate(['/login']), 3000);
+    setTimeout(() => this.router.navigate(['/login']), 5000);
   }
 
   volver(): void {
