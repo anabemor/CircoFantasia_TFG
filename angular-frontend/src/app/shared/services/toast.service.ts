@@ -6,6 +6,15 @@ import { ToastComponent } from '../components/toast/toast.component';
 export class ToastService {
   constructor(private snackBar: MatSnackBar) {}
 
+  mostrarToast({ mensaje, tipo = 'info', duracion = 3000 }: { mensaje: string, tipo?: 'info' | 'error' | 'advertencia' | 'exito', duracion?: number }) {
+    this.snackBar.open(mensaje, 'Cerrar', {
+      duration: duracion,
+      horizontalPosition: 'center',
+      //verticalPosition: 'top',
+      panelClass: [`toast-${tipo}`]  // Asegúrate de tener estilos definidos
+    });
+  }
+
   show(
     message: string,
     type: 'success' | 'error' | 'warning' | 'info' = 'info',

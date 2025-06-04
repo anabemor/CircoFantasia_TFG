@@ -1,1 +1,37 @@
-<p>confirm-dialog works!</p>
+<div class="p-6 rounded-2xl shadow-xl bg-indigo-100 text-gray-800 max-w-md mx-auto space-y-4">
+  <h2 class="text-xl font-bold text-fantasia-azul-oscuro">{{ data.titulo }}</h2>
+
+  <p class="text-base text-gray-700 whitespace-pre-line">
+    {{ data.mensaje }}
+  </p>
+
+  <div [ngClass]="data.soloAceptar ? 'justify-center' : 'justify-end'" class="flex gap-3 mt-4">
+    <!-- Botón único centrado -->
+    <button
+      *ngIf="data.soloAceptar"
+      mat-flat-button
+      (click)="onConfirm()"
+      class="bg-fantasia-azul-oscuro hover:bg-blue-900 text-white px-4 py-2 rounded-xl"
+    >
+      Aceptar
+    </button>
+
+    <!-- Botones confirmación/cancelación -->
+    <ng-container *ngIf="!data.soloAceptar">
+      <button
+        mat-stroked-button
+        (click)="onCancel()"
+        class="border border-gray-400 text-gray-700 px-4 py-2 rounded-xl hover:bg-gray-100"
+      >
+        Cancelar
+      </button>
+      <button
+        mat-flat-button
+        (click)="onConfirm()"
+        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl"
+      >
+        Confirmar
+      </button>
+    </ng-container>
+  </div>
+</div>

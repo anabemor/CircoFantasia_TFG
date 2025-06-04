@@ -33,7 +33,7 @@ export class ToastComponent {
     switch (this.data.type) {
       case 'success': return 'bg-green-600';
       case 'error': return 'bg-red-600';
-      case 'warning': return 'bg-yellow-400 text-black';
+      case 'warning': return 'bg-yellow-300 text-black';
       case 'info': return 'bg-blue-600';
       default: return 'bg-gray-700';
     }

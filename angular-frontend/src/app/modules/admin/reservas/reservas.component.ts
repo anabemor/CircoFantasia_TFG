@@ -6,11 +6,11 @@ import { ReservaAdminService } from '../../../shared/services/reserva-admin.serv
 import { ReservaFormComponent } from './reserva-form/reserva-form.component';
 import { ReservaCreateFormComponent } from './reserva-create-form/reserva-create-form.component';
 import { NavbarAdminComponent } from '../../../shared/components/navbar-admin.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog.component';
 import { AdminAforoComponent } from './aforo/aforo.component';
 import { RouterModule } from '@angular/router';
+import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-reservas',
@@ -50,7 +50,7 @@ export class ReservasComponent implements OnInit {
 
   constructor(
     private reservaService: ReservaAdminService,
-    private snackBar: MatSnackBar,
+    private toast: ToastService,
     private dialog: MatDialog
   ) {}
 
@@ -64,7 +64,7 @@ export class ReservasComponent implements OnInit {
         this.reservas = data;
         this.aplicarFiltros();
       },
-      error: () => alert('Error al cargar las reservas')
+      error: () => this.toast.error('Error al cargar las reservas')
     });
   }
 
@@ -105,15 +105,11 @@ export class ReservasComponent implements OnInit {
   }
 
   anteriorPagina(): void {
-    if (this.paginaActual > 1) {
-      this.paginaActual--;
-    }
+    if (this.paginaActual > 1) this.paginaActual--;
   }
 
   siguientePagina(): void {
-    if (this.paginaActual < this.totalPaginas) {
-      this.paginaActual++;
-    }
+    if (this.paginaActual < this.totalPaginas) this.paginaActual++;
   }
 
   ordenarPor(campo: keyof Reserva): void {
@@ -159,10 +155,7 @@ export class ReservasComponent implements OnInit {
         this.cargarReservas();
         this.mostrarFormularioCreacion = false;
         this.aforoError = null;
-        this.snackBar.open('Reserva creada correctamente', 'Cerrar', {
-          duration: 3000,
-          verticalPosition: 'top',
-        });
+        this.toast.success('Reserva creada correctamente');
       },
       error: (err) => {
         console.error('Error al crear reserva:', err);
@@ -204,18 +197,11 @@ export class ReservasComponent implements OnInit {
       if (confirmado) {
         this.reservaService.deleteReserva(id).subscribe({
           next: () => {
-            this.snackBar.open('Reserva eliminada correctamente', 'Cerrar', {
-              duration: 3000,
-              horizontalPosition: 'right',
-              verticalPosition: 'top'
-            });
+            this.toast.success('Reserva eliminada correctamente');
             this.cargarReservas();
           },
           error: () => {
-            this.snackBar.open('Error al eliminar la reserva', 'Cerrar', {
-              duration: 3000,
-              panelClass: ['bg-red-500', 'text-white']
-            });
+            this.toast.error('Error al eliminar la reserva');
           }
         });
       }
@@ -236,18 +222,11 @@ export class ReservasComponent implements OnInit {
 
         this.reservaService.updateReserva(reserva.id!, reservaActualizada).subscribe({
           next: () => {
-            this.snackBar.open(`Reserva cancelada. Reembolso simulado: ${this.calcularPrecioTotal(reserva)} €`, 'Cerrar', {
-              duration: 4000,
-              horizontalPosition: 'right',
-              verticalPosition: 'top'
-            });
+            this.toast.info(`Reserva cancelada. Reembolso simulado: ${this.calcularPrecioTotal(reserva)} €`);
             this.cargarReservas();
           },
           error: () => {
-            this.snackBar.open('Error al cancelar la reserva', 'Cerrar', {
-              duration: 3000,
-              panelClass: ['bg-red-500', 'text-white']
-            });
+            this.toast.error('Error al cancelar la reserva');
           }
         });
       }

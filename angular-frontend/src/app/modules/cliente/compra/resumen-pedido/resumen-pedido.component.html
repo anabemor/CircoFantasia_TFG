@@ -8,7 +8,7 @@
   </div>
 
   <!-- Fecha -->
-  <div *ngIf="compraService.getFecha()" class="text-xl text-gray-700">
+  <div *ngIf="compraService.getFecha()" class="text-shadow-lg text-gray-700">
     <span class="font-medium">Fecha:  </span>
     <span>{{ compraService.getFecha() | date:'fullDate' }}</span>
   </div>

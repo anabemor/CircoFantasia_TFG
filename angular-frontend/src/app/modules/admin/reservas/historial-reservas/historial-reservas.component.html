@@ -22,31 +22,42 @@
     </mat-form-field>
 
     <!-- Botones de acción -->
-    <div class="col-span-full flex flex-wrap gap-2 justify-end">
+<div class="col-span-full flex flex-wrap gap-2 justify-end">
       <button
         type="submit"
-        class="flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm"
+        class="w-32 flex items-center justify-center gap-1 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm"
       >
         <i class="material-icons text-sm">filter_alt</i> Filtrar
       </button>
+
+      <button
+        type="button"
+        class="w-32 flex items-center justify-center gap-1 bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded-lg text-sm"
+        (click)="limpiarFiltros()"
+      >
+        <i class="material-icons text-sm">delete_outline</i> Limpiar
+      </button>
+
       <button
         type="button"
         (click)="exportarPDF()"
-        class="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm"
+        class="w-32 flex items-center justify-center gap-1 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm"
       >
         <i class="material-icons text-sm">picture_as_pdf</i> PDF
       </button>
+
       <button
         type="button"
         (click)="exportarExcel()"
-        class="flex items-center gap-1 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm"
+        class="w-32 flex items-center justify-center gap-1 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm"
       >
         <i class="material-icons text-sm">table_view</i> Excel
       </button>
+
       <button
         type="button"
         [routerLink]="['/admin/reservas']"
-        class="flex items-center gap-1 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg text-sm"
+        class="w-32 flex items-center justify-center gap-1 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg text-sm"
       >
         <i class="material-icons text-sm">arrow_back</i> Volver
       </button>

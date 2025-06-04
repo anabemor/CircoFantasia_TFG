@@ -10,6 +10,7 @@ import { CompraService } from '../../../../shared/services/compra.service';
 import { ReservaService } from '../../../../shared/services/reserva.service';
 import { MY_DATE_FORMATS } from '../../../../shared/utils/date-formats';
 import { forkJoin } from 'rxjs';
+import { ToastService } from '../../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-seleccion-fecha',
@@ -41,13 +42,14 @@ export class SeleccionFechaComponent implements OnInit {
   constructor(
     private reservaService: ReservaService,
     private compraService: CompraService,
-    private router: Router
+    private router: Router,
+    private toast: ToastService  
   ) {}
 
   ngOnInit(): void {
     const actividad = this.compraService.getActividad();
     if (!actividad) {
-      alert('No hay actividad activa disponible. Inténtalo más tarde.');
+      //alert('No hay actividad activa disponible. Inténtalo más tarde.');
       this.router.navigate(['/']);
       return;
     }
@@ -126,7 +128,7 @@ export class SeleccionFechaComponent implements OnInit {
 
   continuar(): void {
     if (!this.fechaSeleccionada) {
-      alert('Por favor, selecciona una fecha válida.');
+      this.toast.warning('Por favor, selecciona una fecha válida.');
       return;
     }
 
@@ -134,12 +136,12 @@ export class SeleccionFechaComponent implements OnInit {
     const iso = formatDate(fecha, 'yyyy-MM-dd', 'es');
 
     if (fecha < this.fechaMinima || fecha > this.fechaMaxima) {
-      alert('La fecha seleccionada está fuera del rango de la actividad.');
+      this.toast.warning('La fecha seleccionada está fuera del rango de la actividad.');
       return;
     }
 
     if (this.fechasBloqueadas.has(iso)) {
-      alert('La fecha seleccionada está completa. Elige otra.');
+      this.toast.warning('La fecha seleccionada está completa. Elige otra.');
       return;
     }
 

@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CompraService } from '../../../../shared/services/compra.service';
 import { ReservaService } from '../../../../shared/services/reserva.service';
+import { ToastService } from '../../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-resumen-pago',
@@ -11,10 +12,13 @@ import { ReservaService } from '../../../../shared/services/reserva.service';
   templateUrl: './resumen-pago.component.html'
 })
 export class ResumenPagoComponent {
+  isLoading = false;
+
   constructor(
     public compraService: CompraService,
     private reservaService: ReservaService,
-    private router: Router
+    private router: Router,
+    private toast: ToastService
   ) {}
 
   total(): number {
@@ -24,23 +28,22 @@ export class ResumenPagoComponent {
     );
   }
 
-  isLoading = false;
-
   pagar(): void {
     console.log('💥 pagar() ejecutado');
-    console.trace(); // <--- VER QUIÉN LO LLAMA
-    if (this.isLoading) return; // bloquea si ya está enviando
+    console.trace();
+
+    if (this.isLoading) return;
 
     const reserva = this.compraService.crearReserva();
     console.log('🧾 Reserva generada:', reserva);
+
     if (!reserva) {
-      alert('No se puede generar la reserva. Faltan datos.');
+      this.toast.warning('No se puede generar la reserva. Faltan datos.');
       return;
     }
 
     this.isLoading = true;
 
-    
     // Simulación de pago
     setTimeout(() => {
       this.reservaService.enviarReserva(reserva).subscribe({
@@ -51,7 +54,7 @@ export class ResumenPagoComponent {
         error: err => {
           this.isLoading = false;
           console.error('Error al guardar la reserva:', err);
-          alert('Hubo un error al realizar el pago o guardar la reserva.');
+          this.toast.error('Hubo un error al realizar el pago o guardar la reserva.');
         }
       });
     }, 2000);

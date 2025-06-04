@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { NavbarAdminComponent } from '../../../shared/components/navbar-admin.component';
 import { BuzonService, Mensaje } from '../../../shared/services/buzon.service';
 import { RouterModule } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog.component';
 
 @Component({
   selector: 'app-buzon',
@@ -17,7 +19,11 @@ export class BuzonComponent implements OnInit {
   respuesta: string = '';
   filtro: string = '';
 
-  constructor(private buzonService: BuzonService) {}
+  constructor(
+    private buzonService: BuzonService,
+    private dialog: MatDialog
+
+  ) {}
 
   ngOnInit(): void {
     this.buzonService.obtenerMensajes().subscribe((data) => {
@@ -54,12 +60,18 @@ export class BuzonComponent implements OnInit {
     if (this.mensajeSeleccionado) {
       const mensaje = this.mensajeSeleccionado;
 
-      // Simulación visual sin llamada al backend
       setTimeout(() => {
         mensaje.respondido = true;
-        alert(`Simulación de respuesta enviada a ${mensaje.email}:\n\n${this.respuesta}`);
 
-        // Reiniciar
+        // Mostrar dialog en lugar de toast
+        this.dialog.open(ConfirmDialogComponent, {
+          data: {
+            titulo: 'Respuesta enviada',
+            mensaje: `Simulación de respuesta enviada a ${mensaje.email}:\n\n${this.respuesta}`,
+            soloAceptar: true
+          }
+        });
+
         this.mensajeSeleccionado = null;
         this.respuesta = '';
       }, 1000);
@@ -71,22 +83,30 @@ export class BuzonComponent implements OnInit {
 
     if (idsAEliminar.length === 0) return;
 
-    if (!confirm(`¿Seguro que quieres eliminar ${idsAEliminar.length} mensaje(s)?`)) return;
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        titulo: 'Confirmar eliminación',
+        mensaje: `¿Seguro que quieres eliminar ${idsAEliminar.length} mensaje(s)?`
+      }
+    });
 
-    let eliminados = 0;
+    dialogRef.afterClosed().subscribe(resultado => {
+      if (!resultado) return; // Cancelado
 
-    idsAEliminar.forEach(id => {
-      this.buzonService.eliminarMensaje(id).subscribe(() => {
-        eliminados++;
+      let eliminados = 0;
 
-        // Solo recargamos la lista una vez al final
-        if (eliminados === idsAEliminar.length) {
-          this.buzonService.obtenerMensajes().subscribe((data) => {
-            this.mensajes = data.map(m => ({ ...m, seleccionado: false }));
-            this.mensajeSeleccionado = null;
-            this.respuesta = '';
-          });
-        }
+      idsAEliminar.forEach(id => {
+        this.buzonService.eliminarMensaje(id).subscribe(() => {
+          eliminados++;
+
+          if (eliminados === idsAEliminar.length) {
+            this.buzonService.obtenerMensajes().subscribe((data) => {
+              this.mensajes = data.map(m => ({ ...m, seleccionado: false }));
+              this.mensajeSeleccionado = null;
+              this.respuesta = '';
+            });
+          }
+        });
       });
     });
   }

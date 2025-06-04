@@ -16,6 +16,7 @@ import { Reserva } from '../../../../shared/interfaces/reserva.interface';
 import { ReservaService } from '../../../../shared/services/reserva.service';
 import { ActividadService } from '../../../../shared/services/actividad.service';
 import { Actividad } from '../../../../shared/interfaces/actividad.interface';
+import { ToastService } from '../../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-reserva-create-form',
@@ -40,7 +41,7 @@ export class ReservaCreateFormComponent implements OnInit {
   ticketTypes: TicketType[] = [];
 
   fechaMinima: Date = new Date();
-  fechaMaxima: Date = new Date(); // NUEVO
+  fechaMaxima: Date = new Date();
   fechasCompletas: string[] = [];
   fechasCargadas: boolean = false;
 
@@ -49,6 +50,7 @@ export class ReservaCreateFormComponent implements OnInit {
     private ticketService: TicketTypeService,
     private reservaService: ReservaService,
     private actividadService: ActividadService,
+    private toast: ToastService,
     private router: Router
   ) {}
 
@@ -60,10 +62,10 @@ export class ReservaCreateFormComponent implements OnInit {
       next: (actividad: Actividad) => {
         this.fechaMinima = new Date(actividad.fechaInicio);
         this.fechaMaxima = new Date(actividad.fechaFin);
-        this.cargarFechasConAforoCompleto(); // solo tras conocer el rango
+        this.cargarFechasConAforoCompleto();
       },
       error: () => {
-        alert('No se pudo cargar la actividad activa.');
+        this.toast.error('No se pudo cargar la actividad activa.');
       }
     });
   }
@@ -159,7 +161,7 @@ export class ReservaCreateFormComponent implements OnInit {
 
   submit(): void {
     if (this.getPrecioTotal() === 0) {
-      alert('Debes seleccionar al menos una entrada');
+      this.toast.warning('Debes seleccionar al menos una entrada.');
       return;
     }
 

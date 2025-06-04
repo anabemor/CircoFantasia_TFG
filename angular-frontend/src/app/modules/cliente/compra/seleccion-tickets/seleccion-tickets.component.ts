@@ -52,7 +52,7 @@ export class SeleccionTicketsComponent implements OnInit {
       },
       error: (err) => {
        console.error('Error al obtener actividad activa:', err);
-        alert('No hay una actividad activa en este momento.');
+         this.toast.error('Lo sentimos, no existe una actividad en venta en este momento.');
       }
     });
 

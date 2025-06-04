@@ -17,6 +17,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
   max-width: 80%;
   text-align: center;
+  
 }
 
 .custom-snackbar-container .mat-mdc-snack-bar-container {
@@ -31,6 +32,7 @@
 .toast-container {
   width: 100%;
 }
+
 
 .fecha-completa .mat-calendar-body-cell-content {
   background-color: #ffdddd !important;
