@@ -4,17 +4,17 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ActividadService } from '../../../shared/services/actividad.service';
 import { Actividad } from '../../../shared/interfaces/actividad.interface';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { NavbarAdminComponent } from '../../../shared/components/navbar-admin.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog.component';
+import { ToastService } from '../../../shared/services/toast.service'; // Asegúrate de que la ruta es correcta
 
 @Component({
   selector: 'app-actividades',
   standalone: true,
   templateUrl: './actividades.component.html',
   styleUrls: ['./actividades.component.css'],
-  imports: [CommonModule, FormsModule, RouterModule, NavbarAdminComponent ]
+  imports: [CommonModule, FormsModule, RouterModule, NavbarAdminComponent]
 })
 export class ActividadesComponent implements OnInit {
   actividades: Actividad[] = [];
@@ -23,7 +23,6 @@ export class ActividadesComponent implements OnInit {
   modoEdicion = false;
   fechasInvalidas: boolean = false;
   
-  // Modelo del formulario
   formActividad: Actividad = {
     nombre: '',
     descripcion: '',
@@ -32,9 +31,10 @@ export class ActividadesComponent implements OnInit {
     activa: true
   };
 
-  constructor(private actividadService: ActividadService, 
-    private snackBar: MatSnackBar,
-    private dialog: MatDialog
+  constructor(
+    private actividadService: ActividadService,
+    private dialog: MatDialog,
+    private toast: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -42,8 +42,12 @@ export class ActividadesComponent implements OnInit {
   }
 
   cargarActividades() {
-    this.actividadService.getActividades().subscribe(data => {
-      this.actividades = data;
+    this.actividadService.getActividades().subscribe({
+      next: (data) => this.actividades = data,
+      error: (err) => {
+        console.error('Error al cargar actividades:', err);
+        this.toast.error('Error al cargar actividades');
+      }
     });
   }
 
@@ -70,36 +74,35 @@ export class ActividadesComponent implements OnInit {
 
   guardarActividad() {
     this.fechasInvalidas = new Date(this.formActividad.fechaFin) < new Date(this.formActividad.fechaInicio);
-
     if (this.fechasInvalidas) return;
-    
+
     if (this.modoEdicion && this.actividadEnEdicion?.id) {
-      this.actividadService.actualizarActividad(this.actividadEnEdicion.id, this.formActividad)
-        .subscribe(() => {
-          this.snackBar.open('Actividad actualizada con éxito', 'Cerrar', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-          });
+      this.actividadService.actualizarActividad(this.actividadEnEdicion.id, this.formActividad).subscribe({
+        next: () => {
+          this.toast.success('Actividad actualizada con éxito');
           this.mostrarFormulario = false;
           this.cargarActividades();
-        });
+        },
+        error: () => {
+          this.toast.error('Error al actualizar la actividad');
+        }
+      });
     } else {
-      this.actividadService.crearActividad(this.formActividad)
-        .subscribe(() => {
-          this.snackBar.open('Actividad creada con éxito', 'Cerrar', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-          });
+      this.actividadService.crearActividad(this.formActividad).subscribe({
+        next: () => {
+          this.toast.success('Actividad creada con éxito');
           this.mostrarFormulario = false;
           this.cargarActividades();
-        });
+        },
+        error: () => {
+          this.toast.error('Error al crear la actividad');
+        }
+      });
     }
   }
 
   eliminarActividad(id: number) {
-      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '350px',
       data: {
         mensaje: '¿Seguro que deseas eliminar esta actividad?'
@@ -108,18 +111,18 @@ export class ActividadesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(confirmado => {
       if (confirmado) {
-        this.actividadService.eliminarActividad(id).subscribe(() => {
-          this.snackBar.open('Actividad eliminada', 'Cerrar', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-          });
-          this.cargarActividades();
+        this.actividadService.eliminarActividad(id).subscribe({
+          next: () => {
+            this.toast.success('Actividad eliminada');
+            this.cargarActividades();
+          },
+          error: () => {
+            this.toast.error('Error al eliminar la actividad');
+          }
         });
       }
     });
   }
-
 
   cancelar() {
     this.mostrarFormulario = false;
@@ -130,7 +133,7 @@ export class ActividadesComponent implements OnInit {
       fechaFin: '',
       activa: true
     };
-    this.fechasInvalidas = false; //resetea el error de fechas
+    this.fechasInvalidas = false;
   }
 
   validarFechas(): void {

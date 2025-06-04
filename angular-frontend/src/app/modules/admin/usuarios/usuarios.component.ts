@@ -2,16 +2,16 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Usuario, UsuariosService } from '../../../shared/services/usuarios.service';
-import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { NavbarAdminComponent } from '../../../shared/components/navbar-admin.component';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog.component'; // ajusta la ruta si es distinta
+import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog.component';
 import { RouterModule } from '@angular/router';
+import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-usuarios',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, MatSnackBarModule, NavbarAdminComponent],
+  imports: [CommonModule, FormsModule, RouterModule, NavbarAdminComponent],
   templateUrl: './usuarios.component.html',
   styleUrls: ['./usuarios.component.css']
 })
@@ -20,14 +20,14 @@ export class UsuariosComponent {
   usuarioSeleccionado: Usuario | null = null;
   mostrarModal: boolean = false;
 
-  
+  ordenActual: keyof Usuario | 'rol' | '' = '';
+  ordenAscendente: boolean = true;
+
   constructor(
-    private usuariosService: UsuariosService,  
-    private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private usuariosService: UsuariosService,
+    private dialog: MatDialog,
+    private toast: ToastService
   ) {}
-  
-    
 
   ngOnInit(): void {
     this.cargarUsuarios();
@@ -36,7 +36,10 @@ export class UsuariosComponent {
   cargarUsuarios(): void {
     this.usuariosService.getUsuarios().subscribe({
       next: (data) => this.usuarios = data,
-      error: (err) => console.error('Error cargando usuarios:', err),
+      error: (err) => {
+        console.error('Error cargando usuarios:', err);
+        this.toast.error('Error al cargar los usuarios');
+      }
     });
   }
 
@@ -45,15 +48,15 @@ export class UsuariosComponent {
       name: '',
       email: '',
       password: '',
-      roles: ['ROLE_USER'], // valor por defecto
+      roles: ['ROLE_USER'],
     };
-    this.mostrarModal = true; 
+    this.mostrarModal = true;
   }
 
   editarUsuario(usuario: Usuario): void {
     this.usuarioSeleccionado = {
       ...usuario,
-      roles: usuario.roles ?? ['ROLE_USER'], // aseguramos array válido
+      roles: usuario.roles ?? ['ROLE_USER'],
     };
     this.mostrarModal = true;
   }
@@ -73,23 +76,16 @@ export class UsuariosComponent {
         this.usuariosService.eliminarUsuario(id).subscribe({
           next: () => {
             this.cargarUsuarios();
-            this.snackBar.open('Usuario eliminado correctamente', 'Cerrar', {
-              duration: 3000,
-              verticalPosition: 'top',
-            });
+            this.toast.success('Usuario eliminado correctamente');
           },
           error: (err) => {
             console.error('Error al eliminar usuario:', err);
-            this.snackBar.open('Error al eliminar usuario', 'Cerrar', {
-              duration: 3000,
-              verticalPosition: 'top',
-            });
+            this.toast.error('Error al eliminar usuario');
           },
         });
       }
     });
   }
-
 
   guardarUsuario(): void {
     if (!this.usuarioSeleccionado) return;
@@ -99,10 +95,7 @@ export class UsuariosComponent {
     const callback = (mensaje: string) => {
       this.cargarUsuarios();
       this.cerrarModal();
-      this.snackBar.open(mensaje, 'Cerrar', {
-        duration: 3000,
-        verticalPosition: 'top',
-      });
+      this.toast.success(mensaje);
     };
 
     if (id) {
@@ -110,10 +103,7 @@ export class UsuariosComponent {
         next: () => callback('Usuario actualizado correctamente'),
         error: (err) => {
           console.error('Error al editar usuario:', err);
-          this.snackBar.open('Error al actualizar usuario', 'Cerrar', {
-            duration: 3000,
-            verticalPosition: 'top',
-          });
+          this.toast.error('Error al actualizar usuario');
         },
       });
     } else {
@@ -121,10 +111,7 @@ export class UsuariosComponent {
         next: () => callback('Usuario creado correctamente'),
         error: (err) => {
           console.error('Error al crear usuario:', err);
-          this.snackBar.open('Error al crear usuario', 'Cerrar', {
-            duration: 3000,
-            verticalPosition: 'top',
-          });
+          this.toast.error('Error al crear usuario');
         },
       });
     }
@@ -135,32 +122,29 @@ export class UsuariosComponent {
     this.usuarioSeleccionado = null;
   }
 
-  ordenActual: keyof Usuario | 'rol' | '' = '';
-  ordenAscendente: boolean = true;
-
   ordenarPor(campo: keyof Usuario | 'rol'): void {
-  if (this.ordenActual === campo) {
-    this.ordenAscendente = !this.ordenAscendente;
-  } else {
-    this.ordenActual = campo;
-    this.ordenAscendente = true;
-  }
-
-  this.usuarios.sort((a, b) => {
-    let valorA: string;
-    let valorB: string;
-
-    if (campo === 'rol') {
-      valorA = a.roles.includes('ROLE_ADMIN') ? 'Administrador' : 'Gestor';
-      valorB = b.roles.includes('ROLE_ADMIN') ? 'Administrador' : 'Gestor';
+    if (this.ordenActual === campo) {
+      this.ordenAscendente = !this.ordenAscendente;
     } else {
-      valorA = a[campo]?.toString().toLowerCase() ?? '';
-      valorB = b[campo]?.toString().toLowerCase() ?? '';
+      this.ordenActual = campo;
+      this.ordenAscendente = true;
     }
 
-    return this.ordenAscendente
-      ? valorA.localeCompare(valorB)
-      : valorB.localeCompare(valorA);
-  });
-}
+    this.usuarios.sort((a, b) => {
+      let valorA: string;
+      let valorB: string;
+
+      if (campo === 'rol') {
+        valorA = a.roles.includes('ROLE_ADMIN') ? 'Administrador' : 'Gestor';
+        valorB = b.roles.includes('ROLE_ADMIN') ? 'Administrador' : 'Gestor';
+      } else {
+        valorA = a[campo]?.toString().toLowerCase() ?? '';
+        valorB = b[campo]?.toString().toLowerCase() ?? '';
+      }
+
+      return this.ordenAscendente
+        ? valorA.localeCompare(valorB)
+        : valorB.localeCompare(valorA);
+    });
+  }
 }

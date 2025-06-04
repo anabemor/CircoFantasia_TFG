@@ -67,7 +67,7 @@ export class BuzonComponent implements OnInit {
         this.dialog.open(ConfirmDialogComponent, {
           data: {
             titulo: 'Respuesta enviada',
-            mensaje: `Simulación de respuesta enviada a ${mensaje.email}:\n\n${this.respuesta}`,
+            mensaje: `Respuesta enviada a ${mensaje.email}:\n\n${this.respuesta}`,
             soloAceptar: true
           }
         });
