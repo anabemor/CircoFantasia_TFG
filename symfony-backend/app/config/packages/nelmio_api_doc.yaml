@@ -1,0 +1,6 @@
+nelmio_api_doc:
+    documentation:
+        info:
+            title: 'Mi API'
+            description: 'Documentación de la API'
+            version: '1.0.0'
