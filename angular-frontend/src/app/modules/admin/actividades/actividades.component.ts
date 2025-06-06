@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ActividadService } from '../../../shared/services/actividad.service';
+import { TicketTypeService } from '../../../shared/services/ticket-type.service';
 import { Actividad } from '../../../shared/interfaces/actividad.interface';
+import { TicketType } from '../../../shared/interfaces/ticket-type.interface';
 import { NavbarAdminComponent } from '../../../shared/components/navbar-admin.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog.component';
@@ -18,6 +20,7 @@ import { ToastService } from '../../../shared/services/toast.service'; // Asegú
 })
 export class ActividadesComponent implements OnInit {
   actividades: Actividad[] = [];
+  ticketTypes: TicketType[] = [];
   actividadEnEdicion: Actividad | null = null;
   mostrarFormulario = false;
   modoEdicion = false;
@@ -33,12 +36,14 @@ export class ActividadesComponent implements OnInit {
 
   constructor(
     private actividadService: ActividadService,
+    private ticketTypeService: TicketTypeService,
     private dialog: MatDialog,
     private toast: ToastService
   ) {}
 
   ngOnInit(): void {
     this.cargarActividades();
+    this.cargarTiposTicket();
   }
 
   cargarActividades() {
@@ -48,6 +53,13 @@ export class ActividadesComponent implements OnInit {
         console.error('Error al cargar actividades:', err);
         this.toast.error('Error al cargar actividades');
       }
+    });
+  }
+
+  cargarTiposTicket() {
+    this.ticketTypeService.getTiposTicket().subscribe({
+      next: data => this.ticketTypes = data,
+      error: () => this.toast.error('Error al cargar tipos de ticket')
     });
   }
 
@@ -139,4 +151,12 @@ export class ActividadesComponent implements OnInit {
   validarFechas(): void {
     this.fechasInvalidas = new Date(this.formActividad.fechaFin) < new Date(this.formActividad.fechaInicio);
   }
+
+  actualizarPrecio(tipo: TicketType) {
+    this.ticketTypeService.updateTicketType(tipo.id, { precio: tipo.precio }).subscribe({
+      next: () => this.toast.success('Precio actualizado'),
+      error: () => this.toast.error('Error al actualizar precio')
+    });
+  }
+
 }

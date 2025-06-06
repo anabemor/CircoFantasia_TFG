@@ -141,6 +141,32 @@
     </tbody>
   </table>
 
+   <!-- Tipos de ticket -->
+    <h3 class="text-2xl font-semibold mt-10 mb-4 text-gray-800">Tipos de ticket</h3>
+    <table class="min-w-full bg-white border border-gray-200 rounded-lg overflow-hidden shadow">
+      <thead class="bg-purple-600 text-white">
+        <tr>
+          <th class="px-4 py-2 text-left">Nombre</th>
+          <th class="px-4 py-2 text-left">Precio</th>
+          <th class="px-4 py-2 text-left">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let tipo of ticketTypes" class="border-t border-gray-200">
+          <td class="px-4 py-2">{{ tipo.nombre }}</td>
+          <td class="px-4 py-2">
+            <input type="number" class="w-24 p-1 border rounded" [(ngModel)]="tipo.precio" />
+          </td>
+          <td class="px-4 py-2">
+            <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded" (click)="actualizarPrecio(tipo)">
+              Guardar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+
   <!-- Botón volver -->
   <div class="mt-6 flex justify-end">
     <button [routerLink]="['/admin']" class="flex items-center gap-1 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">

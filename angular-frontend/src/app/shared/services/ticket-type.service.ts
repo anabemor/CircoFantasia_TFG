@@ -12,4 +12,16 @@ export class TicketTypeService {
   getTiposTicket() {
     return this.http.get<TicketType[]>(`${this.baseUrl}/ticket_types`);
   }
+
+  createTicketType(tipo: Partial<TicketType>) {
+    return this.http.post<TicketType>(`${this.baseUrl}/ticket_types`, tipo);
+  }
+
+  updateTicketType(id: number, tipo: Partial<TicketType>) {
+    return this.http.put(`${this.baseUrl}/ticket_types/${id}`, tipo);
+  }
+
+  deleteTicketType(id: number) {
+    return this.http.delete(`${this.baseUrl}/ticket_types/${id}`);
+  }
 }
