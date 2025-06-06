@@ -8,6 +8,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/api/mensajes')]
@@ -91,5 +93,48 @@ class MensajeController extends AbstractController
 
         return $this->json(['success' => true]);
     }
+     #[Route('/enviar-masivo', name: 'enviar_mensaje_masivo', methods: ['POST'])]
+    public function enviarMasivo(Request $request, MensajeRepository $repo, MailerInterface $mailer): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
 
+        if (empty($data['ids']) || !is_array($data['ids']) || empty($data['plantilla'])) {
+            return $this->json(['error' => 'Datos inválidos o incompletos.'], 400);
+        }
+         $mensajes = $repo->findBy(['id' => $data['ids']]);
+
+        $plantilla = $data['plantilla'];
+        switch ($plantilla) {
+            case 'promocion':
+                $asunto = 'Promoción Especial';
+                $contenido = '¡Disfruta de nuestras ofertas en Circo Fantasía!';
+                break;
+            case 'agradecimiento':
+                $asunto = 'Gracias por contactar con nosotros';
+                $contenido = 'Gracias por tu interés en Circo Fantasía. Pronto te contactaremos.';
+                break;
+            default:
+                $asunto = 'Aviso Circo Fantasía';
+                $contenido = $plantilla;
+                break;
+        }
+
+        $enviados = 0;
+        foreach ($mensajes as $m) {
+            $email = (new Email())
+                ->from('no-reply@circofantasia.local')
+                ->to($m->getEmail())
+                ->subject($asunto)
+                ->text($contenido);
+
+            try {
+                $mailer->send($email);
+                $enviados++;
+            } catch (\Exception $e) {
+                // Ignorar errores
+            }
+        }
+
+        return $this->json(['success' => true, 'enviados' => $enviados]);
+    }
 }

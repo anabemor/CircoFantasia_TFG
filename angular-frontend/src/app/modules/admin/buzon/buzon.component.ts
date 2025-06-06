@@ -18,7 +18,9 @@ export class BuzonComponent implements OnInit {
   mensajeSeleccionado: (Mensaje & { seleccionado?: boolean }) | null = null;
   respuesta: string = '';
   filtro: string = '';
-
+  plantillas: string[] = ['promocion', 'agradecimiento'];
+  plantillaSeleccionada: string = this.plantillas[0];
+  
   constructor(
     private buzonService: BuzonService,
     private dialog: MatDialog
@@ -78,8 +80,8 @@ export class BuzonComponent implements OnInit {
     }
   }
 
- eliminarSeleccionados(): void {
-    const idsAEliminar = this.mensajesSeleccionados.map(m => m.id);
+  eliminarSeleccionados(): void {
+     const idsAEliminar = this.mensajesSeleccionados.map(m => m.id);
 
     if (idsAEliminar.length === 0) return;
 
@@ -109,5 +111,22 @@ export class BuzonComponent implements OnInit {
         });
       });
     });
+  }
+
+  enviarMasivo(): void {
+    const ids = this.mensajesSeleccionados.map(m => m.id);
+    if (ids.length === 0) return;
+
+    this.buzonService
+      .enviarMasivo(ids, this.plantillaSeleccionada)
+      .subscribe(() => {
+        this.dialog.open(ConfirmDialogComponent, {
+          data: {
+            titulo: 'Mensajes enviados',
+            mensaje: `Se han enviado ${ids.length} mensajes.`,
+            soloAceptar: true,
+          },
+        });
+      });
   }
 }

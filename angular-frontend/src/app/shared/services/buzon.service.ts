@@ -31,5 +31,8 @@ export class BuzonService {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
 
+  enviarMasivo(ids: number[], plantilla: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/enviar-masivo`, { ids, plantilla });
+  }
 
 }
