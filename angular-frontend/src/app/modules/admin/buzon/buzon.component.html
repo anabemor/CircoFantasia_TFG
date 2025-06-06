@@ -17,21 +17,9 @@
       <i class="material-icons text-sm">close</i>
       Limpiar
     </button>
-    <div class="flex items-center gap-2">
-      <select [(ngModel)]="plantillaSeleccionada" class="border rounded px-2 py-1">
-        <option *ngFor="let p of plantillas" [value]="p">{{ p | titlecase }}</option>
-      </select>
-      <button
-        (click)="enviarMasivo()"
-        [disabled]="mensajesSeleccionados.length === 0"
-        class="flex items-center gap-1 bg-indigo-500 text-white px-3 py-2 rounded-lg hover:bg-indigo-600 transition"
-        title="Enviar mensaje masivo"
-      >
-        <i class="material-icons text-sm">forward_to_inbox</i>
-        Enviar masivo
-      </button>
-    </div>
   </div>
+   
+ 
 
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <!-- Lista de mensajes -->
@@ -101,6 +89,33 @@
       </button>
     </div>
   </div>
+
+  <hr class="my-6 border-t border-gray-300" />
+  
+   <!-- Envío masivo -->
+  <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 border border-gray-300 bg-gray-50 p-4 rounded-lg">
+    <select [(ngModel)]="plantillaSeleccionada" class="border rounded px-2 py-1">
+      <option *ngFor="let p of plantillas" [value]="p">{{ p | titlecase }}</option>
+    </select>
+
+    <textarea
+      *ngIf="plantillaSeleccionada === 'personalizado'"
+      [(ngModel)]="plantillaPersonalizada"
+      rows="2"
+      class="flex-grow px-2 py-1 rounded border"
+      placeholder="Redacta la plantilla..."
+    ></textarea>
+
+    <button
+      (click)="enviarMasivo()"
+      [disabled]="mensajesSeleccionados.length === 0"
+      class="flex items-center gap-1 bg-green-500 text-white px-3 py-2 rounded-lg hover:bg-green-600 transition"
+      title="Enviar mensaje masivo"
+    >
+      <i class="material-icons text-sm">forward_to_inbox</i>
+      Enviar masivo
+    </button>
+</div>
 
   <!-- Botón volver -->
   <div class="mt-6 flex justify-end">
