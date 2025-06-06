@@ -3,7 +3,7 @@ services:
     build:
       context: ./symfony-backend
       dockerfile: ./docker/php/Dockerfile
-    container_name: stronova_backend
+    container_name: tickfantasia_backend
     restart: unless-stopped
     working_dir: /var/www/app
     volumes:
@@ -36,26 +36,27 @@ services:
 
   db:
     image: postgres:13
-    container_name: stronova_postgres
+    container_name: tickfantasia_postgres
     restart: always
     environment:
-      POSTGRES_USER: stronova_user
-      POSTGRES_PASSWORD: stronova_password
-      POSTGRES_DB: stronova_db
+      POSTGRES_USER: tickfantasia_user
+      POSTGRES_PASSWORD: tickfantasia_password
+      POSTGRES_DB: tickfantasia_db
     ports:
-      - "5432:5432"
+      - "5432:5432"  
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U symfony -d symfony_db"]
+      test: ["CMD-SHELL", "pg_isready -U tickfantasia_user -d tickfantasia_db"]
       interval: 10s
       retries: 5
+
 
   frontend:
     build:
       context: ./angular-frontend
       dockerfile: Dockerfile
-    container_name: stronova_frontend
+    container_name: tickfantasia_frontend
     restart: always
     working_dir: /app
     volumes:
