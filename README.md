@@ -1,127 +1,141 @@
-# Proyecto TFG CircoFantasia
+# 🎪 TickFantasia
 
-Desarrollo de una Aplicación de Gestión de Reservas para “Circo Escuela Fantasía”
+**TickFantasia** es una aplicación web para la gestión y compra de entradas de espectáculos del Circo Escuela Fantasía. Está compuesta por un frontend desarrollado en Angular 19 y un backend en Symfony 6.4, desplegados mediante Docker y con base de datos PostgreSQL.
 
-## Introducción
-Circo Escuela Fantasía es un centro de ocio dedicado a la organización de actividades lúdico-educativas dirigidas tanto a centros escolares como a familias. A lo largo del año, ofrece una variedad de experiencias temáticas estructuradas en cuatro categorías principales: 🎭 Un Día en el Circo, 🐮 Granja Escuela de Caperucita, 🎃 Halloween Kids Party y 🎅 La Fábrica de Papá Noel.
-    
-Con más de diez años de trayectoria, el centro ha experimentado un crecimiento constante en la demanda de sus actividades. No obstante, a pesar de su éxito, la empresa aún no cuenta con una aplicación propia que facilite la gestión de reservas de manera eficiente y accesible. Hace un año, se implementó un sistema de reservas en línea a través de una plataforma genérica. Sin embargo, esta opción ha resultado ser poco intuitiva para los usuarios y con un coste elevado.
+---
 
-Por este motivo, surge la necesidad de desarrollar una aplicación a medida que optimice la gestión de reservas, ofreciendo una interfaz intuitiva para los clientes y un entorno de administración sencillo y eficiente. Esta nueva herramienta deberá mantener una coherencia visual con la identidad corporativa del centro y garantizar un sistema robusto que contemple todas las necesidades del usuario, cumpla con los estándares de seguridad y sea capaz de gestionar altas cargas de demanda sin afectar su rendimiento.
-__________
+## 🧱 Estructura del Proyecto
 
-## 👪 Público Objetivo
-Dirigida a centros escolares y familias. 
-____________
+```
+.
+├── angular-frontend/      # Interfaz pública y panel de administración (Angular 19 + Tailwind 4)
+├── symfony-backend/       # Lógica del backend y API REST (Symfony 6.4)
+├── docker-compose.yml     # Orquestador de contenedores
+└── README.md              # Este archivo
+```
 
-## 🖥️ Apps Similares
-Turitop
-________________
+### `angular-frontend/`
 
-## 🎯 Características de CircoFantasia
-Las funcionalidades del proyecto Circo Escuela Fantasía deberían centrarse en la gestión eficiente de reservas, la interacción con los usuarios y la administración de eventos. Así las funcionalidades de la aplicación serán:
+Aplicación cliente desarrollada con Angular 19. Usa Tailwind CSS para estilos y Angular Material para componentes visuales. Incluye un sistema de reservas para clientes y un panel privado de administración.
 
-### ✅ Gestión de Reservas
-▪️ **Reserva Online de Actividades**: Permitir a los usuarios seleccionar y reservar eventos según disponibilidad.
+Dependencias clave:
 
-▪️ **Calendario de Eventos**: Vista organizada de fechas y horarios disponibles.
+```json
+"@angular/core": "^19.2.9",
+"@angular/material": "^19.2.16",
+"tailwindcss": "^4.0.10"
+```
 
-▪️ **Gestión de Aforos**: Control de plazas disponibles para cada actividad.
+Se lanza con:
 
-▪️ **Confirmación y Notificaciones**: Envío de correos o mensajes para confirmar reservas y enviar recordatorios.
+```bash
+npm start  # o ejecutado por Docker en el puerto 4200
+```
 
-▪️ **Historial de Reservas**: Los usuarios pueden consultar sus reservas pasadas y futuras.
-____________________
+### `symfony-backend/`
 
-### 👦 Gestión de Usuarios
-▪️ **Registro e Inicio de Sesión**: Para clientes y administradores.
+API RESTful construida en Symfony 6.4. Gestiona usuarios, actividades, reservas y mensajes. Usa Doctrine ORM con PostgreSQL.
 
-▪️ **Perfiles de Usuario**: Almacenar datos básicos y preferencias.
+Rutas destacadas:
 
-▪️ **Diferenciación de Roles**: Administradores, colegios, familias, etc.
-_________________
+```php
+#[Route('/api/register', name: 'api_register', methods: ['POST'])]
+#[Route('/api/reservas', methods: ['POST'])]
+```
 
-### 🥳 Administración de Eventos
+### `docker-compose.yml`
 
-▪️ **Creación y Edición de Actividades**: Los administradores pueden añadir, modificar o eliminar eventos.
+Orquesta tres contenedores: backend Symfony, base de datos PostgreSQL y frontend Angular.
 
-▪️ **Configuración de Precios y Descuentos**: Personalización de tarifas según el tipo de usuario.
+```yaml
+services:
+  backend:
+    build: ./symfony-backend
+    ports: ["8000:8000"]
 
-▪️ **Control de Asistencia**: Lista de participantes y posibilidad de gestionar cancelaciones.
-______________________
-### 💳 Métodos de Pago
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: tickfantasia_user
+      POSTGRES_PASSWORD: tickfantasia_password
+      POSTGRES_DB: tickfantasia_db
+    ports: ["5432:5432"]
 
-▪️ **Pasarela de Pago Segura**: Pago online con tarjeta, PayPal o transferencia.
+  frontend:
+    build: ./angular-frontend
+    ports: ["4200:4200"]
+```
 
-▪️ **Facturación Automática**: Generación de recibos o facturas.
-___________________
+---
 
-### 📢 Comunicación y Soporte
+## ⚙️ Archivos de configuración relevantes
 
-▪️ **Chat o Formulario de Contacto**: Para resolver dudas sobre eventos o reservas.
+### `.env` (backend)
 
-▪️ **Sistema de Opiniones y Valoraciones**: Los usuarios pueden dejar reseñas sobre su experiencia.
+Define la conexión a la base de datos:
 
-▪️ **Notificaciones Push**: Avisos sobre cambios, promociones o recordatorios de eventos.
+```
+DATABASE_URL="postgresql://tickfantasia_user:tickfantasia_password@db:5432/tickfantasia_db?serverVersion=13&charset=utf8"
+```
 
-_________________________
-### 🎨Diseño y Experiencia de Usuario
+### `Dockerfile` (backend)
 
-▪️ **Interfaz Intuitiva, Adaptada Y Responsiva**: Fácil de usar tanto en móviles, tablets u ordenadores.
+Instalación de PHP 8.2 con extensiones necesarias:
 
-▪️ **Diseño en Línea con la Identidad del Circo**: Colores, imágenes y tipografías coherentes con la marca.
-__________________
+```Dockerfile
+FROM php:8.2-apache
+RUN docker-php-ext-install intl mbstring zip pdo_pgsql
+COPY ./docker/php/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+ENTRYPOINT ["docker-entrypoint.sh"]
+```
 
-### 🔒 Seguridad y Rendimiento
+---
 
-▪️ **Autenticación Segura**: Protección de datos personales.
+## 📦 Requisitos Previos
 
-▪️ **Optimización para Altas Demandas**: Que la app funcione bien en picos de tráfico.
+- Docker y Docker Compose instalados
+- Node.js y npm (solo si deseas trabajar fuera de Docker)
+- Git (para clonar el repositorio)
 
-▪️ **Cumplimiento con Regulaciones (GDPR, LOPD, etc.)**: Protección de datos personales de los usuarios.
-_____________________
+---
 
-### 📌 Extras Opcionales
+## 🚀 Puesta en marcha
 
-▪️ **Sistema de Fidelización**: Descuentos o puntos por repetir reservas.
+### 1. Clona el repositorio
 
-▪️ **Modo Offline**: Para que administradores puedan gestionar reservas sin conexión.
+```bash
+git clone https://github.com/tu-usuario/tickfantasia.git
+cd tickfantasia
+```
 
-▪️ **Integración con Redes Sociales**: Para compartir eventos fácilmente.
-__________________________
+### 2. Levanta los contenedores
 
-## 🛠️ Stack Tecnológico y Lenguajes
+```bash
+docker-compose up --build
+```
 
-Teniendo en cuenta que, por tiempo y poca experiencia, no voy a poder desarrollar la aplicación completa, me centraré solo en los tres pilares fundamentales: frontend, backend y base de datos. “Métodos de pago” lo sustituiré por una simulación mediante un monedero digital. Dejaré para más adelante el método de pago real, la “Comunicación y Soporte”, la “Seguridad y Rendimiento” y los extras. 
-(Propuesta)
+Esto iniciará:
+- El frontend en [http://localhost:4200](http://localhost:4200)
+- El backend en [http://localhost:8000](http://localhost:8000)
 
-Necesitamos un stack tecnológico que proporcione flexibilidad, escabilidad y seguridad a la aplicación.
+### 3. Accede a la aplicación
 
-🔹**Frontend**: React.js + Tailwind CSS o Angular ➡️	TypeScript
+- **Cliente**: http://localhost:4200
+- **API REST**: http://localhost:8000/api
 
-🔹**Backend**:  Node.js + Express.js ➡️	 JavaScript/TypeScript
+---
 
-🔹**Base de Datos**: PostgreSQL ➡️	 SQL  
+## 🧪 Uso básico
 
-________
+- El cliente puede comprar entradas desde la interfaz pública.
+- El administrador accede al panel privado para gestionar usuarios, actividades, reservas y mensajes.
+- Las reservas se registran con validación de aforo.
+- El backend expone endpoints REST para las operaciones CRUD principales.
 
-Para ejecución de proyecto en real: 
+---
 
-🔹**Autenticación**: JWT + OAuth 2.0  ➡️ JavaScript/TypeScript
+## 📄 Licencia
 
-🔹**Pagos**: Stripe ➡️	 JavaScript/TypeScript 
+Este proyecto es parte del trabajo académico para el Circo Escuela Fantasía. Uso interno y demostrativo.
 
-🔹**Notificaciones**: Firebase Cloud Messaging (FCM) ➡️	JavaScript/TypeScript
-
-🔹**Infraestructura**: AWS + Docker ➡️	 Bash/Shell
-
-🔹**Seguridad**: HTTPS + bcrypt + OWASP ➡️	 JavaScript/TypeScript
-___________
-
-## Planning Board
-____________
-
-## Diagrama ER
-![ER CircoFantasia](https://github.com/user-attachments/assets/3b250ed4-ca37-438a-8958-e8598ccb9161)
-
-
+---
